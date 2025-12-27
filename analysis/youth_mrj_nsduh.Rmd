@@ -60,8 +60,8 @@ library(gt)
 library(purrr)
 library(forcats)
 
-nsduh_2024 <- read_dta("C:/Users/marin/OneDrive/Área de Trabalho/Projeto/Stata/NSDUH_2024.dta")
-nsduh_2021_2023 <- read_dta("C:/Users/marin/OneDrive/Área de Trabalho/Projeto/Stata/NSDUH_2021_2023.dta")
+nsduh_2024 <- read_dta("../database/NSDUH_2024.dta")
+nsduh_2021_2023 <- read_dta("../database/NSDUH_2021_2023.dta")
 
 
 nsduh_2123 <- nsduh_2021_2023 %>%
