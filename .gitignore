@@ -2,3 +2,79 @@ youth_mrj_nsduh.docx
 *.dta
 *.RData
 *.Rdata
+# =========================
+# R & RStudio
+# =========================
+
+# Histórico e sessões
+*.Rhistory
+*.Rapp.history
+*.Ruserdata
+
+# Projetos RStudio
+*.Rproj.user/
+
+# Ambientes e imagens
+*.RData
+*.rds
+*.rda
+
+
+
+# =========================
+# R Markdown / Quarto
+# =========================
+
+# Arquivos gerados
+*_cache/
+*_files/
+*.html
+*.log
+*crash*
+*debug*
+
+# Quarto
+.quarto/
+.quarto-cache/
+
+# =========================
+# Compilação / LaTeX
+# =========================
+
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.lot
+*.out
+*.toc
+*.synctex.gz
+
+# =========================
+# Sistemas Operacionais
+# =========================
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# =========================
+# Python (caso use reticulate)
+# =========================
+
+__pycache__/
+*.pyc
+*.pyo
+
+# =========================
+# Cache temporário
+# =========================
+
+tmp/
+cache/
