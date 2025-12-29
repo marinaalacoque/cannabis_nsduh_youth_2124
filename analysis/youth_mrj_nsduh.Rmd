@@ -11,39 +11,87 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Patterns and Trends of Cannabis Use and Mental Health Among U.S. Adolescents(2021–2024)
 
-## Background and Rationale
+## 1. Background and Rationale
 
-Prevention of cannabis use among youth has increasingly become a public health priority, particularly in the context of evolving cannabis policies, expanded access to novel modes of administration, and a growing burden of mental health disorders among adolescents in the United States. Legalization of recreational cannabis in several U.S. jurisdictions has increased both accessibility and social visibility, contributing to greater normalization of use. Within this changing landscape, cannabis has become the most commonly used illicit substance and the third most frequently used psychoactive substance among adolescents, after alcohol and nicotine.
+Prevention of cannabis use among adolescents has become an increasingly important public health priority in the United States (Bhangu et al., 2025). This concern has grown alongside major shifts in cannabis policy, the expansion of new modes of consumption, and a parallel rise in mental health problems among young people (Nguyen et al., 2023; Hammond, et al., 2020). The legalization of recreational and medical cannabis in several U.S. jurisdictions, as well as the decriminalization of possession and use (Mattingly et al., 2024), has increased both access to cannabis and its visibility in everyday life, contributing to broader social acceptance and normalization of use (Farrelly et al., 2023; Lapham et al., 2023; Smart & Pacula, 2019). In 2022, data from the National Survey on Drug Use and Health (NSDUH) indicated that 61.9 million individuals reported cannabis use in the past year, while 42.3 million reported use in the past 30 days, reflecting a continued long-term upward trend (Mattingly et al., 2024; SAMHSA, 2023).Within this evolving context, cannabis has become the most commonly used illicit substance in the United States and the third most frequently used psychoactive substance among adolescents, after alcohol and nicotine (Ross, & Levy, 2023; Nguyen et al., 2023).
 
-Despite its widespread use and relatively low perceived risk, evidence indicates that cannabis is associated with adverse mental and physical health outcomes. Adolescents are especially vulnerable due to ongoing neurodevelopment and the central role of the endocannabinoid system in regulating neural organization, behavioral control, and maturation. Early exposure to exogenous cannabinoids may therefore have lasting consequences. According to the Substance Abuse and Mental Health Services Administration (SAMHSA), approximately 10% of marijuana users develop dependence, with this risk rising to 16–17% among those who begin use before age 18. Emerging modes of consumption, such as vaping high-potency concentrates or ingesting edibles, may further elevate these risks. 
+At the same time, perceptions of cannabis as a relatively low-risk substance, often reinforced by discussions of potential therapeutic benefits, stand in contrast to a growing body of evidence documenting its adverse health effects (Florimbio et al., 2024; Whiteley et al., 2021). Adolescents may be particularly vulnerable to these effects due to ongoing brain development and the central role of the endocannabinoid system in neural organization, behavioral regulation, and maturation (Scheyer et al., 2023; Hurd et al., 2019). Early exposure to exogenous cannabinoids may therefore confer long-term consequences, including cognitive impairment, emotional dysregulation, and increased risk of psychiatric comorbidity such as depression, anxiety disorders, and psychosis, as well as self-harm behaviors (Bhangu et al., 2025; Florimbio et al., 2024; Scheyer et al., 2023). Prior research indicates that adolescents with any history of cannabis use experience higher rates of lifetime and past-year major depressive disorder (MDD), MDD with severe role impairment, and past-year suicide attempts (all p < 0.001) (Gukasyan and Strain, 2020).
 
-Adolescent cannabis use has been consistently associated with a range of mental health problems, including depression, anxiety, psychosis, emotional dysregulation, and self-harm, though the directionality of these relationships remains complex and potentially bidirectional. Cannabis Use Disorder (CUD), as defined by the Diagnostic and Statistical Manual of Mental Disorders, Fifth Edition (DSM-5), requires the presence of at least two of eleven criteria within a 12-month period, encompassing impaired control (e.g., using larger amounts than intended, unsuccessful efforts to cut down, cravings), social impairments (e.g., failure to fulfill major roles, continued use despite interpersonal problems), risky use (e.g., use in physically hazardous situations or despite known problems), and pharmacological criteria including tolerance and withdrawal. Large-scale surveys such as the National Survey on Drug Use and Health (NSDUH) utilize DSM-based criteria to systematically assess CUD prevalence and patterns among U.S. adolescents, providing critical insight into population-level risks. 
+Beyond mental health outcomes, both acute and chronic cannabis use have been linked to impairments in memory, learning, attention, executive functioning, and motor coordination, as well as a greater likelihood of initiating other illicit substances (Queiroz et al., 2025; Camchong et al., 2017). According to the Substance Abuse and Mental Health Services Administration’s report, approximately 10% of individuals who use cannabis develop cannabis use disorder, with this proportion increasing to 16–17% among those who initiate use before the age of 18 (SAMHSA, 2024). Emerging research also points to broader neurobiological effects, including dysregulation of the hypothalamic–pituitary–adrenal axis and disruptions in sleep architecture, underscoring the complex and potentially enduring consequences of cannabis exposure during adolescence (Bhangu et al., 2025; Velzeboer et al., 2025; Cservenka et al., 2018). 
 
-Beyond psychiatric outcomes, both acute and chronic cannabis use has been linked to impairments in memory, learning, attention, motor skills, and executive functioning. Emerging evidence also points to dysregulation of the hypothalamic-pituitary-adrenal (HPA) axis: the TRAILS cohort study found that adolescents with lifetime cannabis exposure exhibited altered diurnal cortisol patterns, including lower morning and higher evening cortisol levels, particularly among early-onset users (ages 9–12). Chronic use has further been associated with disruptions in sleep architecture, highlighting the multifaceted neurobiological and behavioral consequences of adolescent cannabis exposure.
+Despite these concerns, important questions remain regarding the causal nature of the relationship between cannabis use and adverse health outcomes, as well as the directionality of these associations. These uncertainties are further heightened by the rapid emergence of high-potency products and alternative modes of consumption, such as vaping concentrates and ingesting edibles, which have become increasingly popular among adolescents in recent years (Lee et al., 2023; Schauer et al., 2020). Notably, vaping illicit cannabis products has been implicated in cases of e-cigarette or vaping product use–associated lung injury (EVALI), which resulted in 2,807 hospitalizations in the United States by 2019 (CDC, 2020).
 
-Given these uncertainties, updated research is essential to guide policy, public education, and evidence-based prevention programs. In this study, we use nationally representative survey data to examine trends in cannabis use among U.S. adolescents aged 12–17 years from 2021 to 2024, with a focus on sociodemographic factors, modes of use, and mental health correlates.
+In this context of changing policies, evolving patterns of use, and ongoing scientific debate, up-to-date and nationally representative evidence is essential to inform public policy, prevention efforts, and youth-focused health education. Accordingly, this study examines recent patterns and trends in cannabis use among U.S. adolescents aged 12–17 years from 2021 to 2024, with particular attention to sociodemographic differences, modes of consumption, and potential associations with mental health outcomes.
 
-## Objectives
+## 2.	Objectives
 
-1. To characterize the sociodemographic profile of adolescents reporting past-year cannabis use.
+### 2.1. To characterize the sociodemographic profile of adolescents reporting past-year cannabis use.
+### 2.2. To estimate the prevalence of different modes of cannabis administration (e.g., smoking, vaping, edibles, concentrates).
+### 2.3. To assess temporal trends in cannabis use between 2021 and 2024.
+### 2.4. To evaluate the association between cannabis use patterns and major depressive episodes.
 
-2. To estimate the prevalence of different modes of cannabis administration (e.g., smoking, vaping, edibles, concentrates).
-
-3. To assess temporal trends in cannabis use between 2021 and 2024.
-
-4. To evaluate the association between cannabis use patterns and major depressive episodes.
-
-## Expected Contributions
+## 3.	Expected Contributions
 
 This study provide an updated and detailed portrait of adolescent cannabis use in the United States, highlighting the intersection with mental health. By integrating sociodemographic and mental health factors, the findings contribute to a more nuanced understanding of adolescent cannabis use patterns and support evidence-based prevention and policy efforts.
 
+## 4.	Methods
 
-## Methods 
+### 4.1. Data source and study population
+
+This multi-year cross-sectional study used data from the 2021–2024 National Survey on Drug Use and Health (NSDUH), a nationally representative survey administered by the Substance Abuse and Mental Health Services Administration (SAMHSA). The NSDUH collects information on sociodemographic characteristics, mental health, substance use, and treatment utilization among noninstitutionalized U.S. civilians aged 12 years or older using a multistage, stratified probability sampling design across all states and Washington, DC. Beginning in late 2020, the NSDUH implemented multimodal data collection procedures, including in-person and web-based surveys, in response to disruptions caused by the COVID-19 pandemic (SAMHSA, 2023).
+
+The analytic sample was restricted to adolescents aged 12–17 years who completed the survey between 2021 and 2024 and had complete information on cannabis use, mental health indicators, and sociodemographic variables. The NSDUH applies standardized imputation procedures to address item-level missing data; therefore, the final analytic dataset contained no missing values on study variables. In total, our analysis included 45,618 adolescents, representing a weighted population of 103,611,766 individuals over the study period.
+
+### 4.2. Measures
+
+#### Cannabis use and Mental health outcomes
+
+Cannabis use was assessed via self-report. Past-year cannabis use was defined as any reported use of marijuana during the 12 months preceding the interview (yes/no), and current cannabis use was defined as use within the past 30 days (yes/no). Binary indicators of cannabis use were created to ensure consistency across analytic models and to validate exposure classification using multiple time-based definitions. Where applicable, additional cannabis-related measures were examined to characterize patterns of use and dependence-related symptoms. These included self-reported past-year marijuana craving or strong urge to use cannabis (yes/no). Measures capturing modes of cannabis consumption were also incorporated, including smoking, vaping, and consumption of edibles, when available in the survey year.
+
+Mental health and substance use disorder outcomes were assessed using NSDUH-provided recoded variables for adolescents based on DSM-5 criteria. Past-year major depressive episode (MDE) and substance use disorder (SUD) were operationalized using the variables YMDERSUD5ANY and YMDESUD5ANYO, introduced in the 2021 NSDUH First Findings Report and incorporating DSM-5 SUD estimates, including prescription drug use. The binary variable YMDERSUD5ANY identified adolescents with a past-year MDE, a past-year SUD, or both (yes/no). To characterize comorbidity patterns, the categorical variable YMDESUD5ANYO classified adolescents into four mutually exclusive groups: (1) SUD only, (2) MDE only, (3) both MDE and SUD, and (4) neither condition in the past year. Consistent with NSDUH coding conventions, adolescents aged 18 years or older were excluded from analyses using these variables. These recoded measures replace earlier NSDUH variables (YMDEORSUD5 and YMDESUD5ONL) and were selected to align with updated DSM-5 definitions and post-2020 NSDUH methodology.
+
+#### Sociodemographic characteristics
+
+Sociodemographic characteristics included age (12–13, 14–15, 16–17 years), sex (male, female), race and ethnicity (non-Hispanic White, non-Hispanic Black, American Indian/Alaska Native [AIAN], Native Hawaiian/Other Pacific Islander [NHPI], non-Hispanic Asian, non-Hispanic multiracial, Hispanic), total annual family income (<$10,000, $10,000–$19,999, $20,000–$29,999, $30,000–$39,999, $40,000–$49,999, $50,000–$74,999, ≥$75,000), health insurance status (insured vs uninsured), county type (large metropolitan, small metropolitan, nonmetropolitan), population density (≥1 million, <1 million, non-Core-Based Statistical Area [CBSA]), and household poverty status (living in poverty, up to 2× federal poverty threshold, >2× threshold).
+
+### 4.3. Statistical analysis
+
+Weighted prevalence of past-year cannabis use among U.S. adolescents was estimated for each survey year from 2021 to 2024, overall and stratified by sociodemographic characteristics, modes of use, and mental health status. Temporal trends were assessed by changes in weighted prevalence and 95% confidence interval overlap (two-sided, α < 0.05), and linear trends were evaluated using multivariable survey-weighted logistic regression with year as a continuous variable. Associations between cannabis use and mental health outcomes were examined using survey-weighted Rao–Scott χ² tests and multivariable logistic regression, adjusting for covariates. Separate models evaluated (1) whether past-year marijuana use was associated with MDE or SUD and (2) whether MDE, SUD, or both predicted past-year marijuana use, with adolescents with neither condition as the reference group. All analyses accounted for the NSDUH complex survey design, including stratification and clustering, and were conducted in R (version 4.4.3) using survey-specific procedures; and statistical significance defined as two-sided p < 0.05.
+
+### 5.	Results
+
+### 6.	References
+
+Bhangu GK, Singh A, Shah A, Malhi N. Cannabis use in adolescents. Del J Public Health. 2025;11(3):6-13. doi:10.32481/djph.2025.09.03
+Camchong J, Lim KO, Kumra S. Adverse effects of cannabis on adolescent brain development: a longitudinal study. Cereb Cortex. 2017;27(3):1922-1930. doi:10.1093/cercor/bhw015
+Centers for Disease Control and Prevention. States update number of hospitalized e-cigarette, or vaping, product use–associated lung injury (EVALI) cases and EVALI deaths. Published February 25, 2020. Accessed December 28, 2025. https://archive.cdc.gov/www_cdc_gov/media/releases/2020/s0225-EVALI-cases-deaths.html
+Cservenka A, Lahanas S, Dotson-Bossert J. Marijuana use and hypothalamic-pituitary-adrenal axis functioning in humans. Front Psychiatry. 2018;9:472. doi:10.3389/fpsyt.2018.00472
+Farrelly KN, Wardell JD, Marsden E, Scarfe ML, Najdzionek P, Turna J, MacKillop J. The impact of recreational cannabis legalization on cannabis use and associated outcomes: a systematic review. Subst Abuse. 2023;17:11782218231172054. doi:10.1177/11782218231172054
+Florimbio AR, Walton MA, Duval ER, Bauermeister JA, Young SD, McAfee J, Bonar EE. Direct and indirect effects of cannabis risk perceptions on cannabis use frequency. Addict Res Theory. 2024;32(1):68-73. doi:10.1080/16066359.2023.2221029
+Gukasyan N, Strain EC. Relationship between cannabis use frequency and major depressive disorder in adolescents: findings from the National Survey on Drug Use and Health 2012–2017. Drug Alcohol Depend. 2020;208:107867. doi:10.1016/j.drugalcdep.2020.107867
+Hammond CJ, Chaney A, Hendrickson B, Sharma P. Cannabis use among US adolescents in the era of marijuana legalization: a review of changing use patterns, comorbidity, and health correlates. Int Rev Psychiatry. 2020;32(3):221-234. doi:10.1080/09540261.2020.1713056
+Hurd YL, Manzoni OJ, Pletnikov MV, Lee FS, Bhattacharyya S, Melis M. Cannabis and the developing brain: insights into its long-lasting effects. J Neurosci. 2019;39(42):8250-8258. doi:10.1523/JNEUROSCI.1165-19.2019
+Lapham GT, Matson TE, Bobb JF, Luce C, Oliver MM, Hamilton LK, Bradley KA. Prevalence of cannabis use disorder and reasons for use among adults in a US state where recreational cannabis use is legal. JAMA Netw Open. 2023;6(8):e2328934. doi:10.1001/jamanetworkopen.2023.28934
+Lee J, Krishnan-Sarin S, Kong G. Social media use and cannabis vaping initiation among US youth. Drug Alcohol Depend. 2023;249:109949. doi:10.1016/j.drugalcdep.2023.109949
+Mattingly DT, Richardson MK, Hart JL. Prevalence of and trends in current cannabis use among US youth and adults, 2013–2022. Drug Alcohol Depend Rep. 2024;12:100253. doi:10.1016/j.dadr.2024.100253
+Nguyen N, Peyser ND, Olgin JE, Pletcher MJ, Beatty AL, Modrow MF, Carton TW, Khatib R, Djibo DA, Ling PM, Marcus GM. Associations between tobacco and cannabis use and anxiety and depression among adults in the United States: findings from the COVID-19 citizen science study. PLoS One. 2023;18(9):e0289058. doi:10.1371/journal.pone.0289058
+Queiroz APS, Pozzolo Pedro MO, Waisman Campos M, Torales J, Ventriglio A, Castaldelli-Maia JM. Cognitive effects of cannabis use: a comprehensive review across domains. Neurol Int. 2025;17(7):107. doi:10.3390/neurolint17070107
+Ross JA, Levy S. The impact of cannabis use on adolescent neurodevelopment and clinical outcomes amidst changing state policies. Clin Ther. 2023;45(6):535-540. doi:10.1016/j.clinthera.2023.03.009
+Schauer GL, Njai R, Grant-Lenzy AM. Modes of marijuana use—smoking, vaping, eating, and dabbing: results from the 2016 BRFSS in 12 states. Drug Alcohol Depend. 2020;209:107900. doi:10.1016/j.drugalcdep.2020.107900
+Scheyer AF, Laviolette SR, Pelissier AL, Manzoni OJ. Cannabis in adolescence: lasting cognitive alterations and underlying mechanisms. Cannabis Cannabinoid Res. 2023;8(1):12-23. doi:10.1089/can.2022.0183
+Smart R, Pacula RL. Early evidence of the impact of cannabis legalization on cannabis use, cannabis use disorder, and the use of other substances: findings from state policy evaluations. Am J Drug Alcohol Abuse. 2019;45(6):644-663. doi:10.1080/00952990.2019.1669626
+Substance Abuse and Mental Health Services Administration. Key substance use and mental health indicators in the United States: results from the 2022 National Survey on Drug Use and Health. Published 2023. Accessed December 28, 2025. https://www.samhsa.gov/data/report/2022-nsduh-annual-national-report
+Substance Abuse and Mental Health Services Administration. 2023 National Survey on Drug Use and Health public use file codebook. Accessed December 28, 2025. https://www.samhsa. gov/data/system/files/media-puf-file/nsduh-2023-ds0001-infocodebook_v2.pdf- 
+Substance Abuse and Mental Health Services Administration. Know the effects, risks, and side effects of marijuana. Published November 2024. Accessed December 28, 2025. https://www.samhsa.gov/marijuana
+Velzeboer R, Malas A, Wei S, Berger R, Parmar V, Lai WWK. Cannabis and sleep architecture: a systematic review and meta-analysis. Sleep Med Rev. 2025;84:102164. doi:10.1016/j.smrv.2025.102164
+Whiteley L, Haubrick KK, Arnold T, Craker L, Olsen E, Hershkowitz D, Brown LK. Motivators for cannabis use among young adults in outpatient psychiatric care: a qualitative study. J Drug Issues. 2021;51(3):590-604. doi:10.1177/00220426211002125
+
+
 
 
 ```{r}
 
-# NSDUH (2021-2023 + 2024) - YOUTH
+# NSDUH (2021-2023 + 2024) - YOUTH: 
 
 library(survey)
 library(svydiags)
