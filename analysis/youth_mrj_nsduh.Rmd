@@ -25,22 +25,21 @@ In this context of changing policies, evolving patterns of use, and ongoing scie
 
 ## 2.	Objectives
 
-### 2.1. To characterize the sociodemographic profile of adolescents reporting past-year cannabis use.
-### 2.2. To estimate the prevalence of different modes of cannabis administration (e.g., smoking, vaping, edibles, concentrates).
-### 2.3. To assess temporal trends in cannabis use between 2021 and 2024.
-### 2.4. To evaluate the association between cannabis use patterns and major depressive episodes.
+### 2.1. To characterize the sociodemographic profile of adolescents reporting past-year marijuana use.
+### 2.2. To estimate the prevalence of different modes of marijuana administration (e.g., smoking, vaping, edibles, concentrates).
+### 2.3. To assess temporal trends in use between 2021 and 2024.
+### 2.4. To evaluate the association between marijuana use patterns and major depressive episodes.
 
 ## 3.	Expected Contributions
 
-This study provide an updated and detailed portrait of adolescent cannabis use in the United States, highlighting the intersection with mental health. By integrating sociodemographic and mental health factors, the findings contribute to a more nuanced understanding of adolescent cannabis use patterns and support evidence-based prevention and policy efforts.
+This study provides an updated and detailed portrait of adolescent marijuana use in the United States, highlighting its intersection with mental health and contributing to a more nuanced understanding of recent patterns of adolescent use.
 
 ## 4.	Methods
 
 ### 4.1. Data source and study population
 
 This multi-year cross-sectional study used data from the 2021–2024 National Survey on Drug Use and Health (NSDUH), a nationally representative survey administered by the Substance Abuse and Mental Health Services Administration (SAMHSA). The NSDUH collects information on sociodemographic characteristics, mental health, substance use, and treatment utilization among noninstitutionalized U.S. civilians aged 12 years or older using a multistage, stratified probability sampling design across all states and Washington, DC. Beginning in late 2020, the NSDUH implemented multimodal data collection procedures, including in-person and web-based surveys, in response to disruptions caused by the COVID-19 pandemic (SAMHSA, 2023).
-
-The analytic sample was restricted to adolescents aged 12–17 years who completed the survey between 2021 and 2024 and had complete information on cannabis use, mental health indicators, and sociodemographic variables. The NSDUH applies standardized imputation procedures to address item-level missing data; therefore, the final analytic dataset contained no missing values on study variables. In total, our analysis included 45,618 adolescents, representing a weighted population of 103,611,766 individuals over the study period.
+The analytic sample was restricted to adolescents aged 12–17 years who completed the survey between 2021 and 2024 and had complete information on cannabis use, mental health indicators, and sociodemographic variables. The NSDUH applies standardized imputation procedures to address item-level missing data; therefore, the final analytic dataset contained no missing values on study variables. Analysis of these deidentified, publicly available data was considered exempt from institutional review board review per institutional and federal regulations. 
 
 ### 4.2. Measures
 
@@ -54,11 +53,28 @@ Mental health and substance use disorder outcomes were assessed using NSDUH-prov
 
 Sociodemographic characteristics included age (12–13, 14–15, 16–17 years), sex (male, female), race and ethnicity (non-Hispanic White, non-Hispanic Black, American Indian/Alaska Native [AIAN], Native Hawaiian/Other Pacific Islander [NHPI], non-Hispanic Asian, non-Hispanic multiracial, Hispanic), total annual family income (<$10,000, $10,000–$19,999, $20,000–$29,999, $30,000–$39,999, $40,000–$49,999, $50,000–$74,999, ≥$75,000), health insurance status (insured vs uninsured), county type (large metropolitan, small metropolitan, nonmetropolitan), population density (≥1 million, <1 million, non-Core-Based Statistical Area [CBSA]), and household poverty status (living in poverty, up to 2× federal poverty threshold, >2× threshold).
 
+
 ### 4.3. Statistical analysis
 
-Weighted prevalence of past-year cannabis use among U.S. adolescents was estimated for each survey year from 2021 to 2024, overall and stratified by sociodemographic characteristics, modes of use, and mental health status. Temporal trends were assessed by changes in weighted prevalence and 95% confidence interval overlap (two-sided, α < 0.05), and linear trends were evaluated using multivariable survey-weighted logistic regression with year as a continuous variable. Associations between cannabis use and mental health outcomes were examined using survey-weighted Rao–Scott χ² tests and multivariable logistic regression, adjusting for covariates. Separate models evaluated (1) whether past-year marijuana use was associated with MDE or SUD and (2) whether MDE, SUD, or both predicted past-year marijuana use, with adolescents with neither condition as the reference group. All analyses accounted for the NSDUH complex survey design, including stratification and clustering, and were conducted in R (version 4.4.3) using survey-specific procedures; and statistical significance defined as two-sided p < 0.05.
+Weighted prevalence of past-year cannabis use among U.S. adolescents was estimated for each survey year from 2021 to 2024, overall and stratified by sociodemographic characteristics, modes of use, and mental health status. Temporal trends were assessed by changes in weighted prevalence and 95% confidence interval overlap (two-sided, α < 0.05), and linear trends were evaluated using multivariable survey-weighted logistic regression with year as a continuous variable. Associations between cannabis use and mental health outcomes were examined using survey-weighted chi-square tests and multivariable logistic regression, adjusting for covariates. Separate models evaluated (1) whether past-year marijuana use was associated with MDE or SUD and (2) whether MDE, SUD, or both predicted past-year marijuana use, with adolescents with neither condition as the reference group. All analyses accounted for the NSDUH complex survey design, including stratification and clustering, and were conducted in R (version 4.4.3) using survey-specific procedures; and statistical significance defined as two-sided p < 0.05.
 
-### 5.	Results
+## 5.	Results
+
+### 5.1. Prevalence of past-year marijuana use 
+
+Among the 45,618 adolescents included in our analysis, representing a weighted population of 103,611,766 (SE, 1,409,989) individuals over the study period, 5,358 adolescents (approximately 11.7%) reported using marijuana in the past 12 months, and 2,961 adolescents (approximately 6.5%) reported use in the past 30 days. Weighted prevalence estimates of past-year cannabis use among U.S. adolescents remained relatively stable from 2021 to 2023, with prevalence of 10.8% (95% CI, 9.7–12.0%) in 2021, 11.4% (95% CI, 10.7–12.1%) in 2022, and 11.0% (95% CI, 10.2–11.8%) in 2023. In 2024, prevalence decreased to 10.1% (95% CI, 9.2–11.0%), as shown in Figure 1. In multivariable logistic regression models adjusted for survey design, compared with 2022, the adjusted odds of past-year cannabis use were slightly lower but not statistically significant in 2021 (AOR, 0.95; 95% CI, 0.82–1.09; p = 0.42) and 2023 (AOR, 0.96; 95% CI, 0.86–1.07; p = 0.43), whereas 2024 showed a statistically significant decrease (AOR, 0.87; 95% CI, 0.79–0.97; p = 0.01). Overall, these findings suggest a modest reduction in adolescent cannabis use in 2024, with no clear trend in the preceding years.
+
+### 5.2. Sociodemographic characteristics 
+
+Table 1 shows the weighted prevalence of past-year cannabis use among US adolescents across sociodemographic groups, by year. Overall, prevalence was higher among females than males, ranging from 54.8% (95% CI, 49.9–59.8) in 2021 to 54.5% (95% CI, 50.6–58.5) in 2024 for females, and 45.2% (95% CI, 40.2–50.1) to 45.5% (95% CI, 41.6–49.5) for males. Use increased with age, with adolescents aged 16–17 years reporting the highest prevalence across all years (66.8% [95% CI, 63.0–70.6] in 2021 and 65.3% [95% CI, 61.9–68.8] in 2024). Racial/ethnic differences were observed, with White adolescents reporting the highest prevalence, followed by Hispanic and Black adolescents, whereas Asian, AIAN, Multiracial and NHPI adolescents had lower prevalence estimates. Geographic patterns indicated higher use in large metropolitan areas compared with smaller areas. Prevalence also varied by family income and poverty status, with higher use among adolescents from households with ≥$75,000 annual income and those living more than twice above the federal poverty threshold. Differences across years within most subgroups were modest, with overlapping confidence intervals, indicating no clear temporal trends.
+
+In adjusted analyses among adolescents reporting past-year cannabis use, only race/ethnicity was significantly associated with marijuana use disorder. Hispanic adolescents had higher odds compared with White adolescents (adjusted OR 1.46, 95% CI, 1.12–1.89), while no other sociodemographic factors showed significant associations.
+
+### 5.3 Prevalence of different modes of marijuana use among past-year users
+
+
+
+
 
 ### 6.	References
 
@@ -134,28 +150,17 @@ nsduh_all <- bind_rows(nsduh_2123, nsduh_2024)
 vars_keep <- c(
   "YEAR","MRJYR","MJREC","YMDERSUD5ANY","YMDESUD5ANYO",
   "AGE3","IRSEX","NEWRACE2","COUTYP4","PDEN10","IRINSUR4","IRFAMIN3",
-  "POVERTY3","EDUSKPEST","UDMJSTRURGE","UDMJWANTBAD",
+  "POVERTY3","EDUSKPEST","PYUD5MRJ",
   "ANALWT2_C3","ANALWT2_C","VESTR_C","VEREP"
 )
 
 nsduh_all <- nsduh_all %>% select(any_of(vars_keep))
 
 missing_vals <- list(
-  MRJYR = c(85,91,94,97,98,99),
-  MJREC = c(85,91,94,97,98,99),
+  MJREC = c(85,94,97,98,99),
   YMDERSUD5ANY = c(85,94,97,98,99),
-  YMDESUD5ANYO = c(85,94,97,98,99),
-  AGE3 = c(94,97,98),
-  IRSEX = c(94,97,98),
-  NEWRACE2 = c(94,97,98),
-  COUTYP4 = c(94,97,98),
-  PDEN10 = c(94,97,98),
-  IRINSUR4 = c(94,97,98),
-  IRFAMIN3 = c(94,97,98),
-  POVERTY3 = c(94,97,98),
-  UDMJSTRURGE = c(85,94,97,98,99),
-  UDMJWANTBAD = c(85,94,97,98,99)
-)
+  YMDESUD5ANYO = c(85,94,97,98,99)
+  )
 
 nsduh_all <- replace_with_na(nsduh_all, missing_vals)
 
@@ -174,26 +179,20 @@ nsduh_all <- nsduh_all %>%
     insurance = IRINSUR4,
     family_income = IRFAMIN3,
     poverty = POVERTY3,
-    strong_urge_mj = UDMJSTRURGE,
-    mj_craving_past_year = UDMJWANTBAD
+    mrj_use_disorder = PYUD5MRJ
   )
+
 
 nsduh_all <- nsduh_all %>%
   mutate(
-    mj_past_year_num = ifelse(mj_recency %in% c(1,2,8,11,12), 1,
-                              ifelse(mj_recency %in% c(3,9,13), 0, NA)),
+    mj_past_year_num = ifelse(mj_past_year ==1,1,0),
     mj_past_month_num = ifelse(mj_recency %in% c(1,11), 1, 0),
     sud_or_mde_num = ifelse(sud_or_mde_raw == 1, 1, 0),
-    mde_num = ifelse(mde_sud_raw %in% c(1,2,3), 1, 0),
-    insured_num = ifelse(insurance == 1, 1, 0)
-  )
+    mrj_use_disorder_num = ifelse (mrj_use_disorder == 1,1,0) 
+)
 
 nsduh_all <- nsduh_all %>%
-  mutate(subpop = ifelse(
-      !is.na(age_cat) &
-      !is.na(sex),
-      1, 0)
-  )
+  mutate(subpop = ifelse(!is.na(age_cat) & !is.na(sex), 1, 0))
 
 nsduh_all <- nsduh_all %>%
   mutate(
@@ -206,17 +205,15 @@ nsduh_all <- nsduh_all %>%
       c("Large metro","Small metro","Nonmetro")),
     pop_density = factor(pop_density, 1:3,
       c("≥1M CBSA","<1M CBSA","Non-CBSA")),
-    insurance = factor(insurance, 1:2, c("Yes","No")),
-    insured_num = factor(insured_num, levels = c(1,0), labels = c("Yes","No")),
-    sud_or_mde_raw = factor(sud_or_mde_raw, levels = c(1,0), labels = c("Yes","No")),
+    insurance = factor(insurance, levels = c(1,2), labels = c("Yes","No")),
+    sud_or_mde_num = factor(sud_or_mde_num, levels = c(1,0), labels = c("Yes","No")),
     mj_past_month_num = factor(mj_past_month_num, levels = c(1,0), labels = c("Yes","No")),
     mj_past_year_num = factor(mj_past_year_num, levels = c(1,0), labels = c("Yes","No")),
+    mrj_use_disorder_num = factor (mrj_use_disorder_num, levels = c(1,0), labels = c("Yes","No")), 
     family_income = factor(family_income, 1:7,
       c("<$10k","$10–19k","$20–29k","$30–39k","$40–49k","$50–74k","≥$75k")),
     poverty = factor(poverty, 1:3,
       c("Living in Poverty", "Income Up to 2X Federal Poverty Threshold", "Income More Than 2X Federal Poverty Threshold")),
-    strong_urge_mj = factor(strong_urge_mj, 1:2, c("Yes","No")),
-    mj_craving_past_year = factor(mj_craving_past_year, 1:2, c("Yes","No")),
     mde_sud_raw = factor(mde_sud_raw, 1:4, 
                          c("SUD only", "MDE only", "SUD and MDE", "Neither"))
   )
@@ -236,10 +233,10 @@ var_label(nsduh_all) <- list(
   sud_or_mde_raw = "Presence of MDE or SUD (Past Year)",
   sud_or_mde_num = "Presence of MDE or SUD (Past Year)(binary)",
   mde_sud_raw = "Past-year MDE and SUD status (DSM-5)",
-  mde_num = "Past-year MDE and SUD status (DSM-5) (binary)",
-  strong_urge_mj = "Strong urge to use marijuana in the past 12 months",
-  mj_craving_past_year = "Wanted to use marijuana so badly in the past 12 months"
+  mrj_use_disorder_num = "Marijuana Use Disorder in the past 12 months"
 ) 
+
+## First object (adolescents aged between 12 to 17 year)
 
 nsduh_sp <- svydesign(
   id = ~VEREP,
@@ -249,25 +246,15 @@ nsduh_sp <- svydesign(
   nest = TRUE
 )
 
-nsduh_sp_prev <- subset(
-  nsduh_sp,
-  !is.na(mj_past_year_num) &
-  !is.na(age_cat)
-)
-
-nsduh_sp_analt <- subset(
-  nsduh_sp,
-  subpop == 1
-)
-
-dim(nsduh_sp_analt) 
-table(nsduh_all$subpop)
-
-
+dim(nsduh_sp)
 
 ```
 
+# Study Population 
+# Figure 1: Prevalence of Past-Year Cannabis Use Among U.S. Adolescents (2021-2024)
+
 ```{r}
+
 
 sample_counts <- nsduh_all %>%
   group_by(year) %>%
@@ -307,67 +294,107 @@ demographics_table %>%
     estimated_pop_fmt = "Est. US Adolescent Pop. (N)"
   ) 
 
-```
 
-## Including Plots and Tables
-
-
-```{r}
+total_pop <- svytotal(~one, design = nsduh_sp, na.rm = TRUE)
+total_pop
 
 prev_year <- svyby(
-  ~mj_past_year,
-  ~year,
-  design = nsduh_sp_analt,
-  FUN = svymean,
-  vartype = "ci",
-  na.rm = TRUE
-) %>%
+  ~mj_past_year_num, ~year, design = nsduh_sp,  FUN = svymean, vartype = "ci", na.rm = TRUE
+)
+
+prev_year <- prev_year %>%
   mutate(
-    prevalence = mj_past_year * 100,
-    ci_l = ci_l * 100,
-    ci_u = ci_u * 100
+    prevalence = mj_past_year_numYes * 100,  # se for factor
+    ci_l = ci_l.mj_past_year_numYes * 100,
+    ci_u = ci_u.mj_past_year_numYes * 100
   )
 
-ggplot(prev_year, aes(x = year, y = prevalence, group = 1)) +
-  geom_line(linewidth = 1) +
-  geom_point(size = 3) +
+prev_year
+
+#Cannabis users past year (2021-2024 N)
+nsduh_used_mj_year<- subset(nsduh_sp, mj_past_year_num == "Yes")
+n_unweighted <- sum(!is.na(nsduh_used_mj_year$variables$mj_past_year_num))
+n_unweighted
+
+#Cannabis users past month (2021-2024 N)
+nsduh_used_mj_month <- subset(nsduh_sp, mj_past_month_num == "Yes")
+n_unweighted_2 <- sum(!is.na(nsduh_used_mj_month$variables$mj_past_month_num))
+n_unweighted_2
+
+
+# Figure 1
+ggplot(prev_year, aes(x = year, y = prevalence)) +
+  geom_line(
+  group = 1,
+  linewidth = 0.6,
+  color = "black"
+)+
+  geom_point(size = 3, color = "black") +
   geom_errorbar(
     aes(ymin = ci_l, ymax = ci_u),
-    width = 0.15
+    width = 0.1,
+    linewidth = 0.6,
+    color = "black"
   ) +
   geom_text(
     aes(label = sprintf("%.1f%%", prevalence)),
     vjust = -3,
-    size = 4
+    size = 3.5,
+    color = "black"
   ) +
   scale_y_continuous(
-    limits = c(0, max(prev_year$ci_u) + 5),
+    limits = c(0, 20),
+    breaks = seq(0, 20, by = 5),
     labels = scales::percent_format(scale = 1)
   ) +
   labs(
-    title = "Prevalence of Past-Year Marijuana Use Among U.S. Adolescents",
-    subtitle = "NSDUH 2021–2024 (Weighted estimates, 95% CI)",
+    title = "Prevalence of Past-Year Cannabis Use Among U.S. Adolescents (2021-2024)",
+    subtitle = "Weighted estimates by survey year",
     x = "Survey Year",
-    y = "Percent (%)"
+    y = "Prevalence (%)",
+    caption = "Error bars indicate 95% confidence intervals."
   ) +
-  theme_minimal(base_size = 13)
+  theme_minimal(base_size = 13) +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.y = element_line(color = "grey85"),
+    axis.title = element_text(face = "bold"),
+    axis.text = element_text(color = "black"),
+    plot.title = element_text(face = "bold", hjust = 0),
+    plot.subtitle = element_text(hjust = 0)
+  )
 
 ```
 
 
+## Any difference in use between 2022 and 2024? 
+
 ```{r}
-nsduh_sp_analt <- update(
-  nsduh_sp_analt,
-  year = factor(year)
+
+# Past - year use:
+
+
+nsduh_sp <- update(
+  nsduh_sp,
+  year = factor(year, levels = c("2021", "2022", "2023", "2024"))
 )
-nsduh_sp_analt <- update(
-  nsduh_sp_analt,
-  year = relevel(year, ref = "2024")
+
+# Year of reference: 2022
+nsduh_sp <- update(
+  nsduh_sp,
+  year = relevel(year, ref = "2022")
 )
-levels(nsduh_sp_analt$variables$year)
+
+
+nsduh_sp <- update(
+  nsduh_sp,
+  mj_past_year_num = as.numeric(mj_past_year_num == "Yes")
+)
+
 model_year <- svyglm(
-  mj_past_year ~ year,
-  design = nsduh_sp_analt,
+  mj_past_year_num ~ year,
+  design = nsduh_sp,
   family = quasibinomial()
 )
 
@@ -376,8 +403,6 @@ year_results <- tidy(
   exponentiate = TRUE,
   conf.int = TRUE
 )
-
-year_results
 
 table_year <- year_results %>%
   filter(term != "(Intercept)") %>%
@@ -389,8 +414,9 @@ table_year <- year_results %>%
     p_value = round(p.value, 3)
   ) %>%
   select(Year, AOR, CI_low, CI_high, p_value)
+
 ref_row <- tibble(
-  Year = "2024 (REF)",
+  Year = "2022 (REF)",
   AOR = 1.00,
   CI_low = NA,
   CI_high = NA,
@@ -399,176 +425,19 @@ ref_row <- tibble(
 
 table_year <- bind_rows(ref_row, table_year)
 
-final_table <- table_year %>%
-  gt() %>%
-  cols_label(
-    Year = "Survey Year",
-    AOR = "AOR",
-    CI_low = "Lower 95% CI",
-    CI_high = "Upper 95% CI",
-    p_value = "p-value"
-  ) %>%
-  fmt_missing(
-    everything(),
-    missing_text = "—"
-  ) %>%
-  tab_style(
-    style = cell_text(weight = "bold"),
-    locations = cells_body(
-      columns = p_value,
-      rows = p_value < 0.05
-    )
-  ) %>%
-  tab_source_note(
-    source_note = "Reference category: 2024"
-  )
-
-final_table
-
-
+table_year
 
 ```
 
 
-
-``` {r}
-
-nsduh_sp_analt <- update(
-  nsduh_sp_analt,
-  year = factor(year)
-)
-
-nsduh_sp_analt <- update(
-  nsduh_sp_analt,
-  year = relevel(year, ref = "2024")
-)
-
-levels(nsduh_sp_analt$variables$year)
-
-model_year <- svyglm(
-  mj_past_year ~ year,
-  design = nsduh_sp_analt,
-  family = quasibinomial()
-)
-
-year_results <- tidy(
-  model_year,
-  exponentiate = TRUE,
-  conf.int = TRUE
-)
-
-year_results
-
-sig_info <- year_results %>%
-  filter(term != "(Intercept)") %>%
-  mutate(
-    year = gsub("year", "", term),
-    sig = p.value < 0.05,
-    label = ifelse(
-      sig,
-      paste0(
-        "AOR=", round(estimate, 2),
-        "\n p=", format.pval(p.value, digits = 2)
-      ),
-      NA_character_
-    )
-  ) %>%
-  select(year, sig, label)
-
-prev_year <- svyby(
-  ~mj_past_year,
-  ~year,
-  design = nsduh_sp_analt,
-  FUN = svymean,
-  vartype = "ci",
-  na.rm = TRUE
-) %>%
-  as.data.frame() %>% 
-  mutate(
-    year = as.character(year),
-    prevalence = mj_past_year * 100,
-    ci_l = ci_l * 100,
-    ci_u = ci_u * 100
-  ) %>%
-  left_join(sig_info, by = "year")
-
-
-y_bracket <- max(prev_year$ci_u, na.rm = TRUE) + 6
-y_text    <- y_bracket + 3
-
-bracket_df <- prev_year %>%
-  filter(sig & year != "2024") %>%
-  mutate(
-    x_start = as.numeric(factor(year, levels = sort(unique(prev_year$year)))),
-    x_end   = as.numeric(factor("2024", levels = sort(unique(prev_year$year))))
-  )
-
-ggplot(prev_year, aes(x = year, y = prevalence, group = 1)) +
-  
-  geom_line(linewidth = 1) +
-  geom_point(size = 3) +
-  
-  geom_errorbar(
-    aes(ymin = ci_l, ymax = ci_u),
-    width = 0.15
-  ) +
-
-  geom_text(
-    aes(label = sprintf("%.1f%%", prevalence)),
-    vjust = -3,
-    size = 4
-  ) +
-  
-  geom_text(
-    aes(label = label),
-    nudge_y = 9,  
-    size = 3.8,
-    lineheight = 0.9,
-    na.rm = TRUE
-  ) +
-  
-  geom_segment(
-    data = bracket_df,
-    aes(x = x_start, xend = x_end, y = y_bracket, yend = y_bracket),
-    inherit.aes = FALSE,
-    linewidth = 0.8
-  ) +
-  
-  geom_segment(
-    data = bracket_df,
-    aes(x = x_start, xend = x_start, y = y_bracket - 0.7, yend = y_bracket),
-    inherit.aes = FALSE,
-    linewidth = 0.8
-  ) +
-  
-  geom_segment(
-    data = bracket_df,
-    aes(x = x_end, xend = x_end, y = y_bracket - 0.7, yend = y_bracket),
-    inherit.aes = FALSE,
-    linewidth = 0.8
-  ) +
-  
-  scale_y_continuous(
-    limits = c(0, y_bracket + 5),
-    labels = scales::percent_format(scale = 1)
-  ) +
-  
-  labs(
-    title = "Prevalence of Past-Year Marijuana Use Among U.S. Adolescents",
-    subtitle = "NSDUH 2021–2024 (Weighted estimates, 95% CI)",
-    caption = "Year of reference: 2024.",
-    x = "Survey Year",
-    y = "Percent (%)"
-  ) +
-  
-  theme_minimal(base_size = 13)
-
-``` 
-
-Weighted prevalence of current cannabis use by sociodemographic characteristics among US youth, 2021–2024.
+# Supplem. : Study population sociodemographic characteristics per year (2021–2024)
 
 ```{r}
 
+nsduh_sp <- update(
+  nsduh_sp,
+  year = relevel(year, ref = "2021")
+) 
 
 covariates_labels <- c(
   sex = "Sex",
@@ -579,10 +448,8 @@ covariates_labels <- c(
   insurance = "Health insurance",
   family_income = "Family income",
   poverty = "Poverty status",
-  mj_past_month_num = "Marijuana use in the past 30 days (binary)",
-  strong_urge_mj = "Urge to use marijuana",
-  mj_craving_past_year = " High urge to use marijuana",
-  sud_or_mde_raw = "Past-year MDE or SUD",
+  mj_past_month_num = "Marijuana use in the past 30 days",
+  mrj_use_disorder_num = "Marijuana Use Disorder in the past 12 months",
   mde_sud_raw = "Past-year MDE and SUD Status (DSM-5)"
   
 )
@@ -590,7 +457,7 @@ covariates_labels <- c(
 get_distribution <- function(var_name, label_var) {
   tryCatch({
 
-    var_data <- nsduh_sp_prev$variables[[var_name]]
+    var_data <- nsduh_sp$variables[[var_name]]
 
     if (length(unique(na.omit(var_data))) < 2) {
       return(NULL)
@@ -599,7 +466,7 @@ get_distribution <- function(var_name, label_var) {
     res <- svyby(
       as.formula(paste0("~", var_name)),
       by = ~year,
-      design = nsduh_sp_prev,
+      design = nsduh_sp,
       FUN = svymean,
       vartype = "ci",
       na.rm = TRUE
@@ -646,7 +513,7 @@ dist_data_wide <- dist_data_long %>%
 gt_table_profile <- dist_data_wide %>%
   gt(groupname_col = "variable_group", rowname_col = "level_label") %>%
   tab_header(
-    title = "Weighted prevalence of current cannabis use by sociodemographic characteristics among US youth, 2021–2024",
+    title = " Population sociodemographic characteristics (2021–2024)",
     subtitle = "NSDUH 2021–2024, Weighted Prevalence (95% CI)"
   ) %>%
   cols_align(align = "center", columns = everything()) %>%
@@ -661,6 +528,129 @@ gt_table_profile
 ```
 
 
+# Table 1: Sociodemographic characteristics of US adolescents with past-year cannabis use by year (Weighted prevalence), 2021–2024
+
+```{r}
+
+adolescents_use <- subset(nsduh_sp, mj_past_year_num == "Yes")
+
+get_distribution <- function(var_name, label_var, design_subset) {
+  tryCatch({
+
+    var_data <- design_subset$variables[[var_name]]
+
+    if (length(unique(na.omit(var_data))) < 2) {
+      return(NULL)
+    }
+
+    res <- svyby(
+      as.formula(paste0("~", var_name)),
+      by = ~year,
+      design = design_subset,
+      FUN = svymean,
+      vartype = "ci",
+      na.rm = TRUE
+    )
+
+    res_formatted <- res %>%
+      pivot_longer(-year, names_to = "col_name", values_to = "value") %>%
+      mutate(
+        stat_type = case_when(
+          grepl("^ci_l", col_name) ~ "ci_l",
+          grepl("^ci_u", col_name) ~ "ci_u",
+          TRUE ~ "mean"
+        ),
+        level_label = col_name %>%
+          gsub("^ci_l\\.|^ci_u\\.", "", .) %>%
+          gsub(paste0("^", var_name), "", .)
+      ) %>%
+      select(year, level_label, stat_type, value) %>%
+      pivot_wider(names_from = stat_type, values_from = value) %>%
+      mutate(
+        result_formatted = sprintf(
+          "%.2f (%.2f, %.2f)", mean * 100, ci_l * 100, ci_u * 100
+        ),
+        variable_group = label_var
+      )
+
+    res_formatted
+
+  }, error = function(e) {
+    message("ERRO em ", var_name, ": ", e$message)
+    NULL
+  })
+}
+
+# Lista apenas das características sociodemográficas
+sociodemographic_labels <- covariates_labels[c("sex", "age_cat", "race", 
+                                                "county_type", "pop_density",
+                                                "insurance", "family_income",
+                                                "poverty")]
+
+dist_data_long <- map_dfr(
+  names(sociodemographic_labels),
+  ~ get_distribution(.x, sociodemographic_labels[.x], adolescents_use)
+)
+
+dist_data_wide <- dist_data_long %>%
+  select(variable_group, level_label, year, result_formatted) %>%
+  pivot_wider(names_from = year, values_from = result_formatted)
+
+gt_table_profile <- dist_data_wide %>%
+  gt(groupname_col = "variable_group", rowname_col = "level_label") %>%
+  tab_header(
+    title = "Weighted prevalence of past-year cannabis use by sociodemographic characteristics among US adolescents, 2021–2024",
+    subtitle = "NSDUH 2021–2024, Weighted Prevalence (95% CI)"
+  ) %>%
+  cols_align(align = "center", columns = everything()) %>%
+  cols_align(align = "left", columns = stub()) %>%
+  tab_options(
+    row_group.font.weight = "bold",
+    table.font.size = 12
+  )
+
+gt_table_profile
+
+```
+
+
+# Among adolescents who reported past-year cannabis use, what was the prevalence of marijuana use disorder, and which sociodemographic factors were independently associated with increased risk?
+
+```{r}
+
+
+nsduh_pooled <- nsduh_all  
+nsduh_pooled$weight_pooled <- nsduh_pooled$ANALWT2_C / 4
+
+nsduh_design <- svydesign(
+  id = ~VEREP,
+  strata = ~VESTR_C,
+  weights = ~weight_pooled,
+  data = nsduh_pooled,
+  nest = TRUE
+)
+
+nsduh_design <- update(nsduh_design, mrj_use_disorder_bin = ifelse(mrj_use_disorder == 1, 1, 0))
+nsduh_design <- update(nsduh_design, mj_past_year_bin = ifelse(mj_past_year_num == "Yes", 1, 0))
+
+adolescents_users <- subset(nsduh_design, mj_past_year_bin == 1 & !is.na(mrj_use_disorder_bin))
+
+# Prevalence
+svyby(~mrj_use_disorder_bin, ~year, adolescents_users, svymean, na.rm = TRUE)
+
+model_adj <- svyglm(
+  mrj_use_disorder_bin ~ age_cat + sex + race + family_income + year,
+  design = adolescents_users,
+  family = quasibinomial()
+)
+summary(model_adj)
+
+exp(cbind(OR = coef(model_adj), confint(model_adj)))
+
+```
+
+# Prevalence of different modes of marijuana use among past-year users
+
 ```{r}
 
 nsduh_2224 <- bind_rows(
@@ -669,7 +659,7 @@ nsduh_2224 <- bind_rows(
 )
 
 vars_keep_subset <- c(
-  "YEAR","MRJYR","MJREC","AGE3","IRSEX","MJYRSMOKE","MJYRVAPE","MJYRDAB",
+  "YEAR","MRJYR","MJREC","AGE3","IRSEX","PYUD5MRJ","MJYRSMOKE","MJYRVAPE","MJYRDAB",
   "MJYREAT","MJYRMOUTH","MJYRSKIN","MJYRPILL","MJYROTHER",
   "ANALWT2_C3","ANALWT2_C","VESTR_C","VEREP"
 )
@@ -677,9 +667,7 @@ vars_keep_subset <- c(
 nsduh_2224 <- nsduh_2224 %>% select(any_of(vars_keep_subset))
 
 missing_vals <- list(
-  MRJYR = c(85,91,94,97,98,99),
-  MJREC = c(85,91,94,97,98,99),
-  AGE3 = c(94,97,98),
+  MJREC = c(85,94,97,98,99),
   IRSEX = c(94,97,98),
   MJYRSMOKE = c(91,93,94,97,98), 
   MJYRVAPE = c(91,93,94,97,98), 
