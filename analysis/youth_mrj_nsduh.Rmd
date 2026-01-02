@@ -39,20 +39,20 @@ This study provides an updated and detailed portrait of adolescent marijuana use
 ### 4.1. Data source and study population
 
 This multi-year cross-sectional study used data from the 2021–2024 National Survey on Drug Use and Health (NSDUH), a nationally representative survey administered by the Substance Abuse and Mental Health Services Administration (SAMHSA). The NSDUH collects information on sociodemographic characteristics, mental health, substance use, and treatment utilization among noninstitutionalized U.S. civilians aged 12 years or older using a multistage, stratified probability sampling design across all states and Washington, DC. Beginning in late 2020, the NSDUH implemented multimodal data collection procedures, including in-person and web-based surveys, in response to disruptions caused by the COVID-19 pandemic (SAMHSA, 2023).
+
 The analytic sample was restricted to adolescents aged 12–17 years who completed the survey between 2021 and 2024 and had complete information on cannabis use, mental health indicators, and sociodemographic variables. The NSDUH applies standardized imputation procedures to address item-level missing data; therefore, the final analytic dataset contained no missing values on study variables. Analysis of these deidentified, publicly available data was considered exempt from institutional review board review per institutional and federal regulations. 
 
 ### 4.2. Measures
 
 #### Cannabis use and Mental health outcomes
 
-Cannabis use was assessed via self-report. Past-year cannabis use was defined as any reported use of marijuana during the 12 months preceding the interview (yes/no), and current cannabis use was defined as use within the past 30 days (yes/no). Binary indicators of cannabis use were created to ensure consistency across analytic models and to validate exposure classification using multiple time-based definitions. Where applicable, additional cannabis-related measures were examined to characterize patterns of use and dependence-related symptoms. These included self-reported past-year marijuana craving or strong urge to use cannabis (yes/no). Measures capturing modes of cannabis consumption were also incorporated, including smoking, vaping, and consumption of edibles, when available in the survey year.
+Cannabis use was assessed via self-report. Past-year cannabis use was defined as any reported use of marijuana during the 12 months preceding the interview (yes/no), and current cannabis use was defined as use within the past 30 days (yes/no). Binary indicators of cannabis use were created to ensure consistency across analytic models and to validate exposure classification using multiple time-based definitions. Beginning in 2021, the NSDUH introduced questions on marijuana vaping within an “emerging issues” section of the questionnaire. The standardized questions assessing multiple modes of marijuana use were implemented consistently starting in 2022. Therefore, analyses of prevalence and mode-specific patterns of marijuana use in the present study were restricted to survey years 2022–2024 to ensure comparability across years. 
 
 Mental health and substance use disorder outcomes were assessed using NSDUH-provided recoded variables for adolescents based on DSM-5 criteria. Past-year major depressive episode (MDE) and substance use disorder (SUD) were operationalized using the variables YMDERSUD5ANY and YMDESUD5ANYO, introduced in the 2021 NSDUH First Findings Report and incorporating DSM-5 SUD estimates, including prescription drug use. The binary variable YMDERSUD5ANY identified adolescents with a past-year MDE, a past-year SUD, or both (yes/no). To characterize comorbidity patterns, the categorical variable YMDESUD5ANYO classified adolescents into four mutually exclusive groups: (1) SUD only, (2) MDE only, (3) both MDE and SUD, and (4) neither condition in the past year. Consistent with NSDUH coding conventions, adolescents aged 18 years or older were excluded from analyses using these variables. These recoded measures replace earlier NSDUH variables (YMDEORSUD5 and YMDESUD5ONL) and were selected to align with updated DSM-5 definitions and post-2020 NSDUH methodology.
 
 #### Sociodemographic characteristics
 
 Sociodemographic characteristics included age (12–13, 14–15, 16–17 years), sex (male, female), race and ethnicity (non-Hispanic White, non-Hispanic Black, American Indian/Alaska Native [AIAN], Native Hawaiian/Other Pacific Islander [NHPI], non-Hispanic Asian, non-Hispanic multiracial, Hispanic), total annual family income (<$10,000, $10,000–$19,999, $20,000–$29,999, $30,000–$39,999, $40,000–$49,999, $50,000–$74,999, ≥$75,000), health insurance status (insured vs uninsured), county type (large metropolitan, small metropolitan, nonmetropolitan), population density (≥1 million, <1 million, non-Core-Based Statistical Area [CBSA]), and household poverty status (living in poverty, up to 2× federal poverty threshold, >2× threshold).
-
 
 ### 4.3. Statistical analysis
 
@@ -72,6 +72,9 @@ In adjusted analyses among adolescents reporting past-year cannabis use, only ra
 
 ### 5.3 Prevalence of different modes of marijuana use among past-year users
 
+Considering different modes of marijuana use, smoking remained the most prevalent method among adolescents across the study period, with prevalence estimates of 76.7% (95% CI, 72.4%–80.9%) in 2022, 79.6% (95% CI, 75.9%–83.2%) in 2023, and 75.4% (95% CI, 71.3%–79.4%) in 2024 (Figure 2). Vaping was the second most common mode of use and demonstrated a significant increasing temporal trend (AOR per year, 1.72; 95% CI, 1.34–2.20; p < .001), with prevalence rising from 60.3% (95% CI, 56.0%–64.6%) in 2022 to 64.8% (95% CI, 60.2%–69.3%) in 2023, and reaching 72.3% (95% CI, 69.0%–75.6%) in 2024.
+
+In contrast, dabbing (waxes or concentrates) showed a decreasing trend over time (AOR per year, 0.70; 95% CI, 0.50–0.99; p = .044), consistent with declining prevalence estimates across survey years. No statistically significant temporal trends were observed for the remaining modes of marijuana use, with less commonly reported methods including oral products (drops or sprays), with prevalences below 3% in all years; topical products, which declined from 7.5% (95% CI, 5.1%–10.0%) in 2022 to 4.4% (95% CI, 2.5%–6.3%) in 2024; and pills and other methods, each consistently reported by fewer than 5% of adolescents.
 
 
 
@@ -157,7 +160,7 @@ vars_keep <- c(
 nsduh_all <- nsduh_all %>% select(any_of(vars_keep))
 
 missing_vals <- list(
-  MJREC = c(85,94,97,98,99),
+  MJREC = c(91,97,98),
   YMDERSUD5ANY = c(85,94,97,98,99),
   YMDESUD5ANYO = c(85,94,97,98,99)
   )
@@ -430,7 +433,7 @@ table_year
 ```
 
 
-# Supplem. : Study population sociodemographic characteristics per year (2021–2024)
+# Supplem. : Sociodemographic Characteristics of the Study Population by Year (2021–2024)
 
 ```{r}
 
@@ -532,12 +535,13 @@ gt_table_profile
 
 ```{r}
 
-adolescents_use <- subset(nsduh_sp, mj_past_year_num == "Yes")
+
+adolescents_use_year <- subset(nsduh_sp, mj_past_year_num == 1)
 
 get_distribution <- function(var_name, label_var, design_subset) {
   tryCatch({
 
-    var_data <- design_subset$variables[[var_name]]
+    var_data <- adolescents_use_year$variables[[var_name]]
 
     if (length(unique(na.omit(var_data))) < 2) {
       return(NULL)
@@ -546,7 +550,7 @@ get_distribution <- function(var_name, label_var, design_subset) {
     res <- svyby(
       as.formula(paste0("~", var_name)),
       by = ~year,
-      design = design_subset,
+      design = adolescents_use_year,
       FUN = svymean,
       vartype = "ci",
       na.rm = TRUE
@@ -589,7 +593,7 @@ sociodemographic_labels <- covariates_labels[c("sex", "age_cat", "race",
 
 dist_data_long <- map_dfr(
   names(sociodemographic_labels),
-  ~ get_distribution(.x, sociodemographic_labels[.x], adolescents_use)
+  ~ get_distribution(.x, sociodemographic_labels[.x], adolescents_use_year)
 )
 
 dist_data_wide <- dist_data_long %>%
@@ -649,7 +653,8 @@ exp(cbind(OR = coef(model_adj), confint(model_adj)))
 
 ```
 
-# Prevalence of different modes of marijuana use among past-year users
+# Fig 2. Prevalence of different modes of marijuana use among past-year users (2022-2024)
+# Were there significant year-to-year trends in marijuana use by mode of administration among adolescents? 
 
 ```{r}
 
@@ -667,8 +672,6 @@ vars_keep_subset <- c(
 nsduh_2224 <- nsduh_2224 %>% select(any_of(vars_keep_subset))
 
 missing_vals <- list(
-  MJREC = c(85,94,97,98,99),
-  IRSEX = c(94,97,98),
   MJYRSMOKE = c(91,93,94,97,98), 
   MJYRVAPE = c(91,93,94,97,98), 
   MJYRDAB = c(91,93,94,97,98), 
@@ -681,23 +684,10 @@ missing_vals <- list(
 
 nsduh_2224 <- replace_with_na(nsduh_2224, missing_vals)
 
-bin_vars <- list(
-  mj_past_year_bin = c(MJREC = c(1,2,8,11,12), MJREC0 = c(3,9,13)),
-  mj_smoke_bin  = c(1,3,5),
-  mj_vape_bin   = c(1,3,5),
-  mj_dab_bin    = c(1,3,5),
-  mj_eat_bin    = c(1,3,5),
-  mj_mouth_bin  = c(1,3,5),
-  mj_skin_bin   = c(1,3,5),
-  mj_pill_bin   = c(1,5),
-  mj_other_bin  = c(1,5)
-)
-
 nsduh_2224 <- nsduh_2224 %>%
   mutate(
-    mj_past_year_bin = case_when(MJREC %in% c(1,2,8,11,12) ~ 1,
-                                 MJREC %in% c(3,9,13) ~ 0,
-                                 TRUE ~ NA_real_),
+    mj_past_year_bin = ifelse(MRJYR %in% c(1), 1,
+                           ifelse(MRJYR %in% c(0), 0, NA)),
     mj_smoke_bin  = ifelse(MJYRSMOKE %in% c(1,3,5), 1,
                            ifelse(MJYRSMOKE %in% c(2), 0, NA)),
     mj_vape_bin   = ifelse(MJYRVAPE %in% c(1,3,5), 1,
@@ -747,16 +737,11 @@ nsduh_sub <- svydesign(
   nest = TRUE
 )
 
-nsduh_sub_analt <- subset(
-  nsduh_sub,
-  !is.na(AGE3) & !is.na(IRSEX) & mj_past_year_bin == "Yes"
-)
-
 run_trend_adj <- function(var, design_obj) {
-  f <- as.formula(paste0("I(", var, " == 'Yes') ~ YEAR + AGE3 + IRSEX"))
+  f <- as.formula(paste0("I(", var, " == 'Yes') ~ YEAR"))
   mod <- svyglm(f, design = design_obj, family = quasibinomial())
   broom::tidy(mod, exponentiate = TRUE, conf.int = TRUE) %>%
-    filter(term == "YEAR2024") %>%
+    filter(grepl("YEAR", term)) %>%
     mutate(Method = var)
 }
 
@@ -777,7 +762,7 @@ format_p <- function(p){
 
 vars_adm <- names(method_labels)
 
-trend_adj_results <- purrr::map_dfr(vars_adm, run_trend_adj, design_obj = nsduh_sub_analt)
+trend_adj_results <- purrr::map_dfr(vars_adm, run_trend_adj, design_obj = nsduh_sub)
 
 trend_adj_table <- trend_adj_results %>%
   transmute(
@@ -799,7 +784,7 @@ for(i in seq_along(vars_adm)){
   
   form <- as.formula(paste0("~", var_name))
   
-  tab <- svyby(form, ~YEAR, design = nsduh_sub_analt, svymean, vartype = "ci", na.rm = TRUE)
+  tab <- svyby(form, ~YEAR, design = nsduh_sub, svymean, vartype = "ci", na.rm = TRUE)
   
   col_est <- paste0(var_name,"Yes")
   col_cil <- paste0("ci_l.", var_name,"Yes")
@@ -818,6 +803,8 @@ for(i in seq_along(vars_adm)){
 
 df_plot <- bind_rows(results_list)
 
+
+print(df_plot)
 
 ggplot(df_plot, aes(x = YEAR, y = prevalence, color = Method, group = Method)) +
   geom_line(linewidth = 1) +
@@ -859,70 +846,24 @@ ggplot(df_plot, aes(x = YEAR, y = reorder(Method, prevalence), fill = prevalence
 
 ```
 
+# Were there differences in the risk of past-year vaping among adolescents according to sex and age? 
+# >>>>>>  NO
 
 ```{r}
 
-design_2224 <- subset(
-  nsduh_sub_analt,
-  YEAR %in% c("2022", "2024") &
-  !is.na(IRSEX),
-  !is.na(AGE3)
-)
-
-svyglm(
-  I(mj_vape_bin == "Yes") ~ YEAR + AGE3 + IRSEX,
-  design = design_2224,
+vape_model <- svyglm(
+  I(mj_vape_bin == "Yes") ~ IRSEX + AGE3,
+  design = nsduh_sub,     
   family = quasibinomial()
 )
-run_trend_adj <- function(var, design_obj) {
-  
-  f <- as.formula(
-    paste0("I(", var, " == 'Yes') ~ YEAR + AGE3 + IRSEX")
-  )
-  
-  mod <- svyglm(
-    f,
-    design = design_obj,
-    family = quasibinomial()
-  )
-  
-  broom::tidy(mod, exponentiate = TRUE, conf.int = TRUE) %>%
-    filter(term == "YEAR2024") %>%
-    mutate(Method = var)
-}
 
-method_labels <- c(
-  mj_smoke_bin = "Smoking",
-  mj_vape_bin  = "Vaping",
-  mj_dab_bin   = "Dabbing (waxes/concentrates)",
-  mj_eat_bin   = "Edibles (food/drink)",
-  mj_mouth_bin = "Oral (Drops/Sprays)",
-  mj_skin_bin  = "Topical (skin)",
-  mj_pill_bin  = "Pills",
-  mj_other_bin = "Other" 
-)
+vape_risk <- broom::tidy(vape_model, exponentiate = TRUE, conf.int = TRUE)
+vape_risk
 
-format_p <- function(p){
-  ifelse(p < 0.001, "<0.001", round(p, 3))
-}
 
-trend_adj_results <- purrr::map_dfr(
-  vars_adm,
-  run_trend_adj,
-  design_obj = design_2224
-)
-trend_adj_table <- trend_adj_results %>%
-  transmute(
-    Method  = method_labels [Method],   
-    OR      = round(estimate, 2),
-    CI      = paste0("(", round(conf.low, 2), "–", round(conf.high, 2), ")"),
-    p_value = format_p(p.value)
-  )
-
-trend_adj_table
 ```
 
-
+# Association between sociodemographic characteristics and current cannabis use among U.S. youth
 
 ```{r}
 
