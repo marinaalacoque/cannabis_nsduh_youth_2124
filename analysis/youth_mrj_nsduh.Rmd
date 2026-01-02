@@ -68,7 +68,7 @@ Among the 45,618 adolescents included in our analysis, representing a weighted p
 
 Table 1 shows the weighted prevalence of past-year cannabis use among US adolescents across sociodemographic groups, by year. Overall, prevalence was higher among females than males, ranging from 54.8% (95% CI, 49.9–59.8) in 2021 to 54.5% (95% CI, 50.6–58.5) in 2024 for females, and 45.2% (95% CI, 40.2–50.1) to 45.5% (95% CI, 41.6–49.5) for males. Use increased with age, with adolescents aged 16–17 years reporting the highest prevalence across all years (66.8% [95% CI, 63.0–70.6] in 2021 and 65.3% [95% CI, 61.9–68.8] in 2024). Racial/ethnic differences were observed, with White adolescents reporting the highest prevalence, followed by Hispanic and Black adolescents, whereas Asian, AIAN, Multiracial and NHPI adolescents had lower prevalence estimates. Geographic patterns indicated higher use in large metropolitan areas compared with smaller areas. Prevalence also varied by family income and poverty status, with higher use among adolescents from households with ≥$75,000 annual income and those living more than twice above the federal poverty threshold. Differences across years within most subgroups were modest, with overlapping confidence intervals, indicating no clear temporal trends.
 
-In adjusted analyses among adolescents reporting past-year cannabis use, only race/ethnicity was significantly associated with marijuana use disorder. Hispanic adolescents had higher odds compared with White adolescents (adjusted OR 1.46, 95% CI, 1.12–1.89), while no other sociodemographic factors showed significant associations.
+In multivariable-adjusted analyses, older adolescents and females had consistently higher odds of past-year cannabis use (p < 0.001). Elevated odds were also observed among youth from middle-income households ($40,000–$49,999 and $50,000–$74,999), adolescents residing in small metropolitan areas, and American Indian/Alaska Native and multiracial adolescents. In contrast, adolescents living in nonmetropolitan areas and Asian adolescents had significantly lower odds of use (all p < 0.001). Hispanic adolescents had slightly lower odds of current cannabis use but were 46% more likely to report marijuana use disorder compared with non-Hispanic White adolescents (AOR, 1.46; 95% CI, 1.12–1.89). 
 
 ### 5.3 Prevalence of different modes of marijuana use among past-year users
 
@@ -76,6 +76,11 @@ Considering different modes of marijuana use, smoking remained the most prevalen
 
 In contrast, dabbing (waxes or concentrates) showed a decreasing trend over time (AOR per year, 0.70; 95% CI, 0.50–0.99; p = .044), consistent with declining prevalence estimates across survey years. No statistically significant temporal trends were observed for the remaining modes of marijuana use, with less commonly reported methods including oral products (drops or sprays), with prevalences below 3% in all years; topical products, which declined from 7.5% (95% CI, 5.1%–10.0%) in 2022 to 4.4% (95% CI, 2.5%–6.3%) in 2024; and pills and other methods, each consistently reported by fewer than 5% of adolescents.
 
+# 5.4. Past-year marijuana use, and Major Depressive Episode/Substance Use Disorder
+
+In this analysis of adolescents, older age, female sex, and past-year marijuana use were significantly associated with higher odds of experiencing a MDE or SUD. Adolescents aged 14–15 had an AOR of 1.60 (95% CI, 1.46–1.76), and those aged 16–17 had an AOR of 1.79 (95% CI, 1.59–2.01), compared with 12–13-year-olds. Females demonstrated nearly threefold higher odds than males (AOR, 2.86; 95% CI, 2.61–3.13). Family income exhibited limited associations, with only adolescents from households earning $50–74k showing a modestly elevated risk (AOR, 1.13; 95% CI, 1.01–1.26). County type was not significantly associated with the outcome. Regarding race and ethnicity, Black (AOR, 0.71; 95% CI, 0.63–0.80), Asian (AOR, 0.76; 95% CI, 0.61–0.96), and Native Hawaiian/Pacific Islander adolescents (AOR, 0.37; 95% CI, 0.17–0.83) had lower odds compared with non-Hispanic White adolescents, whereas Non-Hispanic multiracial adolescents had higher odds (AOR, 1.27; 95% CI, 1.07–1.51).
+
+Past-year marijuana use was the strongest predictor of MDE/SUD, with users showing markedly increased odds (AOR, 9.62; 95% CI, 8.38–11.04); specifically, adolescents who used marijuana in the past year had substantially higher odds of experiencing SUD only (AOR, 22.15; 95% CI, 18.69–26.25) or comorbid SUD and MDE (AOR, 21.79; 95% CI, 17.00–27.94) compared with those with neither condition in adjusted models.
 
 
 
@@ -618,7 +623,8 @@ gt_table_profile
 ```
 
 
-# Among adolescents who reported past-year cannabis use, what was the prevalence of marijuana use disorder, and which sociodemographic factors were independently associated with increased risk?
+# Among adolescents who reported past-year cannabis use, what was the prevalence of marijuana use disorder?
+# Which sociodemographic factors were independently associated with increased risk of CUD?
 
 ```{r}
 
@@ -868,21 +874,26 @@ vape_risk
 ```{r}
 
 nsduh_pooled <- nsduh_all %>%
-  filter(year %in% c(2021, 2022, 2023, 2024)) %>%
-  mutate(
+    mutate(
     weight_pooled = ANALWT2_C / 4,
-    age_cat = relevel(factor(age_cat), ref = "16–17"),
-    sex = relevel(factor(sex), ref = "Male"),
-    race = relevel(factor(race), ref = "White"),
-    family_income = relevel(factor(family_income), ref = "≥$75k"),
-    poverty = relevel(factor(poverty), 
-                      ref = "Income More Than 2X Federal Poverty Threshold"),
-    insurance = relevel(factor(insurance), ref = "Yes"),
-    county_type = relevel(factor(county_type), ref = "Large metro"),
-    
-    year = factor(year)
+    mj_past_year_num = ifelse(mj_past_year_num == "Yes", 1, 0), 
+    family_income_cat = case_when(
+      family_income %in% c("<$10k", "$10–19k") ~ "<$20k",
+      family_income %in% c("$20–29k", "$30–39k") ~ "$20–39k",
+      family_income == "$40–49k" ~ "$40–49k",
+      family_income == "$50–74k" ~ "$50–74k",
+      family_income == "≥$75k" ~ "≥$75k",
+      TRUE ~ NA_character_), 
+    family_income_cat = factor(family_income_cat,
+      levels = c(
+        "<$20k",
+        "$20–39k",
+        "$40–49k",
+        "$50–74k",
+        "≥$75k"
+      ))) %>%
+  mutate(family_income_cat = relevel(family_income_cat, ref = "≥$75k")
   )
-
 
 nsduh_design_pooled <- svydesign(
   id = ~VEREP,
@@ -892,14 +903,11 @@ nsduh_design_pooled <- svydesign(
   nest = TRUE
 )
 
-
 model_pooled <- svyglm(
-  mj_past_month_num ~ age_cat + sex + race + family_income +
-    poverty + insurance + county_type,
+  mj_past_year_num ~ age_cat + sex + race + family_income_cat + county_type,
   design = nsduh_design_pooled,
   family = quasibinomial()
 )
-
 
 pooled_results <- tidy(
   model_pooled,
@@ -912,14 +920,12 @@ pooled_results <- tidy(
       str_detect(term, "^age_cat") ~ "Age",
       str_detect(term, "^sex") ~ "Gender",
       str_detect(term, "^race") ~ "Race/Ethnicity",
-      str_detect(term, "^family_income") ~ "Family Income",
-      str_detect(term, "^poverty") ~ "Poverty",
-      str_detect(term, "^insurance") ~ "Health Insurance",
+      str_detect(term, "^family_income_cat") ~ "Family Income",
       str_detect(term, "^county_type") ~ "County Type"
     ),
     level = str_remove_all(
       term,
-      "^age_cat|^sex|^race|^family_income|^poverty|^insurance|^county_type"
+      "^age_cat|^sex|^race|^family_income_cat|^county_type"
     ),
     aor_ci = sprintf("%.2f (%.2f–%.2f)", estimate, conf.low, conf.high),
     p_val = ifelse(p.value < 0.001, "<0.001", sprintf("%.3f", p.value))
@@ -927,20 +933,9 @@ pooled_results <- tidy(
   select(variable, level, aor_ci, p_val)
 
 
-ref_levels <- tibble(
-  variable = c("Age", "Gender", "Race/Ethnicity", "Family Income",
-               "Poverty", "Health Insurance", "County Type"),
-  level = c("16–17 (REF)", "Male (REF)", "White (REF)", "≥$75k (REF)",
-            "Income More Than 2X Federal Poverty Threshold (REF)", 
-            "Insured (REF)", "Large metro (REF)"),
-  aor_ci = "REF",
-  p_val = "REF"
-)
-
-pooled_results_final <- bind_rows(pooled_results, ref_levels) %>%
+pooled_results_final <- bind_rows(pooled_results) %>%
   mutate(variable = factor(variable, levels = c(
-    "Age", "Gender", "Race/Ethnicity", "Family Income", 
-    "Poverty", "Health Insurance", "County Type"
+    "Age", "Gender", "Race/Ethnicity", "Family Income", "County Type"
   ))) %>%
   group_by(variable) %>%
   ungroup()
@@ -973,92 +968,124 @@ final_table_pooled
 
 ```
 
-## Question : There is association between past-year marijuana use and the presence of major depressive episode and/or substance use disorder among adolescents?
+# Question : There is association between past-year marijuana use and the presence of major depressive episode and/or substance use disorder among adolescents?
+#  >>>> There is a statistically significant association between past-year marijuana use and the presence of major depressive episode and/or substance use disorder among adolescents.
 
 ```{r}
 
-
-svytable(~mj_past_month_num + sud_or_mde_num, design = nsduh_design_pooled)
-
-svychisq(~mj_past_month_num + sud_or_mde_num, design = nsduh_design_pooled)
 
 svytable(~mj_past_year_num + sud_or_mde_num, design = nsduh_design_pooled)
 
 svychisq(~mj_past_year_num + sud_or_mde_num, design = nsduh_design_pooled)
 
 ```
-There is a statistically significant association between past-year marijuana use and the presence of major depressive episode and/or substance use disorder among adolescents (Rao–Scott adjusted χ², F = 81.6, p < 0.001). (Similar conclusion for the past month use). 
 
-
-In weighted bivariate analyses, past-year marijuana use was significantly associated with the presence of MDE or SUD among adolescents. Subsequent multivariable models were used to assess whether this association persisted after adjustment for sociodemographic factors.
-
+# Multivariable models were used to assess whether this association persisted after adjustment for sociodemographic factors.
 
 ```{r}
 
-nsduh_design <- nsduh_design_pooled
+nsduh_pooled$sud_or_mde_bin <- ifelse(nsduh_pooled$sud_or_mde_num == "Yes", 1,
+                                      ifelse(nsduh_pooled$sud_or_mde_num == "No", 0, NA))
 
-nsduh_design <- update(
-  nsduh_design,
-  mj_past_year_num = relevel(mj_past_year_num, ref = "No")
+nsduh_sub_new <- svydesign(
+  id = ~VEREP,
+  strata = ~VESTR_C,
+  weights = ~weight_pooled,
+  data = nsduh_pooled,
+  nest = TRUE
 )
 
 model_adj <- svyglm(
-  sud_or_mde_num ~ mj_past_year_num +
-    age_cat + sex + race + family_income +
-    poverty + insurance + county_type,
-  design = nsduh_design,
+  sud_or_mde_bin ~ mj_past_year_num + age_cat + sex + race + family_income_cat + county_type,
+  design = nsduh_sub_new,
   family = quasibinomial()
 )
+
 results_adj <- tidy(
   model_adj,
   exponentiate = TRUE,
   conf.int = TRUE
 ) %>%
-  filter(term == "mj_past_year_numYes") %>%
   mutate(
-    category = "Past-year marijuana use (Yes vs No)",
+    category = case_when(
+      str_detect(term, "^mj_past_year_num") ~ "Past-year marijuana use",
+      str_detect(term, "^age_cat") ~ "Age",
+      str_detect(term, "^sex") ~ "Gender",
+      str_detect(term, "^race") ~ "Race/Ethnicity",
+      str_detect(term, "^family_income_cat") ~ "Family Income",
+      str_detect(term, "^county_type") ~ "County Type",
+      TRUE ~ term
+    ),
+    level = str_remove_all(
+      term,
+      "^mj_past_year_num|^age_cat|^sex|^race|^family_income_cat|^county_type"
+    ),
     aor_ci = sprintf("%.2f (%.2f–%.2f)", estimate, conf.low, conf.high),
     p_val = ifelse(p.value < 0.001, "<0.001", sprintf("%.3f", p.value))
   ) %>%
-  select(category, aor_ci, p_val)
+  select(category, level, aor_ci, p_val) %>%
+  arrange(category, level)
 
 results_adj
 
 ```
 
-In adjusted analyses, past-year marijuana use was significantly associated with the presence of major depressive episode and/or substance use disorder among adolescents (AOR = 2.64; 95% CI: 2.14–3.25; p < 0.001).
-
+# Past-year marijuana use  and MDE/SUD categories
 
 ```{r}
 
 
-nsduh_design <- update(
-  nsduh_design_pooled,
-  mde_sud_raw = relevel(mde_sud_raw, ref = "Neither"),
-  mj_past_year_num = relevel(mj_past_year_num, ref = "No")  
-)
-
-
-model_mj <- svyglm(
-  mj_past_year_num ~ mde_sud_raw + age_cat + sex + race + family_income +
-    poverty + insurance + county_type,
-  design = nsduh_design,
-  family = quasibinomial()
-)
-
-results_mj <- tidy(model_mj, exponentiate = TRUE, conf.int = TRUE) %>%
-  filter(str_detect(term, "mde_sud_raw")) %>%
+nsduh_pooled <- nsduh_pooled %>%
   mutate(
-    category = case_when(
-      term == "mde_sud_rawSUD only" ~ "SUD only",
-      term == "mde_sud_rawMDE only" ~ "MDE only",
-      term == "mde_sud_rawSUD and MDE" ~ "SUD and MDE"
-    ),
-    aor_ci = sprintf("%.2f (%.2f–%.2f)", estimate, conf.low, conf.high),
-    p_val = ifelse(p.value < 0.001, "<0.001", sprintf("%.3f", p.value))
-  ) %>%
-  select(category, aor_ci, p_val)
+    mj_past_year_num = relevel(factor(mj_past_year_num), ref = "0"),
+    age_cat = relevel(factor(age_cat), ref = "12–13"),
+    sex = relevel(factor(sex), ref = "Male"),
+    race = relevel(factor(race), ref = "White"),
+    family_income_cat = relevel(factor(family_income_cat), ref = "≥$75k"),
+    county_type = relevel(factor(county_type), ref = "Large metro")
+  )
 
+nsduh_design <- svydesign(
+  id = ~VEREP,
+  strata = ~VESTR_C,
+  weights = ~weight_pooled,
+  data = nsduh_pooled,
+  nest = TRUE
+)
+
+mde_sud_categories <- c("SUD only", "MDE only", "SUD and MDE")
+
+
+run_mde_sud_model <- function(cat) {
+  
+  nsduh_pooled[[paste0("mde_", str_replace_all(cat, " ", "_"))]] <- ifelse(
+    nsduh_pooled$mde_sud_raw == cat, 1, 0
+  )
+  
+    design_bin <- update(nsduh_design, 
+                       mde_bin = nsduh_pooled[[paste0("mde_", str_replace_all(cat, " ", "_"))]])
+  
+  
+  model <- svyglm(
+    mde_bin ~ mj_past_year_num + age_cat + sex + race + family_income_cat,
+    design = design_bin,
+    family = quasibinomial()
+  )
+  
+ 
+  tidy(model, exponentiate = TRUE, conf.int = TRUE) %>%
+    filter(str_detect(term, "mj_past_year_num")) %>%
+    mutate(
+      category = cat,
+      aor_ci = sprintf("%.2f (%.2f–%.2f)", estimate, conf.low, conf.high),
+      p_val = ifelse(p.value < 0.001, "<0.001", sprintf("%.3f", p.value))
+    ) %>%
+    select(category, aor_ci, p_val)
+}
+
+
+results_mj <- lapply(mde_sud_categories, run_mde_sud_model) %>%
+  bind_rows()
 
 ref_row <- tibble(
   category = "Neither (REF)",
@@ -1067,363 +1094,9 @@ ref_row <- tibble(
 )
 
 results_mj <- bind_rows(ref_row, results_mj) %>%
-  mutate(category = factor(category, levels = c("Neither (REF)", "SUD only", "MDE only", "SUD and MDE")))
+  mutate(category = factor(category, levels = c("Neither (REF)", mde_sud_categories)))
 
 results_mj
 
 
-
 ```
-Adolescents with a substance use disorder, either alone or combined with a major depressive episode, were significantly more likely to report past-year marijuana use compared to those with neither condition, while a major depressive episode alone was not significantly associated with marijuana use.
-
-
-
-
-
-
-```
-
-
-
-```{r}
-library(survey) ## run design-based analysis
-library(svydiags) ## regression diagnostics
-library(tidyverse) ## data management
-library(naniar) ## data management (recoding missing values)
-library(stats) ## run statistical procedures
-library(jtools) ## miscellaneous statistical tools
-library(haven)
-
-nsduh_2024<- read_dta("C:/Users/marin/OneDrive/Área de Trabalho/Projeto/Stata/NSDUH_2024.dta")
-
-nsduh_2021_2023 <- read_dta("C:/Users/marin/OneDrive/Área de Trabalho/Projeto/Stata/NSDUH_2021_2023.dta")
-      
-
-nsduh_2123 <- nsduh_2021_2023 %>%
-  filter(AGE3 %in% c(1, 2, 3)) %>%
-  mutate(YEAR = as.numeric(YEAR)) %>%
-  rename(ANALWT2_C = ANALWT2_C1)%>%
-  rename_with(toupper)
-    
-nsduh_2024 <- nsduh_2024 %>%
-  filter(AGE3 %in% c(1, 2, 3)) %>%
-  mutate(YEAR = 2024)%>% 
-  rename_with(toupper)
-
-nsduh_all <- bind_rows(nsduh_2123, nsduh_2024)
-
-vars_keep <- c(
-  "YEAR",
-  "MRJYR", "MJREC", "MRDAYPMO",
-  "YMDERSUD5ANY", "YMDESUD5ANYO",
-  "AGE3", "IRSEX", "NEWRACE2",
-  "COUTYP4", "PDEN10",
-  "IRINSUR4", "IRFAMIN3", "POVERTY3",
-  "EDUSKPMON",
-  "DIFOBTMRJ", "UDMJSTRURGE", "UDMJWANTBAD", "ANALWT2_C3", 
-  "ANALWT2_C", "VESTR_C", "VEREP"
-)
-
-nsduh_all <- nsduh_all %>%
-  select(any_of(vars_keep))
-
-nsduh_all <- nsduh_all %>%
-  replace_with_na(replace = list(
-    MRJYR = c(85, 91, 94, 97, 98, 99),
-    MJREC = c(85, 91, 94, 97, 98, 99),
-    MRDAYPMO = c(985, 994, 997, 998),
-    YMDERSUD5ANY = c(85, 94, 97, 98, 99),
-    YMDESUD5ANYO = c(85, 94, 97, 98, 99),
-    AGE3 = c(94, 97, 98),
-    IRSEX = c(94, 97, 98),
-    NEWRACE2 = c(94, 97, 98),
-    COUTYP4 = c(94, 97, 98),
-    PDEN10 = c(94, 97, 98),
-    IRINSUR4 = c(94, 97, 98),
-    IRFAMIN3 = c(94, 97, 98),
-    POVERTY3 = c(94, 97, 98),
-    EDUSKPMON = c(94, 97, 98),
-    DIFOBTMRJ = c(85, 94, 97, 98, 99),
-    UDMJSTRURGE = c(85, 94, 97, 98, 99),
-    UDMJWANTBAD = c(85, 94, 97, 98, 99)
-  ))
-
-nsduh_all <- nsduh_all %>%
-  rename(
-    year = YEAR,
-    mj_past_year = MRJYR,
-    mj_recency = MJREC,
-    mj_days_past_month = MRDAYPMO,
-    sud_mj_past_year = YMDERSUD5ANY,
-    mde_past_year = YMDESUD5ANYO,
-    age_cat = AGE3,
-    sex = IRSEX,
-    race = NEWRACE2,
-    county_type = COUTYP4,
-    pop_density = PDEN10,
-    insurance = IRINSUR4,
-    family_income = IRFAMIN3,
-    poverty = POVERTY3,
-    school_missing_days = EDUSKPMON,
-    difficulty_get_mj = DIFOBTMRJ,
-    strong_urge_mj = UDMJSTRURGE,
-    mj_craving_past_year = UDMJWANTBAD
-  )
-
-nsduh_all <- nsduh_all %>%
-  mutate(
-    year = factor(year),
-
-    age_cat = factor(age_cat,
-      levels = c(1, 2, 3),
-      labels = c("12–13", "14–15", "16–17")
-    ),
-
-    sex = factor(sex,
-      levels = c(1, 2),
-      labels = c("Male", "Female")
-    ),
-
-    race = factor(race,
-      levels = 1:7,
-      labels = c(
-        "White", "Black", "AIAN", "NHPI",
-        "Asian", "Multiracial", "Hispanic"
-      )
-    ),
-
-    county_type = factor(county_type,
-      levels = c(1, 2, 3),
-      labels = c("Large metro", "Small metro", "Nonmetro")
-    ),
-
-    pop_density = factor(pop_density,
-      levels = c(1, 2, 3),
-      labels = c("≥1M CBSA", "<1M CBSA", "Non-CBSA")
-    )
-  )
-
-nsduh_all <- nsduh_all %>%
-  mutate(mj_past_year_bin = factor(ifelse(mj_recency %in% c(1,2,8,11,12), 1,
-                               ifelse(mj_recency %in% c(3,9,13,91), 0, NA))),
-    mj_past_month_bin = factor(ifelse(mj_recency %in% c(1, 11), 1, 0)),
-    mde_bin = factor(ifelse(mde_past_year == 1, 1, 0)),
-    sud_mj_bin = factor(ifelse(sud_mj_past_year == 1, 1, 0)),
-    insured_bin = factor(ifelse(insurance == 1, 1, 0))
-  )
-
-nsduh_all <- nsduh_all %>%
-  mutate(
-    mj_past_year_num  = ifelse(mj_past_year_bin == 1, 1,
-                               ifelse(mj_past_year_bin == 0, 0, NA)),
-    mj_past_month_num = ifelse(mj_past_month_bin == 1, 1,
-                               ifelse(mj_past_month_bin == 0, 0, NA)),
-    mde_num           = ifelse(mde_bin == 1, 1,
-                               ifelse(mde_bin == 0, 0, NA)),
-    sud_mj_num        = ifelse(sud_mj_bin == 1, 1,
-                               ifelse(sud_mj_bin == 0, 0, NA))
-  )
-
-nsduh_all <- nsduh_all %>%
-  mutate(
-    subpop = factor(ifelse(
-      !is.na(mj_past_year_bin) &
-      !is.na(mj_past_month_bin) &
-      !is.na(mde_bin) &
-      !is.na(age_cat) &
-      !is.na(sex) &
-      !is.na(race) &
-      !is.na(county_type) &
-      !is.na(pop_density) &
-      !is.na(insured_bin) &
-      !is.na(family_income) &
-      !is.na(mj_past_year_num) &
-      !is.na(mde_num) &
-      !is.na(sud_mj_num) &
-      !is.na(poverty),
-      1, 0
-    ))
-  )
-
-library(labelled)  # carregue o pacote labelled (instale se necessário: install.packages("labelled"))
-
-var_label(nsduh_all) <- list(
-  year                  = "Survey year",
-  age_cat               = "Age group",
-  sex                   = "Sex",
-  race                  = "Race/Ethnicity",
-  county_type           = "County type",
-  pop_density           = "Population density (CBSA)",
-  insurance             = "Health insurance coverage",
-  insured_bin           = "Has health insurance",
-  family_income         = "Family income",
-  poverty               = "Poverty level",
-  mj_past_year_bin      = "Marijuana use in the past year",
-  mj_past_month_bin     = "Marijuana use in the past month",
-  mj_days_past_month    = "Days of marijuana use in the past month",
-  mde_past_year         = "Major depressive episode in the past year",
-  mde_bin               = "Major depressive episode in the past year (binary)",
-  sud_mj_past_year      = "Marijuana use disorder in the past year",
-  sud_mj_bin            = "Marijuana use disorder in the past year (binary)",
-  school_missing_days   = "Days missed school (skipping)",
-  difficulty_get_mj     = "Difficulty obtaining marijuana",
-  strong_urge_mj        = "Strong urge to use marijuana",
-  mj_craving_past_year    = "Strong desire to use marijuana, past 12 month",
-  subpop                = "Analytical subpopulation (complete cases on main variables)"
-)
-
-
-nsduh_sp <- svydesign(
-  id = ~VEREP,
-  strata = ~VESTR_C,
-  weights = ~ANALWT2_C,
-  data = nsduh_all,
-  nest = TRUE
-)
-
-nsduh_sp_analt <- subset(nsduh_sp, subpop == 1)
-
-
-dim(nsduh_sp_analt)
-table(nsduh_all$subpop)
-
-
-#Analysis Prevalence
-
-
-prev_year <- svyby(
-  ~mj_past_year_num,
-  ~year,
-  nsduh_sp_analt,
-  svymean,
-  vartype = c("ci"),
-  na.rm = TRUE
-)
-
-prev_year
-
-prev_year_sex_age <- svyby(
-  ~mj_past_year_num,
-  ~year + sex + age_cat,
-  nsduh_sp_analt,
-  svymean,
-  vartype = "ci",
-  na.rm = TRUE
-)
-
-prev_year_sex_age
-
-trend_model <- svyglm(
-  mj_past_year_bin ~ as.numeric(as.character(year)),
-  design = nsduh_sp_analt,
-  family = quasibinomial()
-)
-
-summary(trend_model)
-
-svytotal(
-  ~I(mj_past_year_bin == 1),
-  nsduh_sp_analt,
-  na.rm = TRUE
-)
-
-svyby(
-  ~I(mj_past_year_bin == 1),
-  ~year,
-  nsduh_sp_analt,
-  svytotal,
-  na.rm = TRUE
-)
-
-svyby(
-  ~mj_past_year_bin,
-  ~year,
-  nsduh_sp_analt,
-  svymean,
-  vartype = c("ci"),
-  na.rm = TRUE
-) %>%
-  left_join(
-    svyby(
-      ~I(mj_past_year_bin == 1),
-      ~year,
-      nsduh_sp_analt,
-      svytotal,
-      na.rm = TRUE
-    ),
-    by = "year"
-  )
-
-
-
-# Graphics
-
-library(scales)
-
-prev_plot <- prev_year_sex_age %>%
-  mutate(prevalence = mj_past_year_num * 100)
-
-ggplot(prev_plot,
-       aes(x = year,
-           y = prevalence,
-           color = sex,
-           group = sex)) +
-  geom_line() +
-  geom_point() +
-  facet_wrap(~age_cat) +
-  labs(
-    x = "Year",
-    y = "Prevalence of past-year marijuana use (%)",
-    color = "Sex"
-  ) +
-  theme_minimal()
-
-
-
-# Criar coluna para IC95%
-prev_year_sex_age <- prev_year_sex_age %>%
-  mutate(
-    prevalence = mj_past_year_num * 100,   # transforma em %
-    ci_l = ci_l * 100,
-    ci_u = ci_u * 100
-  )
-
-ggplot(prev_year_sex_age, 
-       aes(x = as.numeric(as.character(year)),
-           y = prevalence,
-           color = sex,
-           group = sex)) +
-  geom_line(linewidth = 1) +
-  geom_point(size = 2) +
-  geom_ribbon(aes(ymin = ci_l, ymax = ci_u, fill = sex), alpha = 0.2, color = NA) +
-  scale_y_continuous(labels = function(x) paste0(x, "%")) +
-  scale_x_continuous(breaks = 2021:2024) +
-  labs(
-    x = "Year",
-    y = "Prevalence of past-year marijuana use",
-    title = "Trend in past-year marijuana use among U.S. adolescents (2021–2024)",
-    color = "Sex",
-    fill = "Sex"
-  ) +
-  facet_wrap(~age_cat) +   # separa por faixa etária
-  theme_minimal(base_size = 14) +
-  theme(
-    legend.position = "bottom",
-    panel.grid.major = element_line(color = "gray90"),
-    panel.grid.minor = element_blank()
-  )
-
-
-
-
-
-
-
-
-
-
-
-
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
