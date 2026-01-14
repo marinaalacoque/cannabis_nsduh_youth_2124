@@ -2,7 +2,11 @@
 title: "NSDUH project"
 author: "Marina Alacoque Rodrigues"
 date: "`r Sys.Date()`"
-output: word_document
+output:
+  html_document:
+    df_print: paged
+  word_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -131,6 +135,7 @@ library(broom)
 library(gt)
 library(purrr)
 library(forcats)
+library(dplyr)
 
 nsduh_2024 <- read_dta("../database/NSDUH_2024.dta")
 nsduh_2021_2023 <- read_dta("../database/NSDUH_2021_2023.dta")
@@ -158,11 +163,12 @@ nsduh_all <- bind_rows(nsduh_2123, nsduh_2024)
 vars_keep <- c(
   "YEAR","MRJYR","MJREC","YMDERSUD5ANY","YMDESUD5ANYO",
   "AGE3","IRSEX","NEWRACE2","COUTYP4","PDEN10","IRINSUR4","IRFAMIN3",
-  "POVERTY3","EDUSKPEST","PYUD5MRJ",
+  "POVERTY3","EDUSKPEST","IRPYUD5MRJ","IRPYUD5ALC", "IRPYUD5COC", 
+  "IRPYUD5HER", "IRPYUD5HAL", "IRPYUD5INH", "IRPYUD5MTH",
   "ANALWT2_C3","ANALWT2_C","VESTR_C","VEREP"
 )
 
-nsduh_all <- nsduh_all %>% select(any_of(vars_keep))
+nsduh_all <- nsduh_all |>  dplyr:: select(any_of(vars_keep))
 
 missing_vals <- list(
   MJREC = c(91,97,98),
@@ -187,7 +193,7 @@ nsduh_all <- nsduh_all %>%
     insurance = IRINSUR4,
     family_income = IRFAMIN3,
     poverty = POVERTY3,
-    mrj_use_disorder = PYUD5MRJ
+    mrj_use_disorder = IRPYUD5MRJ
   )
 
 
@@ -356,8 +362,6 @@ ggplot(prev_year, aes(x = year, y = prevalence)) +
     labels = scales::percent_format(scale = 1)
   ) +
   labs(
-    title = "Prevalence of Past-Year Cannabis Use Among U.S. Adolescents (2021-2024)",
-    subtitle = "Weighted estimates by survey year",
     x = "Survey Year",
     y = "Prevalence (%)",
     caption = "Error bars indicate 95% confidence intervals."
@@ -369,8 +373,6 @@ ggplot(prev_year, aes(x = year, y = prevalence)) +
     panel.grid.major.y = element_line(color = "grey85"),
     axis.title = element_text(face = "bold"),
     axis.text = element_text(color = "black"),
-    plot.title = element_text(face = "bold", hjust = 0),
-    plot.subtitle = element_text(hjust = 0)
   )
 
 ```
@@ -438,7 +440,7 @@ table_year
 ```
 
 
-# Supplem. : Sociodemographic Characteristics of the Study Population by Year (2021–2024)
+# Supplementary Table 1 : Sociodemographic Characteristics of the Study Population by Year (2021–2024)
 
 ```{r}
 
@@ -670,7 +672,7 @@ nsduh_2224 <- bind_rows(
 )
 
 vars_keep_subset <- c(
-  "YEAR","MRJYR","MJREC","AGE3","IRSEX","PYUD5MRJ","MJYRSMOKE","MJYRVAPE","MJYRDAB",
+  "YEAR","MRJYR","MJREC","AGE3","IRSEX","IRPYUD5MRJ","MJYRSMOKE","MJYRVAPE","MJYRDAB",
   "MJYREAT","MJYRMOUTH","MJYRSKIN","MJYRPILL","MJYROTHER",
   "ANALWT2_C3","ANALWT2_C","VESTR_C","VEREP"
 )
@@ -818,36 +820,161 @@ ggplot(df_plot, aes(x = YEAR, y = prevalence, color = Method, group = Method)) +
   geom_errorbar(aes(ymin = ci_lower, ymax = ci_upper), width = 0.1, alpha = 0.5) +
   scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
   labs(
-    title = "Cannabis Consumption Habits",
-    subtitle = "Trends in use methods among past-year users (2022-2024)",
     y = "Prevalence (%)",
     x = "Year",
     color = "Mode of Use"
   ) +
-  theme_minimal() +
-  theme(text = element_text(size = 12))
-
-
-# -------------------------
-ggplot(df_plot, aes(x = YEAR, y = reorder(Method, prevalence), fill = prevalence)) +
-  geom_tile(color = "white", linewidth = 1) +
-  geom_text(aes(label = scales::percent(prevalence, accuracy = 0.1),
-                color = ifelse(prevalence > 0.3, "black", "white")),
-            size = 4, fontface = "bold") +
-  scale_color_identity() +
-  scale_fill_viridis_c(option = "plasma", labels = scales::percent) +
-  labs(
-    title = "Cannabis Consumption Habits",
-    subtitle = "Trends in use methods among past-year users (2022-2024)",
-    x = NULL, y = NULL, fill = "Weighted Prevalence (%)"
-  ) +
-  theme_minimal() +
+  theme_minimal(base_size = 13) +
   theme(
-    panel.grid = element_blank(),
-    axis.text.y = element_text(size = 11, face = "bold", color = "#2c3e50"),
-    axis.text.x = element_text(size = 12, face = "bold"),
-    legend.position = "right"
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.y = element_line(color = "grey85"),
+    axis.title = element_text(face = "bold"),
+    axis.text = element_text(color = "black")
   )
+
+
+
+```
+
+
+# What was the proportion of cannabis multimodal use?
+
+```{r}
+
+nsduh_mj_users <- subset(
+  nsduh_sub,
+  mj_past_year_bin == "Yes"
+)
+
+nsduh_mj_users <- update(
+  nsduh_mj_users,
+  smoke_n = ifelse(mj_smoke_bin == "Yes", 1, 0),
+  vape_n  = ifelse(mj_vape_bin  == "Yes", 1, 0),
+  dab_n   = ifelse(mj_dab_bin   == "Yes", 1, 0),
+  eat_n   = ifelse(mj_eat_bin   == "Yes", 1, 0),
+  mouth_n = ifelse(mj_mouth_bin == "Yes", 1, 0),
+  skin_n  = ifelse(mj_skin_bin  == "Yes", 1, 0),
+  pill_n  = ifelse(mj_pill_bin  == "Yes", 1, 0),
+  other_n = ifelse(mj_other_bin == "Yes", 1, 0)
+)
+
+nsduh_mj_users <- update(
+  nsduh_mj_users,
+  n_modes =
+    smoke_n +
+    vape_n +
+    dab_n +
+    eat_n +
+    mouth_n +
+    skin_n +
+    pill_n +
+    other_n
+)
+
+nsduh_mj_users <- update(
+  nsduh_mj_users,
+  multimodal_use = factor(
+    ifelse(n_modes >= 2, "Two or more modes", "One mode only"),
+    levels = c("One mode only", "Two or more modes")
+  )
+)
+
+svytable(~multimodal_use, nsduh_mj_users) %>%
+  prop.table()
+
+svytable(~n_modes, nsduh_mj_users) %>%
+  prop.table()
+
+nsduh_mj_users <- update(
+  nsduh_mj_users,
+  n_modes_cat = factor(
+    case_when(
+      n_modes == 1 ~ "1 mode",
+      n_modes == 2 ~ "2 modes",
+      n_modes >= 3 ~ "3+ modes"
+    ),
+    levels = c("1 mode", "2 modes", "3+ modes")
+  )
+)
+
+svytable(~n_modes_cat, nsduh_mj_users) %>%
+  prop.table()
+
+svytable(~mj_smoke_bin + mj_vape_bin, design = nsduh_mj_users) %>%
+  prop.table(margin = 1)
+
+svytable(~mj_smoke_bin + mj_eat_bin, design = nsduh_mj_users) %>%
+  prop.table(margin = 1)
+
+oddis <- svyglm(
+  I(multimodal_use == "Two or more modes") ~ YEAR + AGE3 + IRSEX,
+  design = nsduh_mj_users,
+  family = quasibinomial()
+)
+
+broom::tidy(
+  oddis,
+  exponentiate = TRUE,
+  conf.int = TRUE
+)
+
+
+tab_multimodal <- svymean(
+  ~I(multimodal_use == "Two or more modes"),
+  design = nsduh_mj_users,
+  na.rm = TRUE
+)
+
+confint(tab_multimodal)
+
+table_or_adj <- broom::tidy(
+  oddis,
+  exponentiate = TRUE,
+  conf.int = TRUE
+) %>%
+  filter(term != "(Intercept)") %>%
+  mutate(
+    Variable = recode(
+      term,
+      "YEAR2023" = "Year: 2023 vs 2022",
+      "YEAR2024" = "Year: 2024 vs 2022",
+      "AGE314–15" = "Age: 14–15 vs 12–13",
+      "AGE316–17" = "Age: 16–17 vs 12–13",
+      "IRSEXFemale" = "Sex: Female vs Male"
+    )
+  ) %>%
+  transmute(
+    Variable,
+    `Adjusted OR` = round(estimate, 2),
+    `95% CI` = paste0(
+      round(conf.low, 2), "–", round(conf.high, 2)
+    ),
+    `p-value` = ifelse(p.value < 0.001, "<0.001", round(p.value, 3))
+  )
+
+table_or_adj
+
+
+
+```
+
+# Do individuals who use cannabis via two or more modes (multimodal use) have a higher risk of past-year marijuana use disorder (IRPYUD5MRJ)?
+
+```{r}
+
+odd_multimodal <- svyglm(
+  IRPYUD5MRJ ~ multimodal_use + YEAR + AGE3 + IRSEX,
+  design = nsduh_mj_users,
+  family = quasibinomial()
+)
+
+
+broom::tidy(
+  odd_multimodal,
+  exponentiate = TRUE,
+  conf.int = TRUE
+)
 
 
 ```
@@ -869,7 +996,7 @@ vape_risk
 
 ```
 
-# Association between sociodemographic characteristics and current cannabis use among U.S. youth
+# Supplementary Table 2: Association between sociodemographic characteristics and current cannabis use among U.S. youth
 
 ```{r}
 
@@ -967,6 +1094,53 @@ final_table_pooled
 
 
 ```
+
+# Defyning SUD 
+
+```{r}
+
+sud_vars <- c("IRPYUD5ALC", "IRPYUD5COC", "IRPYUD5HER",
+              "IRPYUD5HAL", "IRPYUD5INH", "IRPYUD5MTH",
+              "mrj_use_disorder")
+
+for (var in sud_vars) {
+  nsduh_design_pooled$variables[[var]] <- as.numeric(as.character(nsduh_design_pooled$variables[[var]]))
+}
+
+sud_design <- subset(
+  nsduh_design_pooled,
+  mde_sud_raw %in% c("SUD only", "SUD and MDE")
+)
+
+sud_design$variables$other_drug_sud <- ifelse(
+  rowSums(sud_design$variables[, sud_vars], na.rm = TRUE) == 0,
+  1, 0
+)
+
+sud_vars_extended <- c(sud_vars, "other_drug_sud")
+
+sud_proportions <- svymean(
+  as.formula(paste("~", paste(sud_vars_extended, collapse = " + "))),
+  design = sud_design,
+  na.rm = TRUE
+)
+
+sud_proportions_df <- data.frame(
+  SUD_type = names(coef(sud_proportions)),
+  proportion = coef(sud_proportions),
+  SE = SE(sud_proportions)
+) %>%
+  mutate(
+    proportion_percent = round(proportion * 100, 1),
+    lower_CI = round(pmax(0, proportion - 1.96 * SE) * 100, 1),
+    upper_CI = round((proportion + 1.96 * SE) * 100, 1)
+  )
+
+sud_proportions_df
+
+
+```
+
 
 # Question : There is association between past-year marijuana use and the presence of major depressive episode and/or substance use disorder among adolescents?
 #  >>>> There is a statistically significant association between past-year marijuana use and the presence of major depressive episode and/or substance use disorder among adolescents.
@@ -1100,3 +1274,7 @@ results_mj
 
 
 ```
+
+
+
+
