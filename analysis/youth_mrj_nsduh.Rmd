@@ -373,6 +373,10 @@ nsduh_all <- nsduh_all %>%
                      c("Living in Poverty",
                        "Income ≤2× Federal Poverty Threshold",
                        "Income >2× Federal Poverty Threshold")),
+    mj_past_month_bin = factor(mj_past_month_bin, levels = c(1, 0), labels = c("Yes", "No")),
+    mj_past_year_bin = factor(mj_past_year_bin, levels = c(1, 0), labels = c("Yes", "No")),
+    sud_or_mde_bin = factor(sud_or_mde_bin, levels = c(1, 0), labels = c("Yes", "No")),
+    mrj_use_disorder_bin = factor(mrj_use_disorder_bin, levels = c(1, 0), labels = c("Yes", "No")),
     mj_past_month_3cat = factor(
       mj_past_month_3cat,
       levels = c("Yes","No","Never used/Unknown")
@@ -431,109 +435,50 @@ dim(nsduh_sp)
 
 ```{r}
 
+sample_counts <- nsduh_all %>% group_by(year) %>% summarise( adolescent_n = sum(subpop == 1, na.rm = TRUE) ) 
 
-sample_counts <- nsduh_all %>%
-  group_by(year) %>%
-  summarise(
-    adolescent_n = sum(subpop == 1, na.rm = TRUE) 
-  )
+nsduh_sp$variables$one <- 1 
 
-nsduh_sp$variables$one <- 1
+pop_counts <- svyby( ~one, ~year + subpop, design = nsduh_sp, FUN = svytotal, na.rm = TRUE ) 
 
-pop_counts <- svyby(
-  ~one, 
-  ~year + subpop, 
-  design = nsduh_sp, 
-  FUN = svytotal, 
-  na.rm = TRUE
-)
+pop_counts_clean <- pop_counts %>% filter(subpop == 1) %>% select(year, one) %>% rename(estimated_population = one) 
 
-pop_counts_clean <- pop_counts %>%
-  filter(subpop == 1) %>%
-  select(year, one) %>%
-  rename(estimated_population = one)
+demographics_table <- sample_counts %>% 
+  left_join(pop_counts_clean, by = "year") %>% 
+  mutate(estimated_pop_fmt = scales::comma(estimated_population) ) 
 
-demographics_table <- sample_counts %>%
-  left_join(pop_counts_clean, by = "year") %>%
-  mutate(estimated_pop_fmt = scales::comma(estimated_population)
-  )
+demographics_table %>% 
+  select(year, adolescent_n, estimated_pop_fmt) %>% 
+  gt() %>% 
+  tab_header( title = "Sample Size and Population Representativeness", subtitle = "Comparison of Unweighted Sample (n) vs. Weighted Population Estimate (N)" ) %>% 
+  cols_label( adolescent_n = " Adolescents with Complete Data for Age and Sex in the Survey Sample (n)", estimated_pop_fmt = "Est. US Adolescent Pop. (N)" ) 
 
-demographics_table %>%
-  select(year, adolescent_n, estimated_pop_fmt) %>%
-  gt() %>%
-  tab_header(
-    title = "Sample Size and Population Representativeness",
-    subtitle = "Comparison of Unweighted Sample (n) vs. Weighted Population Estimate (N)"
-  ) %>%
-  cols_label(
-    adolescent_n = " Adolescents with Complete Data for Age and Sex in the Survey Sample (n)",
-    estimated_pop_fmt = "Est. US Adolescent Pop. (N)"
-  ) 
+total_pop <- svytotal(~one, design = nsduh_sp, na.rm = TRUE) 
+total_pop 
 
+prev_year <- svyby( ~mj_past_year_bin, ~year, design = nsduh_sp, FUN = svymean, vartype = "ci", na.rm = TRUE ) 
 
-total_pop <- svytotal(~one, design = nsduh_sp, na.rm = TRUE)
-total_pop
+prev_year <- prev_year %>% 
+  mutate( prevalence = mj_past_year_binYes * 100, 
+          ci_l = ci_l.mj_past_year_binYes * 100, 
+          ci_u = ci_u.mj_past_year_binYes * 100 ) 
 
-prev_year <- svyby(
-  ~mj_past_year_bin, ~year, design = nsduh_sp,  FUN = svymean, vartype = "ci", na.rm = TRUE
-)
+prev_year 
 
-prev_year <- prev_year %>%
-  mutate(
-    prevalence = mj_past_year_bin * 100, 
-    ci_l = ci_l * 100,
-    ci_u = ci_u * 100
-  )
+#Cannabis users past year (2021-2024 N) 
 
-prev_year
+n_unweighted_year <- sum(nsduh_all$mj_past_year_bin == 1, na.rm = TRUE) 
+n_unweighted_year 
 
-#Cannabis users past year (2021-2024 N)
-n_unweighted_year <- sum(nsduh_all$mj_past_year_bin == 1, na.rm = TRUE)
-n_unweighted_year
+#Cannabis users past month (2021-2024 N) 
 
-#Cannabis users past month (2021-2024 N)
-n_unweighted_month <- sum(nsduh_all$mj_past_month_bin == 1, na.rm = TRUE)
-n_unweighted_month
+n_unweighted_month <- sum(nsduh_all$mj_past_month_bin == 1, na.rm = TRUE) 
+n_unweighted_month 
+
+# Figure 1 
+ggplot(prev_year, aes(x = year, y = prevalence)) + geom_line( group = 1, linewidth = 0.6, color = "black" )+ geom_point(size = 3, color = "black") + geom_errorbar( aes(ymin = ci_l, ymax = ci_u), width = 0.1, linewidth = 0.6, color = "black" ) + geom_text( aes(label = sprintf("%.1f%%", prevalence)), vjust = -3, size = 3.5, color = "black" ) + scale_y_continuous( limits = c(0, 20), breaks = seq(0, 20, by = 5), labels = scales::percent_format(scale = 1) ) + labs( x = "Survey Year", y = "Prevalence (%)", caption = "Error bars indicate 95% confidence intervals." ) + theme_minimal(base_size = 13) + theme( panel.grid.major.x = element_blank(), panel.grid.minor = element_blank(), panel.grid.major.y = element_line(color = "grey85"), axis.title = element_text(face = "bold"), axis.text = element_text(color = "black"), )
 
 
-# Figure 1
-ggplot(prev_year, aes(x = year, y = prevalence)) +
-  geom_line(
-  group = 1,
-  linewidth = 0.6,
-  color = "black"
-)+
-  geom_point(size = 3, color = "black") +
-  geom_errorbar(
-    aes(ymin = ci_l, ymax = ci_u),
-    width = 0.1,
-    linewidth = 0.6,
-    color = "black"
-  ) +
-  geom_text(
-    aes(label = sprintf("%.1f%%", prevalence)),
-    vjust = -3,
-    size = 3.5,
-    color = "black"
-  ) +
-  scale_y_continuous(
-    limits = c(0, 20),
-    breaks = seq(0, 20, by = 5),
-    labels = scales::percent_format(scale = 1)
-  ) +
-  labs(
-    x = "Survey Year",
-    y = "Prevalence (%)",
-    caption = "Error bars indicate 95% confidence intervals."
-  ) +
-  theme_minimal(base_size = 13) +
-  theme(
-    panel.grid.major.x = element_blank(),
-    panel.grid.minor = element_blank(),
-    panel.grid.major.y = element_line(color = "grey85"),
-    axis.title = element_text(face = "bold"),
-    axis.text = element_text(color = "black"),
-  )
 
 ```
 
@@ -547,23 +492,10 @@ ggplot(prev_year, aes(x = year, y = prevalence)) +
 
 nsduh_sp <- update(
   nsduh_sp,
-  year = factor(year, levels = c("2021", "2022", "2023", "2024"))
-)
-
-# Year of reference: 2022
-nsduh_sp <- update(
-  nsduh_sp,
-  year = relevel(year, ref = "2022")
-)
-
-
-nsduh_sp <- update(
-  nsduh_sp,
-  mj_past_year_bin = as.numeric(mj_past_year_bin == 1)
-)
+  year = relevel(factor(year, levels = c("2021", "2022", "2023", "2024")), ref = "2022"))
 
 model_year <- svyglm(
-  mj_past_year_bin ~ year,
+  mj_past_year ~ year,
   design = nsduh_sp,
   family = quasibinomial()
 )
@@ -578,16 +510,16 @@ table_year <- year_results %>%
   filter(term != "(Intercept)") %>%
   mutate(
     Year = gsub("year", "", term),
-    AOR = round(estimate, 2),
+    OR = round(estimate, 2),
     CI_low = round(conf.low, 2),
     CI_high = round(conf.high, 2),
     p_value = round(p.value, 3)
   ) %>%
-  select(Year, AOR, CI_low, CI_high, p_value)
+  select(Year, OR, CI_low, CI_high, p_value)
 
 ref_row <- tibble(
   Year = "2022 (REF)",
-  AOR = 1.00,
+  OR = 1.00,
   CI_low = NA,
   CI_high = NA,
   p_value = NA
@@ -598,7 +530,20 @@ table_year <- bind_rows(ref_row, table_year)
 table_year
 
 ```
+```{r}
 
+library(emmeans)
+
+emm <- emmeans(model_year, ~ year, type = "response")
+print(emm) 
+
+pares <- pairs(emm, adjust = "none", reverse = TRUE)
+
+print(pares)
+
+confint(pares)
+
+```
 
 # Supplementary Table 1 : Sociodemographic Characteristics of the Study Population by Year (2021–2024)
 
@@ -723,10 +668,17 @@ gt_table_profile <- dist_data_wide %>%
   ) %>%
   cols_align(align = "center", columns = everything()) %>%
   cols_align(align = "left", columns = stub()) %>%
+  tab_source_note(
+    source_note = md(
+      "**Abbreviations:** **NSDUH**: National Survey on Drug Use and Health; **CI**: Confidence Interval; **SUD**: Substance Use Disorder; **MDE**: Major Depressive Episode; **AIAN**: American Indian or Alaska Native; **NHPI**: Native Hawaiian or Other Pacific Islander; **CBSA**: Core Based Statistical Area; **1M**: 1 Million.<br>
+      **Note:** Estimates are weighted to represent the U.S. adolescent population living in households. Numbers may not sum to total due to rounding."
+    )
+  ) %>%
   tab_options(
     row_group.font.weight = "bold",
-    table.font.size = 12
+    table.font.size = 12, source_notes.font.size = 10 
   )
+
 
 gt_table_profile
 
@@ -736,8 +688,8 @@ gt_table_profile
 ```{r}
 library(gt)
 
-gtsave(gt_table_profile, "Tabela1_NSUDH_GT.html")
-gtsave(gt_table_profile, filename = "Tabela1_NSUDH.docx")
+gtsave(gt_table_profile, "Tabela1Sup_NSUDH_GT.html")
+gtsave(gt_table_profile, filename = "Tabela1Sup_NSUDH.docx")
 ```
 
 
@@ -747,7 +699,7 @@ gtsave(gt_table_profile, filename = "Tabela1_NSUDH.docx")
 ```{r}
 
 
-adolescents_use_year <- subset(nsduh_sp, mj_past_year_bin == 1)
+adolescents_use_year <- subset(nsduh_sp, mj_past_year == 1)
 
 
 
@@ -849,9 +801,15 @@ gt_table_profile2 <- dist_data_wide %>%
   ) %>%
   cols_align(align = "center", columns = everything()) %>%
   cols_align(align = "left", columns = stub()) %>%
+  tab_source_note(
+    source_note = md(
+      "**Abbreviations:** **NSDUH**: National Survey on Drug Use and Health; **CI**: Confidence Interval; **SUD**: Substance Use Disorder; **MDE**: Major Depressive Episode; **AIAN**: American Indian or Alaska Native; **NHPI**: Native Hawaiian or Other Pacific Islander; **CBSA**: Core Based Statistical Area; **1M**: 1 Million.<br>
+      **Note:** Estimates are weighted to represent the U.S. adolescent population living in households. Numbers may not sum to total due to rounding."
+    )
+  ) %>%
   tab_options(
     row_group.font.weight = "bold",
-    table.font.size = 12
+    table.font.size = 12, source_notes.font.size = 10 
   )
 
 gt_table_profile2
@@ -862,12 +820,125 @@ gt_table_profile2
 ```{r}
 library(gt)
 
-gtsave(gt_table_profile2, "Tabela2_NSUDH_GT.html")
-gtsave(gt_table_profile2, filename = "Tabela2_NSUDH.docx")
+gtsave(gt_table_profile2, "Tabela1_NSUDH_GT.html")
+gtsave(gt_table_profile2, filename = "Tabela1_NSUDH.docx")
 ```
 
+# Supplementary Table 2: Association between sociodemographic characteristics and current cannabis use among U.S. youth
+
+```{r}
+
+nsduh_pooled <- nsduh_all %>%
+    mutate(
+    weight_pooled = ANALWT2_C / 4,
+    family_income_cat = case_when(
+      family_income %in% c("<$10k", "$10–19k") ~ "<$20k",
+      family_income %in% c("$20–29k", "$30–39k") ~ "$20–39k",
+      family_income == "$40–49k" ~ "$40–49k",
+      family_income == "$50–74k" ~ "$50–74k",
+      family_income == "≥$75k" ~ "≥$75k",
+      TRUE ~ NA_character_), 
+    family_income_cat = factor(family_income_cat,
+      levels = c(
+        "<$20k",
+        "$20–39k",
+        "$40–49k",
+        "$50–74k",
+        "≥$75k"
+      ))) %>%
+  mutate(family_income_cat = relevel(family_income_cat, ref = "≥$75k")
+  )
+
+nsduh_design_pooled <- svydesign(
+  id = ~VEREP,
+  strata = ~VESTR_C,
+  weights = ~weight_pooled,
+  data = nsduh_pooled,
+  nest = TRUE
+)
+
+model_pooled <- svyglm(
+  mj_past_year ~ age_cat + sex + race + family_income_cat + county_type,
+  design = nsduh_design_pooled,
+  family = quasibinomial()
+)
+
+pooled_results <- tidy(
+  model_pooled,
+  exponentiate = TRUE,
+  conf.int = TRUE
+) %>%
+  filter(term != "(Intercept)") %>% 
+  mutate(
+    variable = case_when(
+      str_detect(term, "^age_cat") ~ "Age",
+      str_detect(term, "^sex") ~ "Gender",
+      str_detect(term, "^race") ~ "Race/Ethnicity",
+      str_detect(term, "^family_income_cat") ~ "Family Income",
+      str_detect(term, "^county_type") ~ "County Type"
+    ),
+    level = str_remove_all(
+      term,
+      "^age_cat|^sex|^race|^family_income_cat|^county_type"
+    ),
+    aor_ci = sprintf("%.2f (%.2f–%.2f)", estimate, conf.low, conf.high),
+    p_val = ifelse(p.value < 0.001, "<0.001", sprintf("%.3f", p.value))
+  ) %>%
+  select(variable, level, aor_ci, p_val)
 
 
+pooled_results_final <- bind_rows(pooled_results) %>%
+  mutate(variable = factor(variable, levels = c(
+    "Age", "Gender", "Race/Ethnicity", "Family Income", "County Type"
+  ))) %>%
+  group_by(variable) %>%
+  ungroup()
+
+
+final_table_pooled <- pooled_results_final %>%
+  gt(groupname_col = "variable", rowname_col = "level") %>%
+  tab_stubhead(label = "Category") %>%
+  cols_align(
+  align = "center",
+  columns = c(aor_ci, p_val)
+)%>%
+  cols_label(
+    aor_ci = "AOR (95% CI)",
+    p_val = "p-value"
+  ) %>%
+  tab_header(
+    title = "Association between sociodemographic characteristics and current cannabis use among U.S. youth",
+    subtitle = "NSDUH 2021–2024, adjusted odds ratios"
+  ) %>%
+  tab_options(
+      column_labels.font.weight = "bold"
+  ) %>% # <--- Fecha o tab_options aqui antes de dar o pipe
+  tab_source_note(
+    source_note = md(
+      "**Abbreviations:** **NSDUH**: National Survey on Drug Use and Health; **AOR**: Adjusted Odds Ratio; **CI**: Confidence Interval; **AIAN**: American Indian or Alaska Native; **NHPI**: Native Hawaiian or Other Pacific Islander.<br>
+      **Note:** Model adjusted for age, sex, race/ethnicity, income, and county type."
+    )
+  ) %>%
+  tab_options(
+    row_group.font.weight = "bold",
+    table.font.size = 12, 
+    source_notes.font.size = 10 
+  )
+  
+
+
+final_table_pooled
+
+
+
+```
+
+```{r}
+library(gt)
+
+gtsave(final_table_pooled, "Tabela2Sup_NSUDH_GT.html")
+gtsave(final_table_pooled, filename = "Tabela2Sup_NSUDH.docx")
+```
 
 
 # Among adolescents who reported past-year cannabis use, what was the prevalence of marijuana use disorder?
@@ -887,10 +958,7 @@ nsduh_design <- svydesign(
   nest = TRUE
 )
 
-nsduh_design <- update(nsduh_design, mrj_use_disorder_bin = ifelse(mrj_use_disorder == 1, 1, 0))
-nsduh_design <- update(nsduh_design, mj_past_year_bin = ifelse(mj_past_year_num == "Yes", 1, 0))
-
-adolescents_users <- subset(nsduh_design, mj_past_year_bin == 1 & !is.na(mrj_use_disorder_bin))
+adolescents_users <- subset(nsduh_design, mj_past_year == 1 & !is.na(mrj_use_disorder_bin))
 
 # Prevalence
 svyby(~mrj_use_disorder_bin, ~year, adolescents_users, svymean, na.rm = TRUE)
@@ -903,6 +971,44 @@ model_adj <- svyglm(
 summary(model_adj)
 
 exp(cbind(OR = coef(model_adj), confint(model_adj)))
+
+
+library(gtsummary)
+library(gt)
+
+tabela_cud <- tbl_regression(
+  model_adj, 
+  exponentiate = TRUE, # Transforma Log-Odds em Odds Ratio
+  conf.int = TRUE,     # Mostra o IC 95%
+  pvalue_fun = ~style_pvalue(.x, digits = 3), # Formata o p-valor
+  label = list(        # Opcional: Renomeia as variáveis para ficar bonito
+    age_cat ~ "Age Category",
+    sex ~ "Sex",
+    race ~ "Race/Ethnicity",
+    family_income ~ "Family Income",
+    year ~ "Survey Year"
+  )
+) %>%
+  bold_p() %>%        # Deixa p < 0.05 em negrito
+  add_global_p() %>%  # Adiciona p-valor global para variáveis categóricas
+  as_gt() %>%         # Converte para gt para podermos por título
+  tab_header(
+    title = md("**Factors Associated with Cannabis Use Disorder (CUD)**"),
+    subtitle = "Multivariable Logistic Regression (NSDUH 2021-2024)"
+  ) %>%
+  tab_source_note(
+    source_note = "Model adjusted for age, sex, race, income, and year."
+  )
+
+# Visualizar
+tabela_cud
+
+# Salvar no Word
+gtsave(tabela_cud, "Tabela_Regressao_CUD.docx")
+
+
+
+
 
 ```
 
@@ -1241,104 +1347,7 @@ vape_risk
 
 ```
 
-# Supplementary Table 2: Association between sociodemographic characteristics and current cannabis use among U.S. youth
 
-```{r}
-
-nsduh_pooled <- nsduh_all %>%
-    mutate(
-    weight_pooled = ANALWT2_C / 4,
-    mj_past_year_num = ifelse(mj_past_year_num == "Yes", 1, 0), 
-    family_income_cat = case_when(
-      family_income %in% c("<$10k", "$10–19k") ~ "<$20k",
-      family_income %in% c("$20–29k", "$30–39k") ~ "$20–39k",
-      family_income == "$40–49k" ~ "$40–49k",
-      family_income == "$50–74k" ~ "$50–74k",
-      family_income == "≥$75k" ~ "≥$75k",
-      TRUE ~ NA_character_), 
-    family_income_cat = factor(family_income_cat,
-      levels = c(
-        "<$20k",
-        "$20–39k",
-        "$40–49k",
-        "$50–74k",
-        "≥$75k"
-      ))) %>%
-  mutate(family_income_cat = relevel(family_income_cat, ref = "≥$75k")
-  )
-
-nsduh_design_pooled <- svydesign(
-  id = ~VEREP,
-  strata = ~VESTR_C,
-  weights = ~weight_pooled,
-  data = nsduh_pooled,
-  nest = TRUE
-)
-
-model_pooled <- svyglm(
-  mj_past_year_num ~ age_cat + sex + race + family_income_cat + county_type,
-  design = nsduh_design_pooled,
-  family = quasibinomial()
-)
-
-pooled_results <- tidy(
-  model_pooled,
-  exponentiate = TRUE,
-  conf.int = TRUE
-) %>%
-  filter(term != "(Intercept)") %>% 
-  mutate(
-    variable = case_when(
-      str_detect(term, "^age_cat") ~ "Age",
-      str_detect(term, "^sex") ~ "Gender",
-      str_detect(term, "^race") ~ "Race/Ethnicity",
-      str_detect(term, "^family_income_cat") ~ "Family Income",
-      str_detect(term, "^county_type") ~ "County Type"
-    ),
-    level = str_remove_all(
-      term,
-      "^age_cat|^sex|^race|^family_income_cat|^county_type"
-    ),
-    aor_ci = sprintf("%.2f (%.2f–%.2f)", estimate, conf.low, conf.high),
-    p_val = ifelse(p.value < 0.001, "<0.001", sprintf("%.3f", p.value))
-  ) %>%
-  select(variable, level, aor_ci, p_val)
-
-
-pooled_results_final <- bind_rows(pooled_results) %>%
-  mutate(variable = factor(variable, levels = c(
-    "Age", "Gender", "Race/Ethnicity", "Family Income", "County Type"
-  ))) %>%
-  group_by(variable) %>%
-  ungroup()
-
-
-final_table_pooled <- pooled_results_final %>%
-  gt(groupname_col = "variable", rowname_col = "level") %>%
-  tab_stubhead(label = "Category") %>%
-  cols_align(
-  align = "center",
-  columns = c(aor_ci, p_val)
-)%>%
-  cols_label(
-    aor_ci = "AOR (95% CI)",
-    p_val = "p-value"
-  ) %>%
-  tab_header(
-    title = "Association between sociodemographic characteristics and current cannabis use among U.S. youth",
-    subtitle = "NSDUH 2021–2024, adjusted odds ratios"
-  ) %>%
-  tab_options(
-    row_group.background.color = "#E0E0E0",
-    column_labels.font.weight = "bold"
-  )
-
-
-final_table_pooled
-
-
-
-```
 
 # Defyning SUD 
 
