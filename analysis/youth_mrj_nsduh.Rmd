@@ -171,10 +171,7 @@ vars_keep <- c(
 nsduh_all <- nsduh_all |>  dplyr:: select(any_of(vars_keep))
 
 missing_vals <- list(
-  MJREC = c(91,97,98),
-  YMDERSUD5ANY = c(85,94,97,98,99),
-  YMDESUD5ANYO = c(85,94,97,98,99)
-  )
+  MJREC = c(91,97,98))
 
 nsduh_all <- replace_with_na(nsduh_all, missing_vals)
 
@@ -220,7 +217,7 @@ nsduh_all <- nsduh_all %>%
     pop_density = factor(pop_density, 1:3,
       c("≥1M CBSA","<1M CBSA","Non-CBSA")),
     insurance = factor(insurance, levels = c(1,2), labels = c("Yes","No")),
-    sud_or_mde_num = factor(sud_or_mde_num, levels = c(1,0), labels = c("Yes","No")),
+    sud_or_mde_num = factor(sud_or_mde_num, levels = c(1:3), labels = c("Yes","No", "NA")),
     mj_past_month_num = factor(mj_past_month_num, levels = c(1,0), labels = c("Yes","No")),
     mj_past_year_num = factor(mj_past_year_num, levels = c(1,0), labels = c("Yes","No")),
     mrj_use_disorder_num = factor (mrj_use_disorder_num, levels = c(1,0), labels = c("Yes","No")), 
@@ -228,8 +225,8 @@ nsduh_all <- nsduh_all %>%
       c("<$10k","$10–19k","$20–29k","$30–39k","$40–49k","$50–74k","≥$75k")),
     poverty = factor(poverty, 1:3,
       c("Living in Poverty", "Income Up to 2X Federal Poverty Threshold", "Income More Than 2X Federal Poverty Threshold")),
-    mde_sud_raw = factor(mde_sud_raw, 1:4, 
-                         c("SUD only", "MDE only", "SUD and MDE", "Neither"))
+    mde_sud_raw = factor(mde_sud_raw, 1:5, 
+                         c("SUD only", "MDE only", "SUD and MDE", "Neither", "NA"))
   )
 
 var_label(nsduh_all) <- list(
@@ -263,6 +260,171 @@ nsduh_sp <- svydesign(
 dim(nsduh_sp)
 
 ```
+
+
+```{r}
+
+
+vars_keep <- c(
+  "YEAR","MRJYR","MJREC","YMDERSUD5ANY","YMDESUD5ANYO",
+  "AGE3","IRSEX","NEWRACE2","COUTYP4","PDEN10","IRINSUR4","IRFAMIN3",
+  "POVERTY3","EDUSKPEST","IRPYUD5MRJ","IRPYUD5ALC", "IRPYUD5COC", 
+  "IRPYUD5HER", "IRPYUD5HAL", "IRPYUD5INH", "IRPYUD5MTH",
+  "ANALWT2_C3","ANALWT2_C","VESTR_C","VEREP"
+)
+
+nsduh_all <- nsduh_all |>  dplyr:: select(any_of(vars_keep))
+
+nsduh_all <- nsduh_all %>%
+  rename(
+    year = YEAR,
+    mj_past_year = MRJYR,
+    mj_recency = MJREC,
+    sud_or_mde_raw = YMDERSUD5ANY,
+    mde_sud_raw = YMDESUD5ANYO,
+    age_cat = AGE3,
+    sex = IRSEX,
+    race = NEWRACE2,
+    county_type = COUTYP4,
+    pop_density = PDEN10,
+    insurance = IRINSUR4,
+    family_income = IRFAMIN3,
+    poverty = POVERTY3,
+    mrj_use_disorder = IRPYUD5MRJ
+  )
+
+
+nsduh_all <- nsduh_all %>%
+  mutate(
+
+    # MJREC — 3 categories
+    mj_past_month_3cat = case_when(
+      mj_recency %in% c(1, 11) ~ "Yes",
+      mj_recency %in% c(2, 3, 8, 9) ~ "No",
+      mj_recency %in% c(91, 97, 98) ~ "Never used/Unknown",
+      TRUE ~ NA_character_
+    ),
+
+    # YMDERSUD5ANY — 3 categories
+    sud_or_mde_3cat = case_when(
+      sud_or_mde_raw == 1 ~ "Yes",
+      sud_or_mde_raw == 0 ~ "No",
+      is.na(sud_or_mde_raw) ~ "Unknown"
+    ),
+
+    # YMDESUD5ANYO — 5 categories
+    mde_sud_5cat = case_when(
+      mde_sud_raw == 1 ~ "SUD only",
+      mde_sud_raw == 2 ~ "MDE only",
+      mde_sud_raw == 3 ~ "SUD and MDE",
+      mde_sud_raw == 4 ~ "Neither",
+      is.na(mde_sud_raw) ~ "Unknown"
+    )
+  )
+
+ 
+nsduh_all <- nsduh_all %>%
+  mutate(
+    mj_past_month_bin = case_when(
+      mj_recency %in% c(1, 11) ~ 1,
+      mj_recency %in% c(2, 3, 8, 9) ~ 0,
+      TRUE ~ NA_real_
+    ),
+
+    mj_past_year_bin = case_when(
+      mj_past_year == 1 ~ 1,
+      mj_past_year == 0 ~ 0,
+      TRUE ~ NA_real_
+    ),
+
+    sud_or_mde_bin = case_when(
+      sud_or_mde_raw == 1 ~ 1,
+      sud_or_mde_raw == 0 ~ 0,
+      TRUE ~ NA_real_
+    ),
+
+    mrj_use_disorder_bin = case_when(
+      mrj_use_disorder == 1 ~ 1,
+      mrj_use_disorder == 0 ~ 0,
+      TRUE ~ NA_real_
+    )
+  )
+
+nsduh_all <- nsduh_all %>%
+  mutate(subpop = ifelse(!is.na(age_cat) & !is.na(sex), 1, 0))
+
+
+nsduh_all <- nsduh_all %>%
+  mutate(
+    year = factor(year),
+    age_cat = factor(age_cat, 1:3, c("12–13","14–15","16–17")),
+    sex = factor(sex, 1:2, c("Male","Female")),
+    race = factor(race, 1:7,
+                  c("White","Black","AIAN","NHPI","Asian","Multiracial","Hispanic")),
+    county_type = factor(county_type, 1:3,
+                         c("Large metro","Small metro","Nonmetro")),
+    pop_density = factor(pop_density, 1:3,
+                         c("≥1M CBSA","<1M CBSA","Non-CBSA")),
+    insurance = factor(insurance, c(1,2), c("Yes","No")),
+    family_income = factor(family_income, 1:7,
+                           c("<$10k","$10–19k","$20–29k","$30–39k",
+                             "$40–49k","$50–74k","≥$75k")),
+    poverty = factor(poverty, 1:3,
+                     c("Living in Poverty",
+                       "Income ≤2× Federal Poverty Threshold",
+                       "Income >2× Federal Poverty Threshold")),
+    mj_past_month_3cat = factor(
+      mj_past_month_3cat,
+      levels = c("Yes","No","Never used/Unknown")
+    ),
+    sud_or_mde_3cat = factor(
+      sud_or_mde_3cat,
+      levels = c("Yes","No","Unknown")
+    ),
+    mde_sud_5cat = factor(
+      mde_sud_5cat,
+      levels = c("SUD only","MDE only","SUD and MDE","Neither",
+                 "Unknown")
+    )
+  )
+
+var_label(nsduh_all) <- list(
+  year = "Survey year",
+  age_cat = "Age group (years)",
+  sex = "Sex",
+  race = "Race/Ethnicity",
+  county_type = "County type",
+  pop_density = "Population density (CBSA)",
+  insurance = "Health insurance coverage",
+  family_income = "Family income",
+  poverty = "Poverty level",
+  mj_past_month_3cat = "Marijuana use in the past 30 days",
+  sud_or_mde_3cat = "Past-year MDE or SUD (DSM-5 criteria)",
+  mde_sud_5cat = "Past-year MDE and SUD status (DSM-5 criteria)",
+  mj_past_month_bin = "Marijuana use in the past 30 days (binary)",
+  mj_past_year_bin = "Marijuana use in the past year (binary)",
+  sud_or_mde_bin = "Past-year MDE or SUD (binary)",
+  mrj_use_disorder_bin = "Marijuana Use Disorder (past year)"
+)
+
+
+nsduh_sp <- svydesign(
+  id = ~VEREP,
+  strata = ~VESTR_C,
+  weights = ~ANALWT2_C,
+  data = nsduh_all,
+  nest = TRUE
+)
+
+dim(nsduh_sp)
+
+
+
+
+
+```
+
+
 
 # Study Population 
 # Figure 1: Prevalence of Past-Year Cannabis Use Among U.S. Adolescents (2021-2024)
@@ -313,27 +475,25 @@ total_pop <- svytotal(~one, design = nsduh_sp, na.rm = TRUE)
 total_pop
 
 prev_year <- svyby(
-  ~mj_past_year_num, ~year, design = nsduh_sp,  FUN = svymean, vartype = "ci", na.rm = TRUE
+  ~mj_past_year_bin, ~year, design = nsduh_sp,  FUN = svymean, vartype = "ci", na.rm = TRUE
 )
 
 prev_year <- prev_year %>%
   mutate(
-    prevalence = mj_past_year_numYes * 100,  # se for factor
-    ci_l = ci_l.mj_past_year_numYes * 100,
-    ci_u = ci_u.mj_past_year_numYes * 100
+    prevalence = mj_past_year_bin * 100, 
+    ci_l = ci_l * 100,
+    ci_u = ci_u * 100
   )
 
 prev_year
 
 #Cannabis users past year (2021-2024 N)
-nsduh_used_mj_year<- subset(nsduh_sp, mj_past_year_num == "Yes")
-n_unweighted <- sum(!is.na(nsduh_used_mj_year$variables$mj_past_year_num))
-n_unweighted
+n_unweighted_year <- sum(nsduh_all$mj_past_year_bin == 1, na.rm = TRUE)
+n_unweighted_year
 
 #Cannabis users past month (2021-2024 N)
-nsduh_used_mj_month <- subset(nsduh_sp, mj_past_month_num == "Yes")
-n_unweighted_2 <- sum(!is.na(nsduh_used_mj_month$variables$mj_past_month_num))
-n_unweighted_2
+n_unweighted_month <- sum(nsduh_all$mj_past_month_bin == 1, na.rm = TRUE)
+n_unweighted_month
 
 
 # Figure 1
@@ -399,11 +559,11 @@ nsduh_sp <- update(
 
 nsduh_sp <- update(
   nsduh_sp,
-  mj_past_year_num = as.numeric(mj_past_year_num == "Yes")
+  mj_past_year_bin = as.numeric(mj_past_year_bin == 1)
 )
 
 model_year <- svyglm(
-  mj_past_year_num ~ year,
+  mj_past_year_bin ~ year,
   design = nsduh_sp,
   family = quasibinomial()
 )
@@ -458,9 +618,11 @@ covariates_labels <- c(
   insurance = "Health insurance",
   family_income = "Family income",
   poverty = "Poverty status",
-  mj_past_month_num = "Marijuana use in the past 30 days",
-  mrj_use_disorder_num = "Marijuana Use Disorder in the past 12 months",
-  mde_sud_raw = "Past-year MDE and SUD Status (DSM-5)"
+  mj_past_year_bin = "Marijuana use in the past year (binary)",
+  mj_past_month_3cat = "Marijuana use in the past 30 days",
+  mrj_use_disorder_bin = "Marijuana Use Disorder in the past 12 months",
+  sud_or_mde_3cat = "Past-year MDE or SUD Status (DSM-5 criteria)", 
+  mde_sud_5cat = "Past-year MDE and SUD Categories (DSM-5 criteria)"
   
 )
 
@@ -482,26 +644,59 @@ get_distribution <- function(var_name, label_var) {
       na.rm = TRUE
     )
 
-    res_formatted <- res %>%
-      pivot_longer(-year, names_to = "col_name", values_to = "value") %>%
-      mutate(
-        stat_type = case_when(
-          grepl("^ci_l", col_name) ~ "ci_l",
-          grepl("^ci_u", col_name) ~ "ci_u",
-          TRUE ~ "mean"
-        ),
-        level_label = col_name %>%
-          gsub("^ci_l\\.|^ci_u\\.", "", .) %>%
-          gsub(paste0("^", var_name), "", .)
-      ) %>%
-      select(year, level_label, stat_type, value) %>%
-      pivot_wider(names_from = stat_type, values_from = value) %>%
-      mutate(
-        result_formatted = sprintf(
-          "%.2f (%.2f, %.2f)", mean * 100, ci_l * 100, ci_u * 100
-        ),
-        variable_group = label_var
-      )
+    # ----- Detect binary variables (0/1) -----
+    is_binary <- all(unique(na.omit(var_data)) %in% c(0, 1))
+
+    if (is_binary) {
+
+      # names created by svyby:
+      #   var_name
+      #   ci_l.var_name
+      #   ci_u.var_name
+
+      mean_col <- var_name
+      ci_l_col <- paste0("ci_l.", var_name)
+      ci_u_col <- paste0("ci_u.", var_name)
+
+      res_formatted <- res %>%
+        transmute(
+          year,
+          level_label = "Yes",
+          mean = .data[[mean_col]],
+          ci_l = .data[[ci_l_col]],
+          ci_u = .data[[ci_u_col]],
+          result_formatted = sprintf(
+            "%.2f (%.2f, %.2f)",
+            mean * 100, ci_l * 100, ci_u * 100
+          ),
+          variable_group = label_var
+        )
+
+    } else {
+
+      # ----- Categorical variables -----
+      res_formatted <- res %>%
+        pivot_longer(-year, names_to = "col_name", values_to = "value") %>%
+        mutate(
+          stat_type = case_when(
+            grepl("^ci_l", col_name) ~ "ci_l",
+            grepl("^ci_u", col_name) ~ "ci_u",
+            TRUE ~ "mean"
+          ),
+          level_label = col_name %>%
+            gsub("^ci_l\\.|^ci_u\\.", "", .) %>%
+            gsub(paste0("^", var_name), "", .)
+        ) %>%
+        select(year, level_label, stat_type, value) %>%
+        pivot_wider(names_from = stat_type, values_from = value) %>%
+        mutate(
+          result_formatted = sprintf(
+            "%.2f (%.2f, %.2f)",
+            mean * 100, ci_l * 100, ci_u * 100
+          ),
+          variable_group = label_var
+        )
+    }
 
     res_formatted
 
@@ -523,8 +718,8 @@ dist_data_wide <- dist_data_long %>%
 gt_table_profile <- dist_data_wide %>%
   gt(groupname_col = "variable_group", rowname_col = "level_label") %>%
   tab_header(
-    title = " Population sociodemographic characteristics (2021–2024)",
-    subtitle = "NSDUH 2021–2024, Weighted Prevalence (95% CI)"
+    title = "Characteristics of the Study Population: U.S. Adolescents Aged 12–17 Years, NSDUH 2021–2024",
+    subtitle = "Weighted Prevalence (95% CI)"
   ) %>%
   cols_align(align = "center", columns = everything()) %>%
   cols_align(align = "left", columns = stub()) %>%
@@ -538,17 +733,28 @@ gt_table_profile
 ```
 
 
+```{r}
+library(gt)
+
+gtsave(gt_table_profile, "Tabela1_NSUDH_GT.html")
+gtsave(gt_table_profile, filename = "Tabela1_NSUDH.docx")
+```
+
+
+
 # Table 1: Sociodemographic characteristics of US adolescents with past-year cannabis use by year (Weighted prevalence), 2021–2024
 
 ```{r}
 
 
-adolescents_use_year <- subset(nsduh_sp, mj_past_year_num == 1)
+adolescents_use_year <- subset(nsduh_sp, mj_past_year_bin == 1)
 
-get_distribution <- function(var_name, label_var, design_subset) {
+
+
+get_distribution <- function(var_name, label_var, design_data) {
   tryCatch({
 
-    var_data <- adolescents_use_year$variables[[var_name]]
+    var_data <- design_data$variables[[var_name]]
 
     if (length(unique(na.omit(var_data))) < 2) {
       return(NULL)
@@ -557,32 +763,58 @@ get_distribution <- function(var_name, label_var, design_subset) {
     res <- svyby(
       as.formula(paste0("~", var_name)),
       by = ~year,
-      design = adolescents_use_year,
+      design = design_data,
       FUN = svymean,
       vartype = "ci",
       na.rm = TRUE
     )
 
-    res_formatted <- res %>%
-      pivot_longer(-year, names_to = "col_name", values_to = "value") %>%
-      mutate(
-        stat_type = case_when(
-          grepl("^ci_l", col_name) ~ "ci_l",
-          grepl("^ci_u", col_name) ~ "ci_u",
-          TRUE ~ "mean"
-        ),
-        level_label = col_name %>%
-          gsub("^ci_l\\.|^ci_u\\.", "", .) %>%
-          gsub(paste0("^", var_name), "", .)
-      ) %>%
-      select(year, level_label, stat_type, value) %>%
-      pivot_wider(names_from = stat_type, values_from = value) %>%
-      mutate(
-        result_formatted = sprintf(
-          "%.2f (%.2f, %.2f)", mean * 100, ci_l * 100, ci_u * 100
-        ),
-        variable_group = label_var
-      )
+    is_binary <- all(unique(na.omit(var_data)) %in% c(0, 1))
+
+    if (is_binary) {
+
+      mean_col <- var_name
+      ci_l_col <- paste0("ci_l.", var_name)
+      ci_u_col <- paste0("ci_u.", var_name)
+
+      res_formatted <- res %>%
+        transmute(
+          year,
+          level_label = "Yes",
+          mean = .data[[mean_col]],
+          ci_l = .data[[ci_l_col]],
+          ci_u = .data[[ci_u_col]],
+          result_formatted = sprintf(
+            "%.2f (%.2f, %.2f)",
+            mean * 100, ci_l * 100, ci_u * 100
+          ),
+          variable_group = label_var
+        )
+
+    } else {
+
+      res_formatted <- res %>%
+        pivot_longer(-year, names_to = "col_name", values_to = "value") %>%
+        mutate(
+          stat_type = case_when(
+            grepl("^ci_l", col_name) ~ "ci_l",
+            grepl("^ci_u", col_name) ~ "ci_u",
+            TRUE ~ "mean"
+          ),
+          level_label = col_name %>%
+            gsub("^ci_l\\.|^ci_u\\.", "", .) %>%
+            gsub(paste0("^", var_name), "", .)
+        ) %>%
+        select(year, level_label, stat_type, value) %>%
+        pivot_wider(names_from = stat_type, values_from = value) %>%
+        mutate(
+          result_formatted = sprintf(
+            "%.2f (%.2f, %.2f)",
+            mean * 100, ci_l * 100, ci_u * 100
+          ),
+          variable_group = label_var
+        )
+    }
 
     res_formatted
 
@@ -592,11 +824,13 @@ get_distribution <- function(var_name, label_var, design_subset) {
   })
 }
 
-# Lista apenas das características sociodemográficas
+
 sociodemographic_labels <- covariates_labels[c("sex", "age_cat", "race", 
                                                 "county_type", "pop_density",
                                                 "insurance", "family_income",
-                                                "poverty")]
+                                                "poverty", "mj_past_month_3cat", 
+                                                "mrj_use_disorder_bin", 
+                                                "sud_or_mde_3cat", "mde_sud_5cat")]
 
 dist_data_long <- map_dfr(
   names(sociodemographic_labels),
@@ -607,10 +841,10 @@ dist_data_wide <- dist_data_long %>%
   select(variable_group, level_label, year, result_formatted) %>%
   pivot_wider(names_from = year, values_from = result_formatted)
 
-gt_table_profile <- dist_data_wide %>%
+gt_table_profile2 <- dist_data_wide %>%
   gt(groupname_col = "variable_group", rowname_col = "level_label") %>%
   tab_header(
-    title = "Weighted prevalence of past-year cannabis use by sociodemographic characteristics among US adolescents, 2021–2024",
+    title = "Sociodemographic and Mental Health Profile of US Adolescents With Past-Year Cannabis Use, 2021–2024",
     subtitle = "NSDUH 2021–2024, Weighted Prevalence (95% CI)"
   ) %>%
   cols_align(align = "center", columns = everything()) %>%
@@ -620,9 +854,20 @@ gt_table_profile <- dist_data_wide %>%
     table.font.size = 12
   )
 
-gt_table_profile
+gt_table_profile2
 
 ```
+
+
+```{r}
+library(gt)
+
+gtsave(gt_table_profile2, "Tabela2_NSUDH_GT.html")
+gtsave(gt_table_profile2, filename = "Tabela2_NSUDH.docx")
+```
+
+
+
 
 
 # Among adolescents who reported past-year cannabis use, what was the prevalence of marijuana use disorder?

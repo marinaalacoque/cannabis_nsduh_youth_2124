@@ -1,0 +1,2138 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{longtable}
+\usepackage{colortbl}
+\usepackage{array}
+\usepackage{anyfontsize}
+\usepackage{multirow}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={NSDUH project},
+  pdfauthor={Marina Alacoque Rodrigues},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{NSDUH project}
+\author{Marina Alacoque Rodrigues}
+\date{2026-01-02}
+
+\begin{document}
+\maketitle
+
+\section{Patterns and Trends of Cannabis Use and Mental Health Among
+U.S.
+Adolescents(2021--2024)}\label{patterns-and-trends-of-cannabis-use-and-mental-health-among-u.s.-adolescents20212024}
+
+\subsection{1. Background and Rationale}\label{background-and-rationale}
+
+Prevention of cannabis use among adolescents has become an increasingly
+important public health priority in the United States (Bhangu et al.,
+2025). This concern has grown alongside major shifts in cannabis policy,
+the expansion of new modes of consumption, and a parallel rise in mental
+health problems among young people (Nguyen et al., 2023; Hammond, et
+al., 2020). The legalization of recreational and medical cannabis in
+several U.S. jurisdictions, as well as the decriminalization of
+possession and use (Mattingly et al., 2024), has increased both access
+to cannabis and its visibility in everyday life, contributing to broader
+social acceptance and normalization of use (Farrelly et al., 2023;
+Lapham et al., 2023; Smart \& Pacula, 2019). In 2022, data from the
+National Survey on Drug Use and Health (NSDUH) indicated that 61.9
+million individuals reported cannabis use in the past year, while 42.3
+million reported use in the past 30 days, reflecting a continued
+long-term upward trend (Mattingly et al., 2024; SAMHSA, 2023).Within
+this evolving context, cannabis has become the most commonly used
+illicit substance in the United States and the third most frequently
+used psychoactive substance among adolescents, after alcohol and
+nicotine (Ross, \& Levy, 2023; Nguyen et al., 2023).
+
+At the same time, perceptions of cannabis as a relatively low-risk
+substance, often reinforced by discussions of potential therapeutic
+benefits, stand in contrast to a growing body of evidence documenting
+its adverse health effects (Florimbio et al., 2024; Whiteley et al.,
+2021). Adolescents may be particularly vulnerable to these effects due
+to ongoing brain development and the central role of the endocannabinoid
+system in neural organization, behavioral regulation, and maturation
+(Scheyer et al., 2023; Hurd et al., 2019). Early exposure to exogenous
+cannabinoids may therefore confer long-term consequences, including
+cognitive impairment, emotional dysregulation, and increased risk of
+psychiatric comorbidity such as depression, anxiety disorders, and
+psychosis, as well as self-harm behaviors (Bhangu et al., 2025;
+Florimbio et al., 2024; Scheyer et al., 2023). Prior research indicates
+that adolescents with any history of cannabis use experience higher
+rates of lifetime and past-year major depressive disorder (MDD), MDD
+with severe role impairment, and past-year suicide attempts (all p
+\textless{} 0.001) (Gukasyan and Strain, 2020).
+
+Beyond mental health outcomes, both acute and chronic cannabis use have
+been linked to impairments in memory, learning, attention, executive
+functioning, and motor coordination, as well as a greater likelihood of
+initiating other illicit substances (Queiroz et al., 2025; Camchong et
+al., 2017). According to the Substance Abuse and Mental Health Services
+Administration's report, approximately 10\% of individuals who use
+cannabis develop cannabis use disorder, with this proportion increasing
+to 16--17\% among those who initiate use before the age of 18 (SAMHSA,
+2024). Emerging research also points to broader neurobiological effects,
+including dysregulation of the hypothalamic--pituitary--adrenal axis and
+disruptions in sleep architecture, underscoring the complex and
+potentially enduring consequences of cannabis exposure during
+adolescence (Bhangu et al., 2025; Velzeboer et al., 2025; Cservenka et
+al., 2018).
+
+Despite these concerns, important questions remain regarding the causal
+nature of the relationship between cannabis use and adverse health
+outcomes, as well as the directionality of these associations. These
+uncertainties are further heightened by the rapid emergence of
+high-potency products and alternative modes of consumption, such as
+vaping concentrates and ingesting edibles, which have become
+increasingly popular among adolescents in recent years (Lee et al.,
+2023; Schauer et al., 2020). Notably, vaping illicit cannabis products
+has been implicated in cases of e-cigarette or vaping product
+use--associated lung injury (EVALI), which resulted in 2,807
+hospitalizations in the United States by 2019 (CDC, 2020).
+
+In this context of changing policies, evolving patterns of use, and
+ongoing scientific debate, up-to-date and nationally representative
+evidence is essential to inform public policy, prevention efforts, and
+youth-focused health education. Accordingly, this study examines recent
+patterns and trends in cannabis use among U.S. adolescents aged 12--17
+years from 2021 to 2024, with particular attention to sociodemographic
+differences, modes of consumption, and potential associations with
+mental health outcomes.
+
+\subsection{2. Objectives}\label{objectives}
+
+\subsubsection{2.1. To characterize the sociodemographic profile of
+adolescents reporting past-year marijuana
+use.}\label{to-characterize-the-sociodemographic-profile-of-adolescents-reporting-past-year-marijuana-use.}
+
+\subsubsection{2.2. To estimate the prevalence of different modes of
+marijuana administration (e.g., smoking, vaping, edibles,
+concentrates).}\label{to-estimate-the-prevalence-of-different-modes-of-marijuana-administration-e.g.-smoking-vaping-edibles-concentrates.}
+
+\subsubsection{2.3. To assess temporal trends in use between 2021 and
+2024.}\label{to-assess-temporal-trends-in-use-between-2021-and-2024.}
+
+\subsubsection{2.4. To evaluate the association between marijuana use
+patterns and major depressive
+episodes.}\label{to-evaluate-the-association-between-marijuana-use-patterns-and-major-depressive-episodes.}
+
+\subsection{3. Expected Contributions}\label{expected-contributions}
+
+This study provides an updated and detailed portrait of adolescent
+marijuana use in the United States, highlighting its intersection with
+mental health and contributing to a more nuanced understanding of recent
+patterns of adolescent use.
+
+\subsection{4. Methods}\label{methods}
+
+\subsubsection{4.1. Data source and study
+population}\label{data-source-and-study-population}
+
+This multi-year cross-sectional study used data from the 2021--2024
+National Survey on Drug Use and Health (NSDUH), a nationally
+representative survey administered by the Substance Abuse and Mental
+Health Services Administration (SAMHSA). The NSDUH collects information
+on sociodemographic characteristics, mental health, substance use, and
+treatment utilization among noninstitutionalized U.S. civilians aged 12
+years or older using a multistage, stratified probability sampling
+design across all states and Washington, DC. Beginning in late 2020, the
+NSDUH implemented multimodal data collection procedures, including
+in-person and web-based surveys, in response to disruptions caused by
+the COVID-19 pandemic (SAMHSA, 2023).
+
+The analytic sample was restricted to adolescents aged 12--17 years who
+completed the survey between 2021 and 2024 and had complete information
+on cannabis use, mental health indicators, and sociodemographic
+variables. The NSDUH applies standardized imputation procedures to
+address item-level missing data; therefore, the final analytic dataset
+contained no missing values on study variables. Analysis of these
+deidentified, publicly available data was considered exempt from
+institutional review board review per institutional and federal
+regulations.
+
+\subsubsection{4.2. Measures}\label{measures}
+
+\paragraph{Cannabis use and Mental health
+outcomes}\label{cannabis-use-and-mental-health-outcomes}
+
+Cannabis use was assessed via self-report. Past-year cannabis use was
+defined as any reported use of marijuana during the 12 months preceding
+the interview (yes/no), and current cannabis use was defined as use
+within the past 30 days (yes/no). Binary indicators of cannabis use were
+created to ensure consistency across analytic models and to validate
+exposure classification using multiple time-based definitions. Beginning
+in 2021, the NSDUH introduced questions on marijuana vaping within an
+``emerging issues'' section of the questionnaire. The standardized
+questions assessing multiple modes of marijuana use were implemented
+consistently starting in 2022. Therefore, analyses of prevalence and
+mode-specific patterns of marijuana use in the present study were
+restricted to survey years 2022--2024 to ensure comparability across
+years.
+
+Mental health and substance use disorder outcomes were assessed using
+NSDUH-provided recoded variables for adolescents based on DSM-5
+criteria. Past-year major depressive episode (MDE) and substance use
+disorder (SUD) were operationalized using the variables YMDERSUD5ANY and
+YMDESUD5ANYO, introduced in the 2021 NSDUH First Findings Report and
+incorporating DSM-5 SUD estimates, including prescription drug use. The
+binary variable YMDERSUD5ANY identified adolescents with a past-year
+MDE, a past-year SUD, or both (yes/no). To characterize comorbidity
+patterns, the categorical variable YMDESUD5ANYO classified adolescents
+into four mutually exclusive groups: (1) SUD only, (2) MDE only, (3)
+both MDE and SUD, and (4) neither condition in the past year. Consistent
+with NSDUH coding conventions, adolescents aged 18 years or older were
+excluded from analyses using these variables. These recoded measures
+replace earlier NSDUH variables (YMDEORSUD5 and YMDESUD5ONL) and were
+selected to align with updated DSM-5 definitions and post-2020 NSDUH
+methodology.
+
+\paragraph{Sociodemographic
+characteristics}\label{sociodemographic-characteristics}
+
+Sociodemographic characteristics included age (12--13, 14--15, 16--17
+years), sex (male, female), race and ethnicity (non-Hispanic White,
+non-Hispanic Black, American Indian/Alaska Native {[}AIAN{]}, Native
+Hawaiian/Other Pacific Islander {[}NHPI{]}, non-Hispanic Asian,
+non-Hispanic multiracial, Hispanic), total annual family income
+(\textless\$10,000, \$10,000--\$19,999, \$20,000--\$29,999,
+\$30,000--\$39,999, \$40,000--\$49,999, \$50,000--\$74,999, ≥\$75,000),
+health insurance status (insured vs uninsured), county type (large
+metropolitan, small metropolitan, nonmetropolitan), population density
+(≥1 million, \textless1 million, non-Core-Based Statistical Area
+{[}CBSA{]}), and household poverty status (living in poverty, up to 2×
+federal poverty threshold, \textgreater2× threshold).
+
+\subsubsection{4.3. Statistical analysis}\label{statistical-analysis}
+
+Weighted prevalence of past-year cannabis use among U.S. adolescents was
+estimated for each survey year from 2021 to 2024, overall and stratified
+by sociodemographic characteristics, modes of use, and mental health
+status. Temporal trends were assessed by changes in weighted prevalence
+and 95\% confidence interval overlap (two-sided, α \textless{} 0.05),
+and linear trends were evaluated using multivariable survey-weighted
+logistic regression with year as a continuous variable. Associations
+between cannabis use and mental health outcomes were examined using
+survey-weighted chi-square tests and multivariable logistic regression,
+adjusting for covariates. Separate models evaluated (1) whether
+past-year marijuana use was associated with MDE or SUD and (2) whether
+MDE, SUD, or both predicted past-year marijuana use, with adolescents
+with neither condition as the reference group. All analyses accounted
+for the NSDUH complex survey design, including stratification and
+clustering, and were conducted in R (version 4.4.3) using
+survey-specific procedures; and statistical significance defined as
+two-sided p \textless{} 0.05.
+
+\subsection{5. Results}\label{results}
+
+\subsubsection{5.1. Prevalence of past-year marijuana
+use}\label{prevalence-of-past-year-marijuana-use}
+
+Among the 45,618 adolescents included in our analysis, representing a
+weighted population of 103,611,766 (SE, 1,409,989) individuals over the
+study period, 5,358 adolescents (approximately 11.7\%) reported using
+marijuana in the past 12 months, and 2,961 adolescents (approximately
+6.5\%) reported use in the past 30 days. Weighted prevalence estimates
+of past-year cannabis use among U.S. adolescents remained relatively
+stable from 2021 to 2023, with prevalence of 10.8\% (95\% CI,
+9.7--12.0\%) in 2021, 11.4\% (95\% CI, 10.7--12.1\%) in 2022, and 11.0\%
+(95\% CI, 10.2--11.8\%) in 2023. In 2024, prevalence decreased to 10.1\%
+(95\% CI, 9.2--11.0\%), as shown in Figure 1. In multivariable logistic
+regression models adjusted for survey design, compared with 2022, the
+adjusted odds of past-year cannabis use were slightly lower but not
+statistically significant in 2021 (AOR, 0.95; 95\% CI, 0.82--1.09; p =
+0.42) and 2023 (AOR, 0.96; 95\% CI, 0.86--1.07; p = 0.43), whereas 2024
+showed a statistically significant decrease (AOR, 0.87; 95\% CI,
+0.79--0.97; p = 0.01). Overall, these findings suggest a modest
+reduction in adolescent cannabis use in 2024, with no clear trend in the
+preceding years.
+
+\subsubsection{5.2. Sociodemographic
+characteristics}\label{sociodemographic-characteristics-1}
+
+Table 1 shows the weighted prevalence of past-year cannabis use among US
+adolescents across sociodemographic groups, by year. Overall, prevalence
+was higher among females than males, ranging from 54.8\% (95\% CI,
+49.9--59.8) in 2021 to 54.5\% (95\% CI, 50.6--58.5) in 2024 for females,
+and 45.2\% (95\% CI, 40.2--50.1) to 45.5\% (95\% CI, 41.6--49.5) for
+males. Use increased with age, with adolescents aged 16--17 years
+reporting the highest prevalence across all years (66.8\% {[}95\% CI,
+63.0--70.6{]} in 2021 and 65.3\% {[}95\% CI, 61.9--68.8{]} in 2024).
+Racial/ethnic differences were observed, with White adolescents
+reporting the highest prevalence, followed by Hispanic and Black
+adolescents, whereas Asian, AIAN, Multiracial and NHPI adolescents had
+lower prevalence estimates. Geographic patterns indicated higher use in
+large metropolitan areas compared with smaller areas. Prevalence also
+varied by family income and poverty status, with higher use among
+adolescents from households with ≥\$75,000 annual income and those
+living more than twice above the federal poverty threshold. Differences
+across years within most subgroups were modest, with overlapping
+confidence intervals, indicating no clear temporal trends.
+
+In multivariable-adjusted analyses, older adolescents and females had
+consistently higher odds of past-year cannabis use (p \textless{}
+0.001). Elevated odds were also observed among youth from middle-income
+households (\$40,000--\$49,999 and \$50,000--\$74,999), adolescents
+residing in small metropolitan areas, and American Indian/Alaska Native
+and multiracial adolescents. In contrast, adolescents living in
+nonmetropolitan areas and Asian adolescents had significantly lower odds
+of use (all p \textless{} 0.001). Hispanic adolescents had slightly
+lower odds of current cannabis use but were 46\% more likely to report
+marijuana use disorder compared with non-Hispanic White adolescents
+(AOR, 1.46; 95\% CI, 1.12--1.89).
+
+\subsubsection{5.3 Prevalence of different modes of marijuana use among
+past-year
+users}\label{prevalence-of-different-modes-of-marijuana-use-among-past-year-users}
+
+Considering different modes of marijuana use, smoking remained the most
+prevalent method among adolescents across the study period, with
+prevalence estimates of 76.7\% (95\% CI, 72.4\%--80.9\%) in 2022, 79.6\%
+(95\% CI, 75.9\%--83.2\%) in 2023, and 75.4\% (95\% CI, 71.3\%--79.4\%)
+in 2024 (Figure 2). Vaping was the second most common mode of use and
+demonstrated a significant increasing temporal trend (AOR per year,
+1.72; 95\% CI, 1.34--2.20; p \textless{} .001), with prevalence rising
+from 60.3\% (95\% CI, 56.0\%--64.6\%) in 2022 to 64.8\% (95\% CI,
+60.2\%--69.3\%) in 2023, and reaching 72.3\% (95\% CI, 69.0\%--75.6\%)
+in 2024.
+
+In contrast, dabbing (waxes or concentrates) showed a decreasing trend
+over time (AOR per year, 0.70; 95\% CI, 0.50--0.99; p = .044),
+consistent with declining prevalence estimates across survey years. No
+statistically significant temporal trends were observed for the
+remaining modes of marijuana use, with less commonly reported methods
+including oral products (drops or sprays), with prevalences below 3\% in
+all years; topical products, which declined from 7.5\% (95\% CI,
+5.1\%--10.0\%) in 2022 to 4.4\% (95\% CI, 2.5\%--6.3\%) in 2024; and
+pills and other methods, each consistently reported by fewer than 5\% of
+adolescents.
+
+\section{5.4. Past-year marijuana use, and Major Depressive
+Episode/Substance Use
+Disorder}\label{past-year-marijuana-use-and-major-depressive-episodesubstance-use-disorder}
+
+In this analysis of adolescents, older age, female sex, and past-year
+marijuana use were significantly associated with higher odds of
+experiencing a MDE or SUD. Adolescents aged 14--15 had an AOR of 1.60
+(95\% CI, 1.46--1.76), and those aged 16--17 had an AOR of 1.79 (95\%
+CI, 1.59--2.01), compared with 12--13-year-olds. Females demonstrated
+nearly threefold higher odds than males (AOR, 2.86; 95\% CI,
+2.61--3.13). Family income exhibited limited associations, with only
+adolescents from households earning \$50--74k showing a modestly
+elevated risk (AOR, 1.13; 95\% CI, 1.01--1.26). County type was not
+significantly associated with the outcome. Regarding race and ethnicity,
+Black (AOR, 0.71; 95\% CI, 0.63--0.80), Asian (AOR, 0.76; 95\% CI,
+0.61--0.96), and Native Hawaiian/Pacific Islander adolescents (AOR,
+0.37; 95\% CI, 0.17--0.83) had lower odds compared with non-Hispanic
+White adolescents, whereas Non-Hispanic multiracial adolescents had
+higher odds (AOR, 1.27; 95\% CI, 1.07--1.51).
+
+Past-year marijuana use was the strongest predictor of MDE/SUD, with
+users showing markedly increased odds (AOR, 9.62; 95\% CI, 8.38--11.04);
+specifically, adolescents who used marijuana in the past year had
+substantially higher odds of experiencing SUD only (AOR, 22.15; 95\% CI,
+18.69--26.25) or comorbid SUD and MDE (AOR, 21.79; 95\% CI,
+17.00--27.94) compared with those with neither condition in adjusted
+models.
+
+\subsubsection{6. References}\label{references}
+
+Bhangu GK, Singh A, Shah A, Malhi N. Cannabis use in adolescents. Del J
+Public Health. 2025;11(3):6-13. \url{doi:10.32481/djph.2025.09.03}
+Camchong J, Lim KO, Kumra S. Adverse effects of cannabis on adolescent
+brain development: a longitudinal study. Cereb Cortex.
+2017;27(3):1922-1930. \url{doi:10.1093/cercor/bhw015} Centers for
+Disease Control and Prevention. States update number of hospitalized
+e-cigarette, or vaping, product use--associated lung injury (EVALI)
+cases and EVALI deaths. Published February 25, 2020. Accessed December
+28, 2025.
+\url{https://archive.cdc.gov/www_cdc_gov/media/releases/2020/s0225-EVALI-cases-deaths.html}
+Cservenka A, Lahanas S, Dotson-Bossert J. Marijuana use and
+hypothalamic-pituitary-adrenal axis functioning in humans. Front
+Psychiatry. 2018;9:472. \url{doi:10.3389/fpsyt.2018.00472} Farrelly KN,
+Wardell JD, Marsden E, Scarfe ML, Najdzionek P, Turna J, MacKillop J.
+The impact of recreational cannabis legalization on cannabis use and
+associated outcomes: a systematic review. Subst Abuse.
+2023;17:11782218231172054. \url{doi:10.1177/11782218231172054} Florimbio
+AR, Walton MA, Duval ER, Bauermeister JA, Young SD, McAfee J, Bonar EE.
+Direct and indirect effects of cannabis risk perceptions on cannabis use
+frequency. Addict Res Theory. 2024;32(1):68-73.
+\url{doi:10.1080/16066359.2023.2221029} Gukasyan N, Strain EC.
+Relationship between cannabis use frequency and major depressive
+disorder in adolescents: findings from the National Survey on Drug Use
+and Health 2012--2017. Drug Alcohol Depend. 2020;208:107867.
+\url{doi:10.1016/j.drugalcdep.2020.107867} Hammond CJ, Chaney A,
+Hendrickson B, Sharma P. Cannabis use among US adolescents in the era of
+marijuana legalization: a review of changing use patterns, comorbidity,
+and health correlates. Int Rev Psychiatry. 2020;32(3):221-234.
+\url{doi:10.1080/09540261.2020.1713056} Hurd YL, Manzoni OJ, Pletnikov
+MV, Lee FS, Bhattacharyya S, Melis M. Cannabis and the developing brain:
+insights into its long-lasting effects. J Neurosci.
+2019;39(42):8250-8258. \url{doi:10.1523/JNEUROSCI.1165-19.2019} Lapham
+GT, Matson TE, Bobb JF, Luce C, Oliver MM, Hamilton LK, Bradley KA.
+Prevalence of cannabis use disorder and reasons for use among adults in
+a US state where recreational cannabis use is legal. JAMA Netw Open.
+2023;6(8):e2328934. \url{doi:10.1001/jamanetworkopen.2023.28934} Lee J,
+Krishnan-Sarin S, Kong G. Social media use and cannabis vaping
+initiation among US youth. Drug Alcohol Depend. 2023;249:109949.
+\url{doi:10.1016/j.drugalcdep.2023.109949} Mattingly DT, Richardson MK,
+Hart JL. Prevalence of and trends in current cannabis use among US youth
+and adults, 2013--2022. Drug Alcohol Depend Rep.~2024;12:100253.
+\url{doi:10.1016/j.dadr.2024.100253} Nguyen N, Peyser ND, Olgin JE,
+Pletcher MJ, Beatty AL, Modrow MF, Carton TW, Khatib R, Djibo DA, Ling
+PM, Marcus GM. Associations between tobacco and cannabis use and anxiety
+and depression among adults in the United States: findings from the
+COVID-19 citizen science study. PLoS One. 2023;18(9):e0289058.
+\url{doi:10.1371/journal.pone.0289058} Queiroz APS, Pozzolo Pedro MO,
+Waisman Campos M, Torales J, Ventriglio A, Castaldelli-Maia JM.
+Cognitive effects of cannabis use: a comprehensive review across
+domains. Neurol Int. 2025;17(7):107. \url{doi:10.3390/neurolint17070107}
+Ross JA, Levy S. The impact of cannabis use on adolescent
+neurodevelopment and clinical outcomes amidst changing state policies.
+Clin Ther. 2023;45(6):535-540. \url{doi:10.1016/j.clinthera.2023.03.009}
+Schauer GL, Njai R, Grant-Lenzy AM. Modes of marijuana use---smoking,
+vaping, eating, and dabbing: results from the 2016 BRFSS in 12 states.
+Drug Alcohol Depend. 2020;209:107900.
+\url{doi:10.1016/j.drugalcdep.2020.107900} Scheyer AF, Laviolette SR,
+Pelissier AL, Manzoni OJ. Cannabis in adolescence: lasting cognitive
+alterations and underlying mechanisms. Cannabis Cannabinoid Res.
+2023;8(1):12-23. \url{doi:10.1089/can.2022.0183} Smart R, Pacula RL.
+Early evidence of the impact of cannabis legalization on cannabis use,
+cannabis use disorder, and the use of other substances: findings from
+state policy evaluations. Am J Drug Alcohol Abuse. 2019;45(6):644-663.
+\url{doi:10.1080/00952990.2019.1669626} Substance Abuse and Mental
+Health Services Administration. Key substance use and mental health
+indicators in the United States: results from the 2022 National Survey
+on Drug Use and Health. Published 2023. Accessed December 28, 2025.
+\url{https://www.samhsa.gov/data/report/2022-nsduh-annual-national-report}
+Substance Abuse and Mental Health Services Administration. 2023 National
+Survey on Drug Use and Health public use file codebook. Accessed
+December 28, 2025. \url{https://www.samhsa}.
+gov/data/system/files/media-puf-file/nsduh-2023-ds0001-infocodebook\_v2.pdf-
+Substance Abuse and Mental Health Services Administration. Know the
+effects, risks, and side effects of marijuana. Published November 2024.
+Accessed December 28, 2025. \url{https://www.samhsa.gov/marijuana}
+Velzeboer R, Malas A, Wei S, Berger R, Parmar V, Lai WWK. Cannabis and
+sleep architecture: a systematic review and meta-analysis. Sleep Med
+Rev.~2025;84:102164. \url{doi:10.1016/j.smrv.2025.102164} Whiteley L,
+Haubrick KK, Arnold T, Craker L, Olsen E, Hershkowitz D, Brown LK.
+Motivators for cannabis use among young adults in outpatient psychiatric
+care: a qualitative study. J Drug Issues. 2021;51(3):590-604.
+\url{doi:10.1177/00220426211002125}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# NSDUH (2021{-}2023 + 2024) {-} YOUTH: }
+
+\FunctionTok{library}\NormalTok{(survey)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: grid
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: Matrix
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: survival
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'survey'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:graphics':
+## 
+##     dotchart
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(svydiags)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: MASS
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## -- Attaching core tidyverse packages ------------------------ tidyverse 2.0.0 --
+## v dplyr     1.1.4     v readr     2.1.6
+## v forcats   1.0.1     v stringr   1.6.0
+## v ggplot2   4.0.1     v tibble    3.3.0
+## v lubridate 1.9.4     v tidyr     1.3.1
+## v purrr     1.2.0
+\end{verbatim}
+
+\begin{verbatim}
+## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x tidyr::expand() masks Matrix::expand()
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
+## x tidyr::pack()   masks Matrix::pack()
+## x dplyr::select() masks MASS::select()
+## x tidyr::unpack() masks Matrix::unpack()
+## i Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(naniar)}
+\FunctionTok{library}\NormalTok{(stats)}
+\FunctionTok{library}\NormalTok{(jtools)}
+\FunctionTok{library}\NormalTok{(haven)}
+\FunctionTok{library}\NormalTok{(labelled)}
+\FunctionTok{library}\NormalTok{(scales)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'scales'
+## 
+## The following object is masked from 'package:purrr':
+## 
+##     discard
+## 
+## The following object is masked from 'package:readr':
+## 
+##     col_factor
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(ggplot2)}
+\FunctionTok{library}\NormalTok{(broom)}
+\FunctionTok{library}\NormalTok{(gt)}
+\FunctionTok{library}\NormalTok{(purrr)}
+\FunctionTok{library}\NormalTok{(forcats)}
+
+\NormalTok{nsduh\_2024 }\OtherTok{\textless{}{-}} \FunctionTok{read\_dta}\NormalTok{(}\StringTok{"../database/NSDUH\_2024.dta"}\NormalTok{)}
+\NormalTok{nsduh\_2021\_2023 }\OtherTok{\textless{}{-}} \FunctionTok{read\_dta}\NormalTok{(}\StringTok{"../database/NSDUH\_2021\_2023.dta"}\NormalTok{)}
+
+
+\NormalTok{nsduh\_2123 }\OtherTok{\textless{}{-}}\NormalTok{ nsduh\_2021\_2023 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(AGE3 }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{YEAR =} \FunctionTok{as.numeric}\NormalTok{(YEAR)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{rename}\NormalTok{(}\AttributeTok{ANALWT2\_C =}\NormalTok{ ANALWT2\_C1) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{rename\_with}\NormalTok{(toupper)}
+
+\NormalTok{nsduh\_2024 }\OtherTok{\textless{}{-}}\NormalTok{ nsduh\_2024 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(AGE3 }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{YEAR =} \DecValTok{2024}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{rename\_with}\NormalTok{(toupper)}
+
+\NormalTok{nsduh\_all }\OtherTok{\textless{}{-}} \FunctionTok{bind\_rows}\NormalTok{(nsduh\_2123, nsduh\_2024)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: `..1$YTHACT2` and `..2$YTHACT2` have conflicting value labels.
+## i Labels for these values will be taken from `..1$YTHACT2`.
+## x Values: 1 and 2
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{vars\_keep }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}
+  \StringTok{"YEAR"}\NormalTok{,}\StringTok{"MRJYR"}\NormalTok{,}\StringTok{"MJREC"}\NormalTok{,}\StringTok{"YMDERSUD5ANY"}\NormalTok{,}\StringTok{"YMDESUD5ANYO"}\NormalTok{,}
+  \StringTok{"AGE3"}\NormalTok{,}\StringTok{"IRSEX"}\NormalTok{,}\StringTok{"NEWRACE2"}\NormalTok{,}\StringTok{"COUTYP4"}\NormalTok{,}\StringTok{"PDEN10"}\NormalTok{,}\StringTok{"IRINSUR4"}\NormalTok{,}\StringTok{"IRFAMIN3"}\NormalTok{,}
+  \StringTok{"POVERTY3"}\NormalTok{,}\StringTok{"EDUSKPEST"}\NormalTok{,}\StringTok{"PYUD5MRJ"}\NormalTok{,}
+  \StringTok{"ANALWT2\_C3"}\NormalTok{,}\StringTok{"ANALWT2\_C"}\NormalTok{,}\StringTok{"VESTR\_C"}\NormalTok{,}\StringTok{"VEREP"}
+\NormalTok{)}
+
+\NormalTok{nsduh\_all }\OtherTok{\textless{}{-}}\NormalTok{ nsduh\_all }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\FunctionTok{any\_of}\NormalTok{(vars\_keep))}
+
+\NormalTok{missing\_vals }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}
+  \AttributeTok{MJREC =} \FunctionTok{c}\NormalTok{(}\DecValTok{91}\NormalTok{,}\DecValTok{97}\NormalTok{,}\DecValTok{98}\NormalTok{),}
+  \AttributeTok{YMDERSUD5ANY =} \FunctionTok{c}\NormalTok{(}\DecValTok{85}\NormalTok{,}\DecValTok{94}\NormalTok{,}\DecValTok{97}\NormalTok{,}\DecValTok{98}\NormalTok{,}\DecValTok{99}\NormalTok{),}
+  \AttributeTok{YMDESUD5ANYO =} \FunctionTok{c}\NormalTok{(}\DecValTok{85}\NormalTok{,}\DecValTok{94}\NormalTok{,}\DecValTok{97}\NormalTok{,}\DecValTok{98}\NormalTok{,}\DecValTok{99}\NormalTok{)}
+\NormalTok{  )}
+
+\NormalTok{nsduh\_all }\OtherTok{\textless{}{-}} \FunctionTok{replace\_with\_na}\NormalTok{(nsduh\_all, missing\_vals)}
+
+\NormalTok{nsduh\_all }\OtherTok{\textless{}{-}}\NormalTok{ nsduh\_all }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{rename}\NormalTok{(}
+    \AttributeTok{year =}\NormalTok{ YEAR,}
+    \AttributeTok{mj\_past\_year =}\NormalTok{MRJYR,}
+    \AttributeTok{mj\_recency =}\NormalTok{ MJREC,}
+    \AttributeTok{sud\_or\_mde\_raw =}\NormalTok{ YMDERSUD5ANY,}
+    \AttributeTok{mde\_sud\_raw =}\NormalTok{ YMDESUD5ANYO,}
+    \AttributeTok{age\_cat =}\NormalTok{ AGE3,}
+    \AttributeTok{sex =}\NormalTok{ IRSEX,}
+    \AttributeTok{race =}\NormalTok{ NEWRACE2,}
+    \AttributeTok{county\_type =}\NormalTok{ COUTYP4,}
+    \AttributeTok{pop\_density =}\NormalTok{ PDEN10,}
+    \AttributeTok{insurance =}\NormalTok{ IRINSUR4,}
+    \AttributeTok{family\_income =}\NormalTok{ IRFAMIN3,}
+    \AttributeTok{poverty =}\NormalTok{ POVERTY3,}
+    \AttributeTok{mrj\_use\_disorder =}\NormalTok{ PYUD5MRJ}
+\NormalTok{  )}
+
+
+\NormalTok{nsduh\_all }\OtherTok{\textless{}{-}}\NormalTok{ nsduh\_all }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{mj\_past\_year\_num =} \FunctionTok{ifelse}\NormalTok{(mj\_past\_year }\SpecialCharTok{==}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{),}
+    \AttributeTok{mj\_past\_month\_num =} \FunctionTok{ifelse}\NormalTok{(mj\_recency }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{11}\NormalTok{), }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{),}
+    \AttributeTok{sud\_or\_mde\_num =} \FunctionTok{ifelse}\NormalTok{(sud\_or\_mde\_raw }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{),}
+    \AttributeTok{mrj\_use\_disorder\_num =} \FunctionTok{ifelse}\NormalTok{ (mrj\_use\_disorder }\SpecialCharTok{==} \DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{) }
+\NormalTok{)}
+
+\NormalTok{nsduh\_all }\OtherTok{\textless{}{-}}\NormalTok{ nsduh\_all }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{subpop =} \FunctionTok{ifelse}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(age\_cat) }\SpecialCharTok{\&} \SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(sex), }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{))}
+
+\NormalTok{nsduh\_all }\OtherTok{\textless{}{-}}\NormalTok{ nsduh\_all }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{year =} \FunctionTok{factor}\NormalTok{(year),}
+    \AttributeTok{age\_cat =} \FunctionTok{factor}\NormalTok{(age\_cat, }\DecValTok{1}\SpecialCharTok{:}\DecValTok{3}\NormalTok{, }\FunctionTok{c}\NormalTok{(}\StringTok{"12–13"}\NormalTok{,}\StringTok{"14–15"}\NormalTok{,}\StringTok{"16–17"}\NormalTok{)),}
+    \AttributeTok{sex =} \FunctionTok{factor}\NormalTok{(sex, }\DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{, }\FunctionTok{c}\NormalTok{(}\StringTok{"Male"}\NormalTok{,}\StringTok{"Female"}\NormalTok{)),}
+    \AttributeTok{race =} \FunctionTok{factor}\NormalTok{(race, }\DecValTok{1}\SpecialCharTok{:}\DecValTok{7}\NormalTok{,}
+      \FunctionTok{c}\NormalTok{(}\StringTok{"White"}\NormalTok{,}\StringTok{"Black"}\NormalTok{,}\StringTok{"AIAN"}\NormalTok{,}\StringTok{"NHPI"}\NormalTok{,}\StringTok{"Asian"}\NormalTok{,}\StringTok{"Multiracial"}\NormalTok{,}\StringTok{"Hispanic"}\NormalTok{)),}
+    \AttributeTok{county\_type =} \FunctionTok{factor}\NormalTok{(county\_type, }\DecValTok{1}\SpecialCharTok{:}\DecValTok{3}\NormalTok{,}
+      \FunctionTok{c}\NormalTok{(}\StringTok{"Large metro"}\NormalTok{,}\StringTok{"Small metro"}\NormalTok{,}\StringTok{"Nonmetro"}\NormalTok{)),}
+    \AttributeTok{pop\_density =} \FunctionTok{factor}\NormalTok{(pop\_density, }\DecValTok{1}\SpecialCharTok{:}\DecValTok{3}\NormalTok{,}
+      \FunctionTok{c}\NormalTok{(}\StringTok{"≥1M CBSA"}\NormalTok{,}\StringTok{"\textless{}1M CBSA"}\NormalTok{,}\StringTok{"Non{-}CBSA"}\NormalTok{)),}
+    \AttributeTok{insurance =} \FunctionTok{factor}\NormalTok{(insurance, }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{), }\AttributeTok{labels =} \FunctionTok{c}\NormalTok{(}\StringTok{"Yes"}\NormalTok{,}\StringTok{"No"}\NormalTok{)),}
+    \AttributeTok{sud\_or\_mde\_num =} \FunctionTok{factor}\NormalTok{(sud\_or\_mde\_num, }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{), }\AttributeTok{labels =} \FunctionTok{c}\NormalTok{(}\StringTok{"Yes"}\NormalTok{,}\StringTok{"No"}\NormalTok{)),}
+    \AttributeTok{mj\_past\_month\_num =} \FunctionTok{factor}\NormalTok{(mj\_past\_month\_num, }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{), }\AttributeTok{labels =} \FunctionTok{c}\NormalTok{(}\StringTok{"Yes"}\NormalTok{,}\StringTok{"No"}\NormalTok{)),}
+    \AttributeTok{mj\_past\_year\_num =} \FunctionTok{factor}\NormalTok{(mj\_past\_year\_num, }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{), }\AttributeTok{labels =} \FunctionTok{c}\NormalTok{(}\StringTok{"Yes"}\NormalTok{,}\StringTok{"No"}\NormalTok{)),}
+    \AttributeTok{mrj\_use\_disorder\_num =} \FunctionTok{factor}\NormalTok{ (mrj\_use\_disorder\_num, }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{), }\AttributeTok{labels =} \FunctionTok{c}\NormalTok{(}\StringTok{"Yes"}\NormalTok{,}\StringTok{"No"}\NormalTok{)), }
+    \AttributeTok{family\_income =} \FunctionTok{factor}\NormalTok{(family\_income, }\DecValTok{1}\SpecialCharTok{:}\DecValTok{7}\NormalTok{,}
+      \FunctionTok{c}\NormalTok{(}\StringTok{"\textless{}$10k"}\NormalTok{,}\StringTok{"$10–19k"}\NormalTok{,}\StringTok{"$20–29k"}\NormalTok{,}\StringTok{"$30–39k"}\NormalTok{,}\StringTok{"$40–49k"}\NormalTok{,}\StringTok{"$50–74k"}\NormalTok{,}\StringTok{"≥$75k"}\NormalTok{)),}
+    \AttributeTok{poverty =} \FunctionTok{factor}\NormalTok{(poverty, }\DecValTok{1}\SpecialCharTok{:}\DecValTok{3}\NormalTok{,}
+      \FunctionTok{c}\NormalTok{(}\StringTok{"Living in Poverty"}\NormalTok{, }\StringTok{"Income Up to 2X Federal Poverty Threshold"}\NormalTok{, }\StringTok{"Income More Than 2X Federal Poverty Threshold"}\NormalTok{)),}
+    \AttributeTok{mde\_sud\_raw =} \FunctionTok{factor}\NormalTok{(mde\_sud\_raw, }\DecValTok{1}\SpecialCharTok{:}\DecValTok{4}\NormalTok{, }
+                         \FunctionTok{c}\NormalTok{(}\StringTok{"SUD only"}\NormalTok{, }\StringTok{"MDE only"}\NormalTok{, }\StringTok{"SUD and MDE"}\NormalTok{, }\StringTok{"Neither"}\NormalTok{))}
+\NormalTok{  )}
+
+\FunctionTok{var\_label}\NormalTok{(nsduh\_all) }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}
+  \AttributeTok{year =} \StringTok{"Survey year"}\NormalTok{,}
+  \AttributeTok{age\_cat =} \StringTok{"Age group (years)"}\NormalTok{,}
+  \AttributeTok{sex =} \StringTok{"Sex"}\NormalTok{,}
+  \AttributeTok{race =} \StringTok{"Race/Ethnicity"}\NormalTok{,}
+  \AttributeTok{county\_type =} \StringTok{"County type"}\NormalTok{,}
+  \AttributeTok{pop\_density =} \StringTok{"Population density (CBSA)"}\NormalTok{,}
+  \AttributeTok{insurance =} \StringTok{"Health insurance coverage"}\NormalTok{,}
+  \AttributeTok{family\_income =} \StringTok{"Family income"}\NormalTok{,}
+  \AttributeTok{poverty =} \StringTok{"Poverty level"}\NormalTok{,}
+  \AttributeTok{mj\_past\_year\_num =} \StringTok{"Marijuana use in the past year (binary)"}\NormalTok{,}
+  \AttributeTok{mj\_past\_month\_num =} \StringTok{"Marijuana use in the past 30 days (binary)"}\NormalTok{,}
+  \AttributeTok{sud\_or\_mde\_raw =} \StringTok{"Presence of MDE or SUD (Past Year)"}\NormalTok{,}
+  \AttributeTok{sud\_or\_mde\_num =} \StringTok{"Presence of MDE or SUD (Past Year)(binary)"}\NormalTok{,}
+  \AttributeTok{mde\_sud\_raw =} \StringTok{"Past{-}year MDE and SUD status (DSM{-}5)"}\NormalTok{,}
+  \AttributeTok{mrj\_use\_disorder\_num =} \StringTok{"Marijuana Use Disorder in the past 12 months"}
+\NormalTok{) }
+
+\DocumentationTok{\#\# First object (adolescents aged between 12 to 17 year)}
+
+\NormalTok{nsduh\_sp }\OtherTok{\textless{}{-}} \FunctionTok{svydesign}\NormalTok{(}
+  \AttributeTok{id =} \SpecialCharTok{\textasciitilde{}}\NormalTok{VEREP,}
+  \AttributeTok{strata =} \SpecialCharTok{\textasciitilde{}}\NormalTok{VESTR\_C,}
+  \AttributeTok{weights =} \SpecialCharTok{\textasciitilde{}}\NormalTok{ANALWT2\_C,}
+  \AttributeTok{data =}\NormalTok{ nsduh\_all,}
+  \AttributeTok{nest =} \ConstantTok{TRUE}
+\NormalTok{)}
+
+\FunctionTok{dim}\NormalTok{(nsduh\_sp)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 45618    24
+\end{verbatim}
+
+\section{Study Population}\label{study-population}
+
+\section{Figure 1: Prevalence of Past-Year Cannabis Use Among U.S.
+Adolescents
+(2021-2024)}\label{figure-1-prevalence-of-past-year-cannabis-use-among-u.s.-adolescents-2021-2024}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sample\_counts }\OtherTok{\textless{}{-}}\NormalTok{ nsduh\_all }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(year) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}
+    \AttributeTok{adolescent\_n =} \FunctionTok{sum}\NormalTok{(subpop }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{) }
+\NormalTok{  )}
+
+\NormalTok{nsduh\_sp}\SpecialCharTok{$}\NormalTok{variables}\SpecialCharTok{$}\NormalTok{one }\OtherTok{\textless{}{-}} \DecValTok{1}
+
+\NormalTok{pop\_counts }\OtherTok{\textless{}{-}} \FunctionTok{svyby}\NormalTok{(}
+  \SpecialCharTok{\textasciitilde{}}\NormalTok{one, }
+  \SpecialCharTok{\textasciitilde{}}\NormalTok{year }\SpecialCharTok{+}\NormalTok{ subpop, }
+  \AttributeTok{design =}\NormalTok{ nsduh\_sp, }
+  \AttributeTok{FUN =}\NormalTok{ svytotal, }
+  \AttributeTok{na.rm =} \ConstantTok{TRUE}
+\NormalTok{)}
+
+\NormalTok{pop\_counts\_clean }\OtherTok{\textless{}{-}}\NormalTok{ pop\_counts }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(subpop }\SpecialCharTok{==} \DecValTok{1}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(year, one) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{rename}\NormalTok{(}\AttributeTok{estimated\_population =}\NormalTok{ one)}
+
+\NormalTok{demographics\_table }\OtherTok{\textless{}{-}}\NormalTok{ sample\_counts }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{left\_join}\NormalTok{(pop\_counts\_clean, }\AttributeTok{by =} \StringTok{"year"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{estimated\_pop\_fmt =}\NormalTok{ scales}\SpecialCharTok{::}\FunctionTok{comma}\NormalTok{(estimated\_population)}
+\NormalTok{  )}
+
+\NormalTok{demographics\_table }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(year, adolescent\_n, estimated\_pop\_fmt) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{gt}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_header}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{"Sample Size and Population Representativeness"}\NormalTok{,}
+    \AttributeTok{subtitle =} \StringTok{"Comparison of Unweighted Sample (n) vs. Weighted Population Estimate (N)"}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{cols\_label}\NormalTok{(}
+    \AttributeTok{adolescent\_n =} \StringTok{" Adolescents with Complete Data for Age and Sex in the Survey Sample (n)"}\NormalTok{,}
+    \AttributeTok{estimated\_pop\_fmt =} \StringTok{"Est. US Adolescent Pop. (N)"}
+\NormalTok{  ) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[t]
+\caption*{
+{\fontsize{20}{25}\selectfont  Sample Size and Population Representativeness\fontsize{12}{15}\selectfont } \\ 
+{\fontsize{14}{17}\selectfont  Comparison of Unweighted Sample (n) vs. Weighted Population Estimate (N)\fontsize{12}{15}\selectfont }
+} 
+\fontsize{12.0pt}{14.0pt}\selectfont
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}crr}
+\toprule
+Survey year &  Adolescents with Complete Data for Age and Sex in the Survey Sample (n) & Est. US Adolescent Pop. (N) \\ 
+\midrule\addlinespace[2.5pt]
+2021 & 10743 & 26,019,281 \\ 
+2022 & 11969 & 25,725,767 \\ 
+2023 & 11572 & 25,915,190 \\ 
+2024 & 11334 & 25,951,528 \\ 
+\bottomrule
+\end{tabular*}
+\end{table}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_pop }\OtherTok{\textless{}{-}} \FunctionTok{svytotal}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{one, }\AttributeTok{design =}\NormalTok{ nsduh\_sp, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{total\_pop}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         total      SE
+## one 103611766 1409989
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{prev\_year }\OtherTok{\textless{}{-}} \FunctionTok{svyby}\NormalTok{(}
+  \SpecialCharTok{\textasciitilde{}}\NormalTok{mj\_past\_year\_num, }\SpecialCharTok{\textasciitilde{}}\NormalTok{year, }\AttributeTok{design =}\NormalTok{ nsduh\_sp,  }\AttributeTok{FUN =}\NormalTok{ svymean, }\AttributeTok{vartype =} \StringTok{"ci"}\NormalTok{, }\AttributeTok{na.rm =} \ConstantTok{TRUE}
+\NormalTok{)}
+
+\NormalTok{prev\_year }\OtherTok{\textless{}{-}}\NormalTok{ prev\_year }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{prevalence =}\NormalTok{ mj\_past\_year\_numYes }\SpecialCharTok{*} \DecValTok{100}\NormalTok{,  }\CommentTok{\# se for factor}
+    \AttributeTok{ci\_l =}\NormalTok{ ci\_l.mj\_past\_year\_numYes }\SpecialCharTok{*} \DecValTok{100}\NormalTok{,}
+    \AttributeTok{ci\_u =}\NormalTok{ ci\_u.mj\_past\_year\_numYes }\SpecialCharTok{*} \DecValTok{100}
+\NormalTok{  )}
+
+\NormalTok{prev\_year}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      year mj_past_year_numYes mj_past_year_numNo ci_l.mj_past_year_numYes
+## 2021 2021           0.1084857          0.8915143               0.09714884
+## 2022 2022           0.1139919          0.8860081               0.10678267
+## 2023 2023           0.1096555          0.8903445               0.10161411
+## 2024 2024           0.1010305          0.8989695               0.09213005
+##      ci_l.mj_past_year_numNo ci_u.mj_past_year_numYes ci_u.mj_past_year_numNo
+## 2021               0.8801775                0.1198225               0.9028512
+## 2022               0.8787989                0.1212011               0.8932173
+## 2023               0.8823031                0.1176969               0.8983859
+## 2024               0.8900690                0.1099310               0.9078700
+##      prevalence      ci_l     ci_u
+## 2021   10.84857  9.714884 11.98225
+## 2022   11.39919 10.678267 12.12011
+## 2023   10.96555 10.161411 11.76969
+## 2024   10.10305  9.213005 10.99310
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#Cannabis users past year (2021{-}2024 N)}
+\NormalTok{nsduh\_used\_mj\_year}\OtherTok{\textless{}{-}} \FunctionTok{subset}\NormalTok{(nsduh\_sp, mj\_past\_year\_num }\SpecialCharTok{==} \StringTok{"Yes"}\NormalTok{)}
+\NormalTok{n\_unweighted }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(nsduh\_used\_mj\_year}\SpecialCharTok{$}\NormalTok{variables}\SpecialCharTok{$}\NormalTok{mj\_past\_year\_num))}
+\NormalTok{n\_unweighted}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 5358
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#Cannabis users past month (2021{-}2024 N)}
+\NormalTok{nsduh\_used\_mj\_month }\OtherTok{\textless{}{-}} \FunctionTok{subset}\NormalTok{(nsduh\_sp, mj\_past\_month\_num }\SpecialCharTok{==} \StringTok{"Yes"}\NormalTok{)}
+\NormalTok{n\_unweighted\_2 }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(nsduh\_used\_mj\_month}\SpecialCharTok{$}\NormalTok{variables}\SpecialCharTok{$}\NormalTok{mj\_past\_month\_num))}
+\NormalTok{n\_unweighted\_2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 2961
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Figure 1}
+\FunctionTok{ggplot}\NormalTok{(prev\_year, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ year, }\AttributeTok{y =}\NormalTok{ prevalence)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}
+  \AttributeTok{group =} \DecValTok{1}\NormalTok{,}
+  \AttributeTok{linewidth =} \FloatTok{0.6}\NormalTok{,}
+  \AttributeTok{color =} \StringTok{"black"}
+\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{size =} \DecValTok{3}\NormalTok{, }\AttributeTok{color =} \StringTok{"black"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_errorbar}\NormalTok{(}
+    \FunctionTok{aes}\NormalTok{(}\AttributeTok{ymin =}\NormalTok{ ci\_l, }\AttributeTok{ymax =}\NormalTok{ ci\_u),}
+    \AttributeTok{width =} \FloatTok{0.1}\NormalTok{,}
+    \AttributeTok{linewidth =} \FloatTok{0.6}\NormalTok{,}
+    \AttributeTok{color =} \StringTok{"black"}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{geom\_text}\NormalTok{(}
+    \FunctionTok{aes}\NormalTok{(}\AttributeTok{label =} \FunctionTok{sprintf}\NormalTok{(}\StringTok{"\%.1f\%\%"}\NormalTok{, prevalence)),}
+    \AttributeTok{vjust =} \SpecialCharTok{{-}}\DecValTok{3}\NormalTok{,}
+    \AttributeTok{size =} \FloatTok{3.5}\NormalTok{,}
+    \AttributeTok{color =} \StringTok{"black"}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{scale\_y\_continuous}\NormalTok{(}
+    \AttributeTok{limits =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{20}\NormalTok{),}
+    \AttributeTok{breaks =} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{20}\NormalTok{, }\AttributeTok{by =} \DecValTok{5}\NormalTok{),}
+    \AttributeTok{labels =}\NormalTok{ scales}\SpecialCharTok{::}\FunctionTok{percent\_format}\NormalTok{(}\AttributeTok{scale =} \DecValTok{1}\NormalTok{)}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{"Prevalence of Past{-}Year Cannabis Use Among U.S. Adolescents (2021{-}2024)"}\NormalTok{,}
+    \AttributeTok{subtitle =} \StringTok{"Weighted estimates by survey year"}\NormalTok{,}
+    \AttributeTok{x =} \StringTok{"Survey Year"}\NormalTok{,}
+    \AttributeTok{y =} \StringTok{"Prevalence (\%)"}\NormalTok{,}
+    \AttributeTok{caption =} \StringTok{"Error bars indicate 95\% confidence intervals."}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{(}\AttributeTok{base\_size =} \DecValTok{13}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}
+    \AttributeTok{panel.grid.major.x =} \FunctionTok{element\_blank}\NormalTok{(),}
+    \AttributeTok{panel.grid.minor =} \FunctionTok{element\_blank}\NormalTok{(),}
+    \AttributeTok{panel.grid.major.y =} \FunctionTok{element\_line}\NormalTok{(}\AttributeTok{color =} \StringTok{"grey85"}\NormalTok{),}
+    \AttributeTok{axis.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{face =} \StringTok{"bold"}\NormalTok{),}
+    \AttributeTok{axis.text =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{color =} \StringTok{"black"}\NormalTok{),}
+    \AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{face =} \StringTok{"bold"}\NormalTok{, }\AttributeTok{hjust =} \DecValTok{0}\NormalTok{),}
+    \AttributeTok{plot.subtitle =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =} \DecValTok{0}\NormalTok{)}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{youth_mrj_nsduh_files/figure-latex/unnamed-chunk-3-1.pdf}}
+
+\subsection{Any difference in use between 2022 and
+2024?}\label{any-difference-in-use-between-2022-and-2024}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Past {-} year use:}
+
+
+\NormalTok{nsduh\_sp }\OtherTok{\textless{}{-}} \FunctionTok{update}\NormalTok{(}
+\NormalTok{  nsduh\_sp,}
+  \AttributeTok{year =} \FunctionTok{factor}\NormalTok{(year, }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\StringTok{"2021"}\NormalTok{, }\StringTok{"2022"}\NormalTok{, }\StringTok{"2023"}\NormalTok{, }\StringTok{"2024"}\NormalTok{))}
+\NormalTok{)}
+
+\CommentTok{\# Year of reference: 2022}
+\NormalTok{nsduh\_sp }\OtherTok{\textless{}{-}} \FunctionTok{update}\NormalTok{(}
+\NormalTok{  nsduh\_sp,}
+  \AttributeTok{year =} \FunctionTok{relevel}\NormalTok{(year, }\AttributeTok{ref =} \StringTok{"2022"}\NormalTok{)}
+\NormalTok{)}
+
+
+\NormalTok{nsduh\_sp }\OtherTok{\textless{}{-}} \FunctionTok{update}\NormalTok{(}
+\NormalTok{  nsduh\_sp,}
+  \AttributeTok{mj\_past\_year\_num =} \FunctionTok{as.numeric}\NormalTok{(mj\_past\_year\_num }\SpecialCharTok{==} \StringTok{"Yes"}\NormalTok{)}
+\NormalTok{)}
+
+\NormalTok{model\_year }\OtherTok{\textless{}{-}} \FunctionTok{svyglm}\NormalTok{(}
+\NormalTok{  mj\_past\_year\_num }\SpecialCharTok{\textasciitilde{}}\NormalTok{ year,}
+  \AttributeTok{design =}\NormalTok{ nsduh\_sp,}
+  \AttributeTok{family =} \FunctionTok{quasibinomial}\NormalTok{()}
+\NormalTok{)}
+
+\NormalTok{year\_results }\OtherTok{\textless{}{-}} \FunctionTok{tidy}\NormalTok{(}
+\NormalTok{  model\_year,}
+  \AttributeTok{exponentiate =} \ConstantTok{TRUE}\NormalTok{,}
+  \AttributeTok{conf.int =} \ConstantTok{TRUE}
+\NormalTok{)}
+
+\NormalTok{table\_year }\OtherTok{\textless{}{-}}\NormalTok{ year\_results }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(term }\SpecialCharTok{!=} \StringTok{"(Intercept)"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{Year =} \FunctionTok{gsub}\NormalTok{(}\StringTok{"year"}\NormalTok{, }\StringTok{""}\NormalTok{, term),}
+    \AttributeTok{AOR =} \FunctionTok{round}\NormalTok{(estimate, }\DecValTok{2}\NormalTok{),}
+    \AttributeTok{CI\_low =} \FunctionTok{round}\NormalTok{(conf.low, }\DecValTok{2}\NormalTok{),}
+    \AttributeTok{CI\_high =} \FunctionTok{round}\NormalTok{(conf.high, }\DecValTok{2}\NormalTok{),}
+    \AttributeTok{p\_value =} \FunctionTok{round}\NormalTok{(p.value, }\DecValTok{3}\NormalTok{)}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(Year, AOR, CI\_low, CI\_high, p\_value)}
+
+\NormalTok{ref\_row }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}
+  \AttributeTok{Year =} \StringTok{"2022 (REF)"}\NormalTok{,}
+  \AttributeTok{AOR =} \FloatTok{1.00}\NormalTok{,}
+  \AttributeTok{CI\_low =} \ConstantTok{NA}\NormalTok{,}
+  \AttributeTok{CI\_high =} \ConstantTok{NA}\NormalTok{,}
+  \AttributeTok{p\_value =} \ConstantTok{NA}
+\NormalTok{)}
+
+\NormalTok{table\_year }\OtherTok{\textless{}{-}} \FunctionTok{bind\_rows}\NormalTok{(ref\_row, table\_year)}
+
+\NormalTok{table\_year}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 4 x 5
+##   Year         AOR CI_low CI_high p_value
+##   <chr>      <dbl>  <dbl>   <dbl>   <dbl>
+## 1 2022 (REF)  1     NA      NA     NA    
+## 2 2021        0.95   0.82    1.09   0.424
+## 3 2023        0.96   0.86    1.07   0.426
+## 4 2024        0.87   0.79    0.97   0.012
+\end{verbatim}
+
+\section{Supplem. : Sociodemographic Characteristics of the Study
+Population by Year
+(2021--2024)}\label{supplem.-sociodemographic-characteristics-of-the-study-population-by-year-20212024}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{nsduh\_sp }\OtherTok{\textless{}{-}} \FunctionTok{update}\NormalTok{(}
+\NormalTok{  nsduh\_sp,}
+  \AttributeTok{year =} \FunctionTok{relevel}\NormalTok{(year, }\AttributeTok{ref =} \StringTok{"2021"}\NormalTok{)}
+\NormalTok{) }
+
+\NormalTok{covariates\_labels }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}
+  \AttributeTok{sex =} \StringTok{"Sex"}\NormalTok{,}
+  \AttributeTok{age\_cat =} \StringTok{"Age group"}\NormalTok{,}
+  \AttributeTok{race =} \StringTok{"Race/Ethnicity"}\NormalTok{,}
+  \AttributeTok{county\_type =} \StringTok{"County type"}\NormalTok{,}
+  \AttributeTok{pop\_density =} \StringTok{"Population density"}\NormalTok{,}
+  \AttributeTok{insurance =} \StringTok{"Health insurance"}\NormalTok{,}
+  \AttributeTok{family\_income =} \StringTok{"Family income"}\NormalTok{,}
+  \AttributeTok{poverty =} \StringTok{"Poverty status"}\NormalTok{,}
+  \AttributeTok{mj\_past\_month\_num =} \StringTok{"Marijuana use in the past 30 days"}\NormalTok{,}
+  \AttributeTok{mrj\_use\_disorder\_num =} \StringTok{"Marijuana Use Disorder in the past 12 months"}\NormalTok{,}
+  \AttributeTok{mde\_sud\_raw =} \StringTok{"Past{-}year MDE and SUD Status (DSM{-}5)"}
+  
+\NormalTok{)}
+
+\NormalTok{get\_distribution }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(var\_name, label\_var) \{}
+  \FunctionTok{tryCatch}\NormalTok{(\{}
+
+\NormalTok{    var\_data }\OtherTok{\textless{}{-}}\NormalTok{ nsduh\_sp}\SpecialCharTok{$}\NormalTok{variables[[var\_name]]}
+
+    \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{length}\NormalTok{(}\FunctionTok{unique}\NormalTok{(}\FunctionTok{na.omit}\NormalTok{(var\_data))) }\SpecialCharTok{\textless{}} \DecValTok{2}\NormalTok{) \{}
+      \FunctionTok{return}\NormalTok{(}\ConstantTok{NULL}\NormalTok{)}
+\NormalTok{    \}}
+
+\NormalTok{    res }\OtherTok{\textless{}{-}} \FunctionTok{svyby}\NormalTok{(}
+      \FunctionTok{as.formula}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"\textasciitilde{}"}\NormalTok{, var\_name)),}
+      \AttributeTok{by =} \SpecialCharTok{\textasciitilde{}}\NormalTok{year,}
+      \AttributeTok{design =}\NormalTok{ nsduh\_sp,}
+      \AttributeTok{FUN =}\NormalTok{ svymean,}
+      \AttributeTok{vartype =} \StringTok{"ci"}\NormalTok{,}
+      \AttributeTok{na.rm =} \ConstantTok{TRUE}
+\NormalTok{    )}
+
+\NormalTok{    res\_formatted }\OtherTok{\textless{}{-}}\NormalTok{ res }\SpecialCharTok{\%\textgreater{}\%}
+      \FunctionTok{pivot\_longer}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{year, }\AttributeTok{names\_to =} \StringTok{"col\_name"}\NormalTok{, }\AttributeTok{values\_to =} \StringTok{"value"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+      \FunctionTok{mutate}\NormalTok{(}
+        \AttributeTok{stat\_type =} \FunctionTok{case\_when}\NormalTok{(}
+          \FunctionTok{grepl}\NormalTok{(}\StringTok{"\^{}ci\_l"}\NormalTok{, col\_name) }\SpecialCharTok{\textasciitilde{}} \StringTok{"ci\_l"}\NormalTok{,}
+          \FunctionTok{grepl}\NormalTok{(}\StringTok{"\^{}ci\_u"}\NormalTok{, col\_name) }\SpecialCharTok{\textasciitilde{}} \StringTok{"ci\_u"}\NormalTok{,}
+          \ConstantTok{TRUE} \SpecialCharTok{\textasciitilde{}} \StringTok{"mean"}
+\NormalTok{        ),}
+        \AttributeTok{level\_label =}\NormalTok{ col\_name }\SpecialCharTok{\%\textgreater{}\%}
+          \FunctionTok{gsub}\NormalTok{(}\StringTok{"\^{}ci\_l}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{.|\^{}ci\_u}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{."}\NormalTok{, }\StringTok{""}\NormalTok{, .) }\SpecialCharTok{\%\textgreater{}\%}
+          \FunctionTok{gsub}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"\^{}"}\NormalTok{, var\_name), }\StringTok{""}\NormalTok{, .)}
+\NormalTok{      ) }\SpecialCharTok{\%\textgreater{}\%}
+      \FunctionTok{select}\NormalTok{(year, level\_label, stat\_type, value) }\SpecialCharTok{\%\textgreater{}\%}
+      \FunctionTok{pivot\_wider}\NormalTok{(}\AttributeTok{names\_from =}\NormalTok{ stat\_type, }\AttributeTok{values\_from =}\NormalTok{ value) }\SpecialCharTok{\%\textgreater{}\%}
+      \FunctionTok{mutate}\NormalTok{(}
+        \AttributeTok{result\_formatted =} \FunctionTok{sprintf}\NormalTok{(}
+          \StringTok{"\%.2f (\%.2f, \%.2f)"}\NormalTok{, mean }\SpecialCharTok{*} \DecValTok{100}\NormalTok{, ci\_l }\SpecialCharTok{*} \DecValTok{100}\NormalTok{, ci\_u }\SpecialCharTok{*} \DecValTok{100}
+\NormalTok{        ),}
+        \AttributeTok{variable\_group =}\NormalTok{ label\_var}
+\NormalTok{      )}
+
+\NormalTok{    res\_formatted}
+
+\NormalTok{  \}, }\AttributeTok{error =} \ControlFlowTok{function}\NormalTok{(e) \{}
+    \FunctionTok{message}\NormalTok{(}\StringTok{"ERRO em "}\NormalTok{, var\_name, }\StringTok{": "}\NormalTok{, e}\SpecialCharTok{$}\NormalTok{message)}
+    \ConstantTok{NULL}
+\NormalTok{  \})}
+\NormalTok{\}}
+
+\NormalTok{dist\_data\_long }\OtherTok{\textless{}{-}} \FunctionTok{map\_dfr}\NormalTok{(}
+  \FunctionTok{names}\NormalTok{(covariates\_labels),}
+  \SpecialCharTok{\textasciitilde{}} \FunctionTok{get\_distribution}\NormalTok{(.x, covariates\_labels[.x])}
+\NormalTok{)}
+
+\NormalTok{dist\_data\_wide }\OtherTok{\textless{}{-}}\NormalTok{ dist\_data\_long }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(variable\_group, level\_label, year, result\_formatted) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{pivot\_wider}\NormalTok{(}\AttributeTok{names\_from =}\NormalTok{ year, }\AttributeTok{values\_from =}\NormalTok{ result\_formatted)}
+
+\NormalTok{gt\_table\_profile }\OtherTok{\textless{}{-}}\NormalTok{ dist\_data\_wide }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{gt}\NormalTok{(}\AttributeTok{groupname\_col =} \StringTok{"variable\_group"}\NormalTok{, }\AttributeTok{rowname\_col =} \StringTok{"level\_label"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_header}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{" Population sociodemographic characteristics (2021–2024)"}\NormalTok{,}
+    \AttributeTok{subtitle =} \StringTok{"NSDUH 2021–2024, Weighted Prevalence (95\% CI)"}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{cols\_align}\NormalTok{(}\AttributeTok{align =} \StringTok{"center"}\NormalTok{, }\AttributeTok{columns =} \FunctionTok{everything}\NormalTok{()) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{cols\_align}\NormalTok{(}\AttributeTok{align =} \StringTok{"left"}\NormalTok{, }\AttributeTok{columns =} \FunctionTok{stub}\NormalTok{()) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_options}\NormalTok{(}
+    \AttributeTok{row\_group.font.weight =} \StringTok{"bold"}\NormalTok{,}
+    \AttributeTok{table.font.size =} \DecValTok{12}
+\NormalTok{  )}
+
+\NormalTok{gt\_table\_profile}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[t]
+\caption*{
+{\fontsize{20}{25}\selectfont   Population sociodemographic characteristics (2021–2024)\fontsize{9}{11}\selectfont } \\ 
+{\fontsize{14}{17}\selectfont  NSDUH 2021–2024, Weighted Prevalence (95\% CI)\fontsize{9}{11}\selectfont }
+} 
+\fontsize{9.0pt}{11.0pt}\selectfont
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}l|cccc}
+\toprule
+ & 2021 & 2022 & 2023 & 2024 \\ 
+\midrule\addlinespace[2.5pt]
+\multicolumn{5}{l}{Sex} \\[2.5pt] 
+\midrule\addlinespace[2.5pt]
+Male & 51.07 (49.15, 52.99) & 51.15 (49.43, 52.87) & 51.15 (49.38, 52.91) & 51.15 (49.78, 52.53) \\ 
+Female & 48.93 (47.01, 50.85) & 48.85 (47.13, 50.57) & 48.85 (47.09, 50.62) & 48.85 (47.47, 50.22) \\ 
+\midrule\addlinespace[2.5pt]
+\multicolumn{5}{l}{Age group} \\[2.5pt] 
+\midrule\addlinespace[2.5pt]
+12–13 & 34.04 (32.53, 35.56) & 32.94 (31.55, 34.33) & 31.14 (29.95, 32.33) & 30.83 (29.17, 32.49) \\ 
+14–15 & 32.56 (31.07, 34.05) & 35.25 (33.85, 36.64) & 34.95 (33.54, 36.37) & 34.48 (32.89, 36.07) \\ 
+16–17 & 33.40 (31.96, 34.84) & 31.81 (30.43, 33.19) & 33.91 (32.64, 35.18) & 34.69 (33.01, 36.37) \\ 
+\midrule\addlinespace[2.5pt]
+\multicolumn{5}{l}{Race/Ethnicity} \\[2.5pt] 
+\midrule\addlinespace[2.5pt]
+White & 50.51 (47.84, 53.18) & 49.92 (47.81, 52.03) & 49.43 (47.75, 51.11) & 48.67 (46.86, 50.48) \\ 
+Black & 13.55 (12.23, 14.87) & 13.64 (12.56, 14.72) & 13.88 (12.60, 15.16) & 13.76 (12.37, 15.15) \\ 
+AIAN & 0.65 (0.36, 0.94) & 0.82 (0.62, 1.02) & 0.85 (0.66, 1.03) & 0.87 (0.71, 1.04) \\ 
+NHPI & 0.62 (0.24, 1.01) & 0.24 (0.11, 0.37) & 0.34 (0.17, 0.52) & 0.35 (0.18, 0.53) \\ 
+Asian & 5.62 (4.50, 6.75) & 6.29 (4.81, 7.77) & 5.60 (4.83, 6.38) & 5.56 (4.57, 6.56) \\ 
+Multiracial & 3.49 (2.81, 4.16) & 3.25 (2.81, 3.68) & 3.66 (3.17, 4.14) & 4.18 (3.87, 4.49) \\ 
+Hispanic & 25.55 (23.13, 27.97) & 25.85 (23.83, 27.86) & 26.24 (24.12, 28.37) & 26.60 (24.86, 28.33) \\ 
+\midrule\addlinespace[2.5pt]
+\multicolumn{5}{l}{County type} \\[2.5pt] 
+\midrule\addlinespace[2.5pt]
+Large metro & 53.94 (50.79, 57.10) & 57.68 (55.34, 60.01) & 54.77 (52.32, 57.23) & 56.75 (54.74, 58.77) \\ 
+Small metro & 30.85 (27.88, 33.82) & 31.02 (28.90, 33.15) & 32.46 (30.18, 34.75) & 32.25 (30.12, 34.39) \\ 
+Nonmetro & 15.20 (13.35, 17.05) & 11.30 (9.95, 12.64) & 12.76 (11.39, 14.14) & 10.99 (9.67, 12.32) \\ 
+\midrule\addlinespace[2.5pt]
+\multicolumn{5}{l}{Population density} \\[2.5pt] 
+\midrule\addlinespace[2.5pt]
+≥1M CBSA & 52.90 (49.68, 56.11) & 56.37 (54.05, 58.68) & 52.64 (50.15, 55.13) & 54.87 (52.79, 56.94) \\ 
+<1M CBSA & 40.60 (37.21, 43.98) & 38.99 (36.82, 41.15) & 41.45 (39.09, 43.81) & 40.24 (38.19, 42.29) \\ 
+Non-CBSA & 6.50 (5.03, 7.98) & 4.65 (3.80, 5.50) & 5.91 (4.79, 7.02) & 4.89 (3.73, 6.05) \\ 
+\midrule\addlinespace[2.5pt]
+\multicolumn{5}{l}{Health insurance} \\[2.5pt] 
+\midrule\addlinespace[2.5pt]
+Yes & 94.90 (93.89, 95.91) & 96.08 (95.27, 96.88) & 95.17 (94.32, 96.03) & 95.34 (94.51, 96.18) \\ 
+No & 5.10 (4.09, 6.11) & 3.92 (3.12, 4.73) & 4.83 (3.97, 5.68) & 4.66 (3.82, 5.49) \\ 
+\midrule\addlinespace[2.5pt]
+\multicolumn{5}{l}{Family income} \\[2.5pt] 
+\midrule\addlinespace[2.5pt]
+<\$10k & 5.61 (4.83, 6.39) & 5.33 (4.58, 6.08) & 5.04 (4.39, 5.69) & 4.92 (4.42, 5.42) \\ 
+\$10–19k & 8.84 (7.84, 9.85) & 7.90 (7.16, 8.64) & 7.81 (6.77, 8.85) & 7.14 (6.28, 8.00) \\ 
+\$20–29k & 8.69 (7.73, 9.65) & 8.16 (7.18, 9.13) & 7.03 (6.22, 7.84) & 6.97 (6.05, 7.89) \\ 
+\$30–39k & 8.84 (7.81, 9.86) & 7.69 (6.93, 8.44) & 8.62 (7.79, 9.45) & 7.42 (6.45, 8.40) \\ 
+\$40–49k & 9.40 (8.14, 10.65) & 8.73 (7.77, 9.69) & 8.41 (7.48, 9.34) & 7.49 (6.57, 8.40) \\ 
+\$50–74k & 13.38 (12.09, 14.67) & 13.42 (12.49, 14.36) & 13.00 (11.92, 14.08) & 12.92 (12.11, 13.73) \\ 
+≥\$75k & 45.24 (42.29, 48.19) & 48.77 (46.64, 50.91) & 50.09 (48.05, 52.13) & 53.14 (51.28, 55.01) \\ 
+\midrule\addlinespace[2.5pt]
+\multicolumn{5}{l}{Poverty status} \\[2.5pt] 
+\midrule\addlinespace[2.5pt]
+Living in Poverty & 20.94 (18.72, 23.17) & 20.37 (18.68, 22.07) & 21.93 (20.43, 23.43) & 21.31 (19.65, 22.97) \\ 
+Income Up to 2X Federal Poverty Threshold & 21.71 (20.02, 23.40) & 22.38 (20.86, 23.91) & 20.71 (19.26, 22.17) & 20.11 (18.63, 21.59) \\ 
+Income More Than 2X Federal Poverty Threshold & 57.35 (54.52, 60.17) & 57.25 (54.97, 59.52) & 57.36 (55.38, 59.33) & 58.58 (56.73, 60.43) \\ 
+\midrule\addlinespace[2.5pt]
+\multicolumn{5}{l}{Marijuana use in the past 30 days} \\[2.5pt] 
+\midrule\addlinespace[2.5pt]
+Yes & 5.79 (4.91, 6.67) & 6.02 (5.44, 6.60) & 5.93 (5.17, 6.69) & 5.73 (5.09, 6.37) \\ 
+No & 94.21 (93.33, 95.09) & 93.98 (93.40, 94.56) & 94.07 (93.31, 94.83) & 94.27 (93.63, 94.91) \\ 
+\midrule\addlinespace[2.5pt]
+\multicolumn{5}{l}{Marijuana Use Disorder in the past 12 months} \\[2.5pt] 
+\midrule\addlinespace[2.5pt]
+Yes & 4.50 (3.59, 5.42) & 4.81 (4.33, 5.30) & 4.31 (3.76, 4.86) & 4.40 (3.83, 4.96) \\ 
+No & 95.50 (94.58, 96.41) & 95.19 (94.70, 95.67) & 95.69 (95.14, 96.24) & 95.60 (95.04, 96.17) \\ 
+\midrule\addlinespace[2.5pt]
+\multicolumn{5}{l}{Past-year MDE and SUD Status (DSM-5)} \\[2.5pt] 
+\midrule\addlinespace[2.5pt]
+SUD only & 5.39 (4.51, 6.27) & 5.10 (4.47, 5.74) & 4.85 (4.13, 5.57) & 4.47 (3.97, 4.96) \\ 
+MDE only & 16.44 (15.21, 17.68) & 15.72 (14.63, 16.81) & 14.38 (13.23, 15.53) & 11.58 (10.74, 12.42) \\ 
+SUD and MDE & 4.09 (3.56, 4.62) & 3.60 (3.09, 4.12) & 3.46 (3.02, 3.90) & 3.26 (2.63, 3.89) \\ 
+Neither & 74.07 (72.38, 75.76) & 75.57 (74.21, 76.94) & 77.30 (76.05, 78.56) & 80.69 (79.61, 81.78) \\ 
+\bottomrule
+\end{tabular*}
+\end{table}
+
+\section{Table 1: Sociodemographic characteristics of US adolescents
+with past-year cannabis use by year (Weighted prevalence),
+2021--2024}\label{table-1-sociodemographic-characteristics-of-us-adolescents-with-past-year-cannabis-use-by-year-weighted-prevalence-20212024}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{adolescents\_use\_year }\OtherTok{\textless{}{-}} \FunctionTok{subset}\NormalTok{(nsduh\_sp, mj\_past\_year\_num }\SpecialCharTok{==} \DecValTok{1}\NormalTok{)}
+
+\NormalTok{get\_distribution }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(var\_name, label\_var, design\_subset) \{}
+  \FunctionTok{tryCatch}\NormalTok{(\{}
+
+\NormalTok{    var\_data }\OtherTok{\textless{}{-}}\NormalTok{ adolescents\_use\_year}\SpecialCharTok{$}\NormalTok{variables[[var\_name]]}
+
+    \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{length}\NormalTok{(}\FunctionTok{unique}\NormalTok{(}\FunctionTok{na.omit}\NormalTok{(var\_data))) }\SpecialCharTok{\textless{}} \DecValTok{2}\NormalTok{) \{}
+      \FunctionTok{return}\NormalTok{(}\ConstantTok{NULL}\NormalTok{)}
+\NormalTok{    \}}
+
+\NormalTok{    res }\OtherTok{\textless{}{-}} \FunctionTok{svyby}\NormalTok{(}
+      \FunctionTok{as.formula}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"\textasciitilde{}"}\NormalTok{, var\_name)),}
+      \AttributeTok{by =} \SpecialCharTok{\textasciitilde{}}\NormalTok{year,}
+      \AttributeTok{design =}\NormalTok{ adolescents\_use\_year,}
+      \AttributeTok{FUN =}\NormalTok{ svymean,}
+      \AttributeTok{vartype =} \StringTok{"ci"}\NormalTok{,}
+      \AttributeTok{na.rm =} \ConstantTok{TRUE}
+\NormalTok{    )}
+
+\NormalTok{    res\_formatted }\OtherTok{\textless{}{-}}\NormalTok{ res }\SpecialCharTok{\%\textgreater{}\%}
+      \FunctionTok{pivot\_longer}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{year, }\AttributeTok{names\_to =} \StringTok{"col\_name"}\NormalTok{, }\AttributeTok{values\_to =} \StringTok{"value"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+      \FunctionTok{mutate}\NormalTok{(}
+        \AttributeTok{stat\_type =} \FunctionTok{case\_when}\NormalTok{(}
+          \FunctionTok{grepl}\NormalTok{(}\StringTok{"\^{}ci\_l"}\NormalTok{, col\_name) }\SpecialCharTok{\textasciitilde{}} \StringTok{"ci\_l"}\NormalTok{,}
+          \FunctionTok{grepl}\NormalTok{(}\StringTok{"\^{}ci\_u"}\NormalTok{, col\_name) }\SpecialCharTok{\textasciitilde{}} \StringTok{"ci\_u"}\NormalTok{,}
+          \ConstantTok{TRUE} \SpecialCharTok{\textasciitilde{}} \StringTok{"mean"}
+\NormalTok{        ),}
+        \AttributeTok{level\_label =}\NormalTok{ col\_name }\SpecialCharTok{\%\textgreater{}\%}
+          \FunctionTok{gsub}\NormalTok{(}\StringTok{"\^{}ci\_l}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{.|\^{}ci\_u}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{."}\NormalTok{, }\StringTok{""}\NormalTok{, .) }\SpecialCharTok{\%\textgreater{}\%}
+          \FunctionTok{gsub}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"\^{}"}\NormalTok{, var\_name), }\StringTok{""}\NormalTok{, .)}
+\NormalTok{      ) }\SpecialCharTok{\%\textgreater{}\%}
+      \FunctionTok{select}\NormalTok{(year, level\_label, stat\_type, value) }\SpecialCharTok{\%\textgreater{}\%}
+      \FunctionTok{pivot\_wider}\NormalTok{(}\AttributeTok{names\_from =}\NormalTok{ stat\_type, }\AttributeTok{values\_from =}\NormalTok{ value) }\SpecialCharTok{\%\textgreater{}\%}
+      \FunctionTok{mutate}\NormalTok{(}
+        \AttributeTok{result\_formatted =} \FunctionTok{sprintf}\NormalTok{(}
+          \StringTok{"\%.2f (\%.2f, \%.2f)"}\NormalTok{, mean }\SpecialCharTok{*} \DecValTok{100}\NormalTok{, ci\_l }\SpecialCharTok{*} \DecValTok{100}\NormalTok{, ci\_u }\SpecialCharTok{*} \DecValTok{100}
+\NormalTok{        ),}
+        \AttributeTok{variable\_group =}\NormalTok{ label\_var}
+\NormalTok{      )}
+
+\NormalTok{    res\_formatted}
+
+\NormalTok{  \}, }\AttributeTok{error =} \ControlFlowTok{function}\NormalTok{(e) \{}
+    \FunctionTok{message}\NormalTok{(}\StringTok{"ERRO em "}\NormalTok{, var\_name, }\StringTok{": "}\NormalTok{, e}\SpecialCharTok{$}\NormalTok{message)}
+    \ConstantTok{NULL}
+\NormalTok{  \})}
+\NormalTok{\}}
+
+\CommentTok{\# Lista apenas das características sociodemográficas}
+\NormalTok{sociodemographic\_labels }\OtherTok{\textless{}{-}}\NormalTok{ covariates\_labels[}\FunctionTok{c}\NormalTok{(}\StringTok{"sex"}\NormalTok{, }\StringTok{"age\_cat"}\NormalTok{, }\StringTok{"race"}\NormalTok{, }
+                                                \StringTok{"county\_type"}\NormalTok{, }\StringTok{"pop\_density"}\NormalTok{,}
+                                                \StringTok{"insurance"}\NormalTok{, }\StringTok{"family\_income"}\NormalTok{,}
+                                                \StringTok{"poverty"}\NormalTok{)]}
+
+\NormalTok{dist\_data\_long }\OtherTok{\textless{}{-}} \FunctionTok{map\_dfr}\NormalTok{(}
+  \FunctionTok{names}\NormalTok{(sociodemographic\_labels),}
+  \SpecialCharTok{\textasciitilde{}} \FunctionTok{get\_distribution}\NormalTok{(.x, sociodemographic\_labels[.x], adolescents\_use\_year)}
+\NormalTok{)}
+
+\NormalTok{dist\_data\_wide }\OtherTok{\textless{}{-}}\NormalTok{ dist\_data\_long }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(variable\_group, level\_label, year, result\_formatted) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{pivot\_wider}\NormalTok{(}\AttributeTok{names\_from =}\NormalTok{ year, }\AttributeTok{values\_from =}\NormalTok{ result\_formatted)}
+
+\NormalTok{gt\_table\_profile }\OtherTok{\textless{}{-}}\NormalTok{ dist\_data\_wide }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{gt}\NormalTok{(}\AttributeTok{groupname\_col =} \StringTok{"variable\_group"}\NormalTok{, }\AttributeTok{rowname\_col =} \StringTok{"level\_label"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_header}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{"Weighted prevalence of past{-}year cannabis use by sociodemographic characteristics among US adolescents, 2021–2024"}\NormalTok{,}
+    \AttributeTok{subtitle =} \StringTok{"NSDUH 2021–2024, Weighted Prevalence (95\% CI)"}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{cols\_align}\NormalTok{(}\AttributeTok{align =} \StringTok{"center"}\NormalTok{, }\AttributeTok{columns =} \FunctionTok{everything}\NormalTok{()) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{cols\_align}\NormalTok{(}\AttributeTok{align =} \StringTok{"left"}\NormalTok{, }\AttributeTok{columns =} \FunctionTok{stub}\NormalTok{()) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_options}\NormalTok{(}
+    \AttributeTok{row\_group.font.weight =} \StringTok{"bold"}\NormalTok{,}
+    \AttributeTok{table.font.size =} \DecValTok{12}
+\NormalTok{  )}
+
+\NormalTok{gt\_table\_profile}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[t]
+\caption*{
+{\fontsize{20}{25}\selectfont  Weighted prevalence of past-year cannabis use by sociodemographic characteristics among US adolescents, 2021–2024\fontsize{9}{11}\selectfont } \\ 
+{\fontsize{14}{17}\selectfont  NSDUH 2021–2024, Weighted Prevalence (95\% CI)\fontsize{9}{11}\selectfont }
+} 
+\fontsize{9.0pt}{11.0pt}\selectfont
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}l|cccc}
+\toprule
+ & 2021 & 2022 & 2023 & 2024 \\ 
+\midrule\addlinespace[2.5pt]
+\multicolumn{5}{l}{Sex} \\[2.5pt] 
+\midrule\addlinespace[2.5pt]
+Male & 45.18 (40.24, 50.12) & 44.96 (41.30, 48.62) & 44.27 (40.11, 48.43) & 45.50 (41.55, 49.45) \\ 
+Female & 54.82 (49.88, 59.76) & 55.04 (51.38, 58.70) & 55.73 (51.57, 59.89) & 54.50 (50.55, 58.45) \\ 
+\midrule\addlinespace[2.5pt]
+\multicolumn{5}{l}{Age group} \\[2.5pt] 
+\midrule\addlinespace[2.5pt]
+12–13 & 6.83 (4.79, 8.88) & 8.77 (6.19, 11.35) & 5.50 (3.77, 7.22) & 6.66 (4.77, 8.55) \\ 
+14–15 & 26.37 (22.71, 30.04) & 32.69 (28.49, 36.89) & 35.59 (32.75, 38.42) & 28.00 (24.85, 31.15) \\ 
+16–17 & 66.80 (63.01, 70.58) & 58.54 (53.80, 63.28) & 58.91 (55.59, 62.24) & 65.34 (61.88, 68.80) \\ 
+\midrule\addlinespace[2.5pt]
+\multicolumn{5}{l}{Race/Ethnicity} \\[2.5pt] 
+\midrule\addlinespace[2.5pt]
+White & 53.42 (46.55, 60.29) & 49.62 (46.45, 52.80) & 50.00 (45.82, 54.18) & 51.22 (46.86, 55.59) \\ 
+Black & 11.73 (8.84, 14.63) & 14.68 (11.54, 17.81) & 15.52 (12.36, 18.68) & 16.61 (13.45, 19.77) \\ 
+AIAN & 1.61 (0.06, 3.16) & 1.09 (0.44, 1.74) & 1.04 (0.26, 1.81) & 0.94 (0.17, 1.71) \\ 
+NHPI & 2.02 (0.21, 3.83) & 0.23 (-0.13, 0.58) & 0.53 (-0.12, 1.19) & 0.09 (0.00, 0.17) \\ 
+Asian & 3.02 (0.77, 5.27) & 2.65 (0.79, 4.52) & 2.04 (1.11, 2.97) & 1.67 (0.03, 3.31) \\ 
+Multiracial & 5.10 (2.90, 7.30) & 3.11 (1.91, 4.32) & 5.39 (3.89, 6.88) & 5.11 (3.80, 6.41) \\ 
+Hispanic & 23.10 (17.83, 28.37) & 28.62 (24.81, 32.43) & 25.48 (20.77, 30.18) & 24.37 (20.76, 27.98) \\ 
+\midrule\addlinespace[2.5pt]
+\multicolumn{5}{l}{County type} \\[2.5pt] 
+\midrule\addlinespace[2.5pt]
+Large metro & 50.63 (44.90, 56.36) & 55.97 (51.44, 60.50) & 55.22 (51.46, 58.98) & 52.92 (48.53, 57.31) \\ 
+Small metro & 36.42 (30.70, 42.13) & 34.51 (30.57, 38.46) & 32.92 (29.13, 36.71) & 36.43 (32.31, 40.55) \\ 
+Nonmetro & 12.95 (9.99, 15.91) & 9.52 (7.14, 11.90) & 11.86 (9.79, 13.94) & 10.65 (8.31, 12.99) \\ 
+\midrule\addlinespace[2.5pt]
+\multicolumn{5}{l}{Population density} \\[2.5pt] 
+\midrule\addlinespace[2.5pt]
+≥1M CBSA & 49.69 (43.86, 55.52) & 54.56 (50.08, 59.04) & 52.22 (48.24, 56.20) & 50.42 (46.29, 54.55) \\ 
+<1M CBSA & 47.49 (41.45, 53.54) & 42.71 (38.62, 46.81) & 42.15 (37.57, 46.74) & 44.27 (40.51, 48.03) \\ 
+Non-CBSA & 2.82 (1.88, 3.75) & 2.72 (1.39, 4.05) & 5.63 (3.19, 8.06) & 5.31 (3.38, 7.23) \\ 
+\midrule\addlinespace[2.5pt]
+\multicolumn{5}{l}{Health insurance} \\[2.5pt] 
+\midrule\addlinespace[2.5pt]
+Yes & 94.95 (91.22, 98.68) & 97.14 (95.45, 98.83) & 96.55 (95.16, 97.94) & 95.32 (93.28, 97.36) \\ 
+No & 5.05 (1.32, 8.78) & 2.86 (1.17, 4.55) & 3.45 (2.06, 4.84) & 4.68 (2.64, 6.72) \\ 
+\midrule\addlinespace[2.5pt]
+\multicolumn{5}{l}{Family income} \\[2.5pt] 
+\midrule\addlinespace[2.5pt]
+<\$10k & 7.47 (4.20, 10.75) & 5.97 (3.63, 8.30) & 4.86 (3.13, 6.59) & 4.37 (2.95, 5.79) \\ 
+\$10–19k & 5.86 (3.79, 7.93) & 9.38 (6.25, 12.51) & 7.55 (5.97, 9.13) & 8.74 (6.35, 11.14) \\ 
+\$20–29k & 7.69 (5.46, 9.92) & 9.72 (7.31, 12.14) & 7.19 (5.09, 9.28) & 7.76 (5.70, 9.83) \\ 
+\$30–39k & 6.75 (4.29, 9.21) & 7.10 (4.86, 9.34) & 8.76 (6.19, 11.32) & 8.63 (6.14, 11.13) \\ 
+\$40–49k & 11.31 (6.96, 15.67) & 10.55 (7.75, 13.34) & 9.23 (6.63, 11.83) & 9.70 (7.25, 12.16) \\ 
+\$50–74k & 15.40 (12.32, 18.47) & 13.86 (11.41, 16.32) & 16.00 (12.74, 19.27) & 14.49 (11.86, 17.12) \\ 
+≥\$75k & 45.52 (39.21, 51.82) & 43.43 (39.90, 46.96) & 46.41 (42.22, 50.59) & 46.30 (41.88, 50.72) \\ 
+\midrule\addlinespace[2.5pt]
+\multicolumn{5}{l}{Poverty status} \\[2.5pt] 
+\midrule\addlinespace[2.5pt]
+Living in Poverty & 17.23 (13.05, 21.42) & 21.27 (17.21, 25.33) & 20.18 (17.51, 22.85) & 21.85 (19.13, 24.57) \\ 
+Income Up to 2X Federal Poverty Threshold & 20.23 (16.12, 24.35) & 23.87 (20.21, 27.53) & 21.76 (18.82, 24.69) & 23.78 (19.85, 27.71) \\ 
+Income More Than 2X Federal Poverty Threshold & 62.53 (57.04, 68.02) & 54.86 (50.32, 59.40) & 58.06 (54.13, 62.00) & 54.37 (49.88, 58.86) \\ 
+\bottomrule
+\end{tabular*}
+\end{table}
+
+\section{Among adolescents who reported past-year cannabis use, what was
+the prevalence of marijuana use
+disorder?}\label{among-adolescents-who-reported-past-year-cannabis-use-what-was-the-prevalence-of-marijuana-use-disorder}
+
+\section{Which sociodemographic factors were independently associated
+with increased risk of
+CUD?}\label{which-sociodemographic-factors-were-independently-associated-with-increased-risk-of-cud}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{nsduh\_pooled }\OtherTok{\textless{}{-}}\NormalTok{ nsduh\_all  }
+\NormalTok{nsduh\_pooled}\SpecialCharTok{$}\NormalTok{weight\_pooled }\OtherTok{\textless{}{-}}\NormalTok{ nsduh\_pooled}\SpecialCharTok{$}\NormalTok{ANALWT2\_C }\SpecialCharTok{/} \DecValTok{4}
+
+\NormalTok{nsduh\_design }\OtherTok{\textless{}{-}} \FunctionTok{svydesign}\NormalTok{(}
+  \AttributeTok{id =} \SpecialCharTok{\textasciitilde{}}\NormalTok{VEREP,}
+  \AttributeTok{strata =} \SpecialCharTok{\textasciitilde{}}\NormalTok{VESTR\_C,}
+  \AttributeTok{weights =} \SpecialCharTok{\textasciitilde{}}\NormalTok{weight\_pooled,}
+  \AttributeTok{data =}\NormalTok{ nsduh\_pooled,}
+  \AttributeTok{nest =} \ConstantTok{TRUE}
+\NormalTok{)}
+
+\NormalTok{nsduh\_design }\OtherTok{\textless{}{-}} \FunctionTok{update}\NormalTok{(nsduh\_design, }\AttributeTok{mrj\_use\_disorder\_bin =} \FunctionTok{ifelse}\NormalTok{(mrj\_use\_disorder }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{))}
+\NormalTok{nsduh\_design }\OtherTok{\textless{}{-}} \FunctionTok{update}\NormalTok{(nsduh\_design, }\AttributeTok{mj\_past\_year\_bin =} \FunctionTok{ifelse}\NormalTok{(mj\_past\_year\_num }\SpecialCharTok{==} \StringTok{"Yes"}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{))}
+
+\NormalTok{adolescents\_users }\OtherTok{\textless{}{-}} \FunctionTok{subset}\NormalTok{(nsduh\_design, mj\_past\_year\_bin }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\&} \SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(mrj\_use\_disorder\_bin))}
+
+\CommentTok{\# Prevalence}
+\FunctionTok{svyby}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{mrj\_use\_disorder\_bin, }\SpecialCharTok{\textasciitilde{}}\NormalTok{year, adolescents\_users, svymean, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      year mrj_use_disorder_bin         se
+## 2021 2021            0.4620313 0.03476800
+## 2022 2022            0.4444830 0.02064246
+## 2023 2023            0.4094783 0.02050104
+## 2024 2024            0.4529070 0.02094444
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model\_adj }\OtherTok{\textless{}{-}} \FunctionTok{svyglm}\NormalTok{(}
+\NormalTok{  mrj\_use\_disorder\_bin }\SpecialCharTok{\textasciitilde{}}\NormalTok{ age\_cat }\SpecialCharTok{+}\NormalTok{ sex }\SpecialCharTok{+}\NormalTok{ race }\SpecialCharTok{+}\NormalTok{ family\_income }\SpecialCharTok{+}\NormalTok{ year,}
+  \AttributeTok{design =}\NormalTok{ adolescents\_users,}
+  \AttributeTok{family =} \FunctionTok{quasibinomial}\NormalTok{()}
+\NormalTok{)}
+\FunctionTok{summary}\NormalTok{(model\_adj)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## svyglm(formula = mrj_use_disorder_bin ~ age_cat + sex + race + 
+##     family_income + year, design = adolescents_users, family = quasibinomial())
+## 
+## Survey design:
+## subset(nsduh_design, mj_past_year_bin == 1 & !is.na(mrj_use_disorder_bin))
+## 
+## Coefficients:
+##                       Estimate Std. Error t value Pr(>|t|)   
+## (Intercept)          -0.545626   0.434432  -1.256  0.21823   
+## age_cat14–15          0.299307   0.219170   1.366  0.18158   
+## age_cat16–17          0.372705   0.226168   1.648  0.10916   
+## sexFemale             0.166936   0.090425   1.846  0.07414 . 
+## raceBlack             0.019550   0.119881   0.163  0.87148   
+## raceAIAN              0.334114   0.441179   0.757  0.45440   
+## raceNHPI              0.138492   0.755337   0.183  0.85568   
+## raceAsian             0.008986   0.356779   0.025  0.98006   
+## raceMultiracial      -0.035534   0.207311  -0.171  0.86499   
+## raceHispanic          0.375911   0.127348   2.952  0.00587 **
+## family_income$10–19k  0.076387   0.283320   0.270  0.78919   
+## family_income$20–29k -0.153254   0.290864  -0.527  0.60190   
+## family_income$30–39k  0.041197   0.300195   0.137  0.89171   
+## family_income$40–49k -0.007182   0.293236  -0.024  0.98061   
+## family_income$50–74k -0.277268   0.252368  -1.099  0.28011   
+## family_income≥$75k   -0.165935   0.245104  -0.677  0.50327   
+## year2022             -0.089540   0.153597  -0.583  0.56401   
+## year2023             -0.217970   0.172731  -1.262  0.21610   
+## year2024             -0.039419   0.152406  -0.259  0.79756   
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for quasibinomial family taken to be 0.9999467)
+## 
+## Number of Fisher Scoring iterations: 4
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{exp}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(}\AttributeTok{OR =} \FunctionTok{coef}\NormalTok{(model\_adj), }\FunctionTok{confint}\NormalTok{(model\_adj)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                             OR     2.5 %   97.5 %
+## (Intercept)          0.5794788 0.2391811 1.403939
+## age_cat14–15         1.3489234 0.8631835 2.108004
+## age_cat16–17         1.4516558 0.9157754 2.301115
+## sexFemale            1.1816784 0.9828940 1.420666
+## raceBlack            1.0197421 0.7988045 1.301788
+## raceAIAN             1.3967019 0.5686221 3.430707
+## raceNHPI             1.1485409 0.2465775 5.349825
+## raceAsian            1.0090267 0.4878490 2.086988
+## raceMultiracial      0.9650902 0.6326666 1.472180
+## raceHispanic         1.4563178 1.1235714 1.887607
+## family_income$10–19k 1.0793805 0.6060957 1.922241
+## family_income$20–29k 0.8579117 0.4743901 1.551492
+## family_income$30–39k 1.0420572 0.5653673 1.920669
+## family_income$40–49k 0.9928435 0.5463565 1.804204
+## family_income$50–74k 0.7578512 0.4532442 1.267172
+## family_income≥$75k   0.8471012 0.5141727 1.395602
+## year2022             0.9143521 0.6687092 1.250229
+## year2023             0.8041494 0.5656315 1.143246
+## year2024             0.9613475 0.7047870 1.311303
+\end{verbatim}
+
+\section{Fig 2. Prevalence of different modes of marijuana use among
+past-year users
+(2022-2024)}\label{fig-2.-prevalence-of-different-modes-of-marijuana-use-among-past-year-users-2022-2024}
+
+\section{Were there significant year-to-year trends in marijuana use by
+mode of administration among
+adolescents?}\label{were-there-significant-year-to-year-trends-in-marijuana-use-by-mode-of-administration-among-adolescents}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{nsduh\_2224 }\OtherTok{\textless{}{-}} \FunctionTok{bind\_rows}\NormalTok{(}
+\NormalTok{  nsduh\_2123 }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(YEAR }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\DecValTok{2022}\NormalTok{,}\DecValTok{2023}\NormalTok{)),}
+\NormalTok{  nsduh\_2024}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: `..1$YTHACT2` and `..2$YTHACT2` have conflicting value labels.
+## i Labels for these values will be taken from `..1$YTHACT2`.
+## x Values: 1 and 2
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{vars\_keep\_subset }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}
+  \StringTok{"YEAR"}\NormalTok{,}\StringTok{"MRJYR"}\NormalTok{,}\StringTok{"MJREC"}\NormalTok{,}\StringTok{"AGE3"}\NormalTok{,}\StringTok{"IRSEX"}\NormalTok{,}\StringTok{"PYUD5MRJ"}\NormalTok{,}\StringTok{"MJYRSMOKE"}\NormalTok{,}\StringTok{"MJYRVAPE"}\NormalTok{,}\StringTok{"MJYRDAB"}\NormalTok{,}
+  \StringTok{"MJYREAT"}\NormalTok{,}\StringTok{"MJYRMOUTH"}\NormalTok{,}\StringTok{"MJYRSKIN"}\NormalTok{,}\StringTok{"MJYRPILL"}\NormalTok{,}\StringTok{"MJYROTHER"}\NormalTok{,}
+  \StringTok{"ANALWT2\_C3"}\NormalTok{,}\StringTok{"ANALWT2\_C"}\NormalTok{,}\StringTok{"VESTR\_C"}\NormalTok{,}\StringTok{"VEREP"}
+\NormalTok{)}
+
+\NormalTok{nsduh\_2224 }\OtherTok{\textless{}{-}}\NormalTok{ nsduh\_2224 }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\FunctionTok{any\_of}\NormalTok{(vars\_keep\_subset))}
+
+\NormalTok{missing\_vals }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}
+  \AttributeTok{MJYRSMOKE =} \FunctionTok{c}\NormalTok{(}\DecValTok{91}\NormalTok{,}\DecValTok{93}\NormalTok{,}\DecValTok{94}\NormalTok{,}\DecValTok{97}\NormalTok{,}\DecValTok{98}\NormalTok{), }
+  \AttributeTok{MJYRVAPE =} \FunctionTok{c}\NormalTok{(}\DecValTok{91}\NormalTok{,}\DecValTok{93}\NormalTok{,}\DecValTok{94}\NormalTok{,}\DecValTok{97}\NormalTok{,}\DecValTok{98}\NormalTok{), }
+  \AttributeTok{MJYRDAB =} \FunctionTok{c}\NormalTok{(}\DecValTok{91}\NormalTok{,}\DecValTok{93}\NormalTok{,}\DecValTok{94}\NormalTok{,}\DecValTok{97}\NormalTok{,}\DecValTok{98}\NormalTok{), }
+  \AttributeTok{MJYREAT =} \FunctionTok{c}\NormalTok{(}\DecValTok{91}\NormalTok{,}\DecValTok{93}\NormalTok{,}\DecValTok{94}\NormalTok{,}\DecValTok{97}\NormalTok{,}\DecValTok{98}\NormalTok{), }
+  \AttributeTok{MJYRMOUTH =} \FunctionTok{c}\NormalTok{(}\DecValTok{91}\NormalTok{,}\DecValTok{93}\NormalTok{,}\DecValTok{94}\NormalTok{,}\DecValTok{97}\NormalTok{,}\DecValTok{98}\NormalTok{), }
+  \AttributeTok{MJYRSKIN =} \FunctionTok{c}\NormalTok{(}\DecValTok{91}\NormalTok{,}\DecValTok{93}\NormalTok{,}\DecValTok{94}\NormalTok{,}\DecValTok{97}\NormalTok{,}\DecValTok{98}\NormalTok{), }
+  \AttributeTok{MJYRPILL =} \FunctionTok{c}\NormalTok{(}\DecValTok{91}\NormalTok{,}\DecValTok{93}\NormalTok{,}\DecValTok{94}\NormalTok{,}\DecValTok{97}\NormalTok{,}\DecValTok{98}\NormalTok{), }
+  \AttributeTok{MJYROTHER =} \FunctionTok{c}\NormalTok{(}\DecValTok{91}\NormalTok{,}\DecValTok{93}\NormalTok{,}\DecValTok{94}\NormalTok{,}\DecValTok{97}\NormalTok{,}\DecValTok{98}\NormalTok{)}
+\NormalTok{)}
+
+\NormalTok{nsduh\_2224 }\OtherTok{\textless{}{-}} \FunctionTok{replace\_with\_na}\NormalTok{(nsduh\_2224, missing\_vals)}
+
+\NormalTok{nsduh\_2224 }\OtherTok{\textless{}{-}}\NormalTok{ nsduh\_2224 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{mj\_past\_year\_bin =} \FunctionTok{ifelse}\NormalTok{(MRJYR }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{), }\DecValTok{1}\NormalTok{,}
+                           \FunctionTok{ifelse}\NormalTok{(MRJYR }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{), }\DecValTok{0}\NormalTok{, }\ConstantTok{NA}\NormalTok{)),}
+    \AttributeTok{mj\_smoke\_bin  =} \FunctionTok{ifelse}\NormalTok{(MJYRSMOKE }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{5}\NormalTok{), }\DecValTok{1}\NormalTok{,}
+                           \FunctionTok{ifelse}\NormalTok{(MJYRSMOKE }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{), }\DecValTok{0}\NormalTok{, }\ConstantTok{NA}\NormalTok{)),}
+    \AttributeTok{mj\_vape\_bin   =} \FunctionTok{ifelse}\NormalTok{(MJYRVAPE }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{5}\NormalTok{), }\DecValTok{1}\NormalTok{,}
+                           \FunctionTok{ifelse}\NormalTok{(MJYRVAPE }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{4}\NormalTok{), }\DecValTok{0}\NormalTok{, }\ConstantTok{NA}\NormalTok{)),}
+    \AttributeTok{mj\_dab\_bin    =} \FunctionTok{ifelse}\NormalTok{(MJYRDAB }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{5}\NormalTok{), }\DecValTok{1}\NormalTok{,}
+                           \FunctionTok{ifelse}\NormalTok{(MJYRDAB }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{4}\NormalTok{), }\DecValTok{0}\NormalTok{, }\ConstantTok{NA}\NormalTok{)),}
+    \AttributeTok{mj\_eat\_bin    =} \FunctionTok{ifelse}\NormalTok{(MJYREAT }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{5}\NormalTok{), }\DecValTok{1}\NormalTok{,}
+                           \FunctionTok{ifelse}\NormalTok{(MJYREAT }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{4}\NormalTok{), }\DecValTok{0}\NormalTok{, }\ConstantTok{NA}\NormalTok{)),}
+    \AttributeTok{mj\_mouth\_bin  =} \FunctionTok{ifelse}\NormalTok{(MJYRMOUTH }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{5}\NormalTok{), }\DecValTok{1}\NormalTok{,}
+                           \FunctionTok{ifelse}\NormalTok{(MJYRMOUTH }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{4}\NormalTok{), }\DecValTok{0}\NormalTok{, }\ConstantTok{NA}\NormalTok{)),}
+    \AttributeTok{mj\_skin\_bin   =} \FunctionTok{ifelse}\NormalTok{(MJYRSKIN }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{5}\NormalTok{), }\DecValTok{1}\NormalTok{,}
+                           \FunctionTok{ifelse}\NormalTok{(MJYRSKIN }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{4}\NormalTok{), }\DecValTok{0}\NormalTok{, }\ConstantTok{NA}\NormalTok{)),}
+    \AttributeTok{mj\_pill\_bin   =} \FunctionTok{ifelse}\NormalTok{(MJYRPILL }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{5}\NormalTok{), }\DecValTok{1}\NormalTok{,}
+                           \FunctionTok{ifelse}\NormalTok{(MJYRPILL }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{4}\NormalTok{), }\DecValTok{0}\NormalTok{, }\ConstantTok{NA}\NormalTok{)),}
+    \AttributeTok{mj\_other\_bin  =} \FunctionTok{ifelse}\NormalTok{(MJYROTHER }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{5}\NormalTok{), }\DecValTok{1}\NormalTok{,}
+                           \FunctionTok{ifelse}\NormalTok{(MJYROTHER }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{4}\NormalTok{), }\DecValTok{0}\NormalTok{, }\ConstantTok{NA}\NormalTok{))}
+\NormalTok{  )}
+
+\NormalTok{nsduh\_2224 }\OtherTok{\textless{}{-}}\NormalTok{ nsduh\_2224 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{YEAR =} \FunctionTok{factor}\NormalTok{(YEAR),}
+    \AttributeTok{AGE3 =} \FunctionTok{factor}\NormalTok{(AGE3, }\AttributeTok{levels=}\DecValTok{1}\SpecialCharTok{:}\DecValTok{3}\NormalTok{, }\AttributeTok{labels=}\FunctionTok{c}\NormalTok{(}\StringTok{"12–13"}\NormalTok{,}\StringTok{"14–15"}\NormalTok{,}\StringTok{"16–17"}\NormalTok{)),}
+    \AttributeTok{IRSEX =} \FunctionTok{factor}\NormalTok{(IRSEX, }\AttributeTok{levels=}\DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{, }\AttributeTok{labels=}\FunctionTok{c}\NormalTok{(}\StringTok{"Male"}\NormalTok{,}\StringTok{"Female"}\NormalTok{)),}
+    \FunctionTok{across}\NormalTok{(}\FunctionTok{ends\_with}\NormalTok{(}\StringTok{"\_bin"}\NormalTok{), }\SpecialCharTok{\textasciitilde{}}\FunctionTok{factor}\NormalTok{(., }\AttributeTok{levels=}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{), }\AttributeTok{labels=}\FunctionTok{c}\NormalTok{(}\StringTok{"Yes"}\NormalTok{,}\StringTok{"No"}\NormalTok{)))}
+\NormalTok{  )}
+
+\FunctionTok{var\_label}\NormalTok{(nsduh\_2224) }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}
+  \AttributeTok{YEAR =} \StringTok{"Survey year"}\NormalTok{,}
+  \AttributeTok{AGE3 =} \StringTok{"Age group (years)"}\NormalTok{,}
+  \AttributeTok{IRSEX =} \StringTok{"Sex"}\NormalTok{,}
+  \AttributeTok{mj\_past\_year\_bin =} \StringTok{"Marijuana use in past year (binary)"}\NormalTok{,}
+  \AttributeTok{mj\_smoke\_bin  =} \StringTok{"Marijuana use {-} Smoking"}\NormalTok{,}
+  \AttributeTok{mj\_vape\_bin   =} \StringTok{"Marijuana use {-} Vaping"}\NormalTok{,}
+  \AttributeTok{mj\_dab\_bin    =} \StringTok{"Marijuana use {-} Dabbing (waxes/concentrates)"}\NormalTok{,}
+  \AttributeTok{mj\_eat\_bin    =} \StringTok{"Marijuana use {-} Edibles (food/drink)"}\NormalTok{,}
+  \AttributeTok{mj\_mouth\_bin  =} \StringTok{"Marijuana use {-} Oral (Drops/Sprays)"}\NormalTok{,}
+  \AttributeTok{mj\_skin\_bin   =} \StringTok{"Marijuana use {-} Topical (skin)"}\NormalTok{,}
+  \AttributeTok{mj\_pill\_bin   =} \StringTok{"Marijuana use {-} Pills"}\NormalTok{,}
+  \AttributeTok{mj\_other\_bin  =} \StringTok{"Marijuana use {-} Other methods"}
+\NormalTok{)}
+
+\NormalTok{nsduh\_sub }\OtherTok{\textless{}{-}} \FunctionTok{svydesign}\NormalTok{(}
+  \AttributeTok{id =} \SpecialCharTok{\textasciitilde{}}\NormalTok{VEREP,}
+  \AttributeTok{strata =} \SpecialCharTok{\textasciitilde{}}\NormalTok{VESTR\_C,}
+  \AttributeTok{weights =} \SpecialCharTok{\textasciitilde{}}\NormalTok{ANALWT2\_C,}
+  \AttributeTok{data =}\NormalTok{ nsduh\_2224,}
+  \AttributeTok{nest =} \ConstantTok{TRUE}
+\NormalTok{)}
+
+\NormalTok{run\_trend\_adj }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(var, design\_obj) \{}
+\NormalTok{  f }\OtherTok{\textless{}{-}} \FunctionTok{as.formula}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"I("}\NormalTok{, var, }\StringTok{" == \textquotesingle{}Yes\textquotesingle{}) \textasciitilde{} YEAR"}\NormalTok{))}
+\NormalTok{  mod }\OtherTok{\textless{}{-}} \FunctionTok{svyglm}\NormalTok{(f, }\AttributeTok{design =}\NormalTok{ design\_obj, }\AttributeTok{family =} \FunctionTok{quasibinomial}\NormalTok{())}
+\NormalTok{  broom}\SpecialCharTok{::}\FunctionTok{tidy}\NormalTok{(mod, }\AttributeTok{exponentiate =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{conf.int =} \ConstantTok{TRUE}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{filter}\NormalTok{(}\FunctionTok{grepl}\NormalTok{(}\StringTok{"YEAR"}\NormalTok{, term)) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Method =}\NormalTok{ var)}
+\NormalTok{\}}
+
+\NormalTok{method\_labels }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}
+  \AttributeTok{mj\_smoke\_bin  =} \StringTok{"Smoking"}\NormalTok{,}
+  \AttributeTok{mj\_vape\_bin   =} \StringTok{"Vaping"}\NormalTok{,}
+  \AttributeTok{mj\_dab\_bin    =} \StringTok{"Dabbing (waxes/concentrates)"}\NormalTok{,}
+  \AttributeTok{mj\_eat\_bin    =} \StringTok{"Edibles (food/drink)"}\NormalTok{,}
+  \AttributeTok{mj\_mouth\_bin  =} \StringTok{"Oral (Drops/Sprays)"}\NormalTok{,}
+  \AttributeTok{mj\_skin\_bin   =} \StringTok{"Topical (skin)"}\NormalTok{,}
+  \AttributeTok{mj\_pill\_bin   =} \StringTok{"Pills"}\NormalTok{,}
+  \AttributeTok{mj\_other\_bin  =} \StringTok{"Other"}
+\NormalTok{)}
+
+\NormalTok{format\_p }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(p)\{}
+  \FunctionTok{ifelse}\NormalTok{(p }\SpecialCharTok{\textless{}} \FloatTok{0.001}\NormalTok{, }\StringTok{"\textless{}0.001"}\NormalTok{, }\FunctionTok{round}\NormalTok{(p, }\DecValTok{3}\NormalTok{))}
+\NormalTok{\}}
+
+\NormalTok{vars\_adm }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(method\_labels)}
+
+\NormalTok{trend\_adj\_results }\OtherTok{\textless{}{-}}\NormalTok{ purrr}\SpecialCharTok{::}\FunctionTok{map\_dfr}\NormalTok{(vars\_adm, run\_trend\_adj, }\AttributeTok{design\_obj =}\NormalTok{ nsduh\_sub)}
+
+\NormalTok{trend\_adj\_table }\OtherTok{\textless{}{-}}\NormalTok{ trend\_adj\_results }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{transmute}\NormalTok{(}
+    \AttributeTok{Method  =}\NormalTok{ method\_labels[Method],}
+    \AttributeTok{OR      =} \FunctionTok{round}\NormalTok{(estimate, }\DecValTok{2}\NormalTok{),}
+    \AttributeTok{CI      =} \FunctionTok{paste0}\NormalTok{(}\StringTok{"("}\NormalTok{, }\FunctionTok{round}\NormalTok{(conf.low,}\DecValTok{2}\NormalTok{), }\StringTok{"–"}\NormalTok{, }\FunctionTok{round}\NormalTok{(conf.high,}\DecValTok{2}\NormalTok{), }\StringTok{")"}\NormalTok{),}
+    \AttributeTok{p\_value =} \FunctionTok{format\_p}\NormalTok{(p.value)}
+\NormalTok{  )}
+
+\NormalTok{trend\_adj\_table}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 16 x 4
+##    Method                          OR CI          p_value
+##    <chr>                        <dbl> <chr>       <chr>  
+##  1 Smoking                       1.19 (0.83–1.69) 0.336  
+##  2 Smoking                       0.93 (0.66–1.32) 0.686  
+##  3 Vaping                        1.21 (0.91–1.61) 0.185  
+##  4 Vaping                        1.72 (1.34–2.2)  <0.001 
+##  5 Dabbing (waxes/concentrates)  0.73 (0.54–0.99) 0.041  
+##  6 Dabbing (waxes/concentrates)  0.7  (0.5–0.99)  0.044  
+##  7 Edibles (food/drink)          1.16 (0.92–1.48) 0.211  
+##  8 Edibles (food/drink)          1.2  (0.95–1.51) 0.122  
+##  9 Oral (Drops/Sprays)           0.46 (0.21–1.04) 0.062  
+## 10 Oral (Drops/Sprays)           1.54 (0.63–3.79) 0.336  
+## 11 Topical (skin)                0.65 (0.39–1.1)  0.109  
+## 12 Topical (skin)                0.57 (0.32–1.01) 0.054  
+## 13 Pills                         0.48 (0.22–1.04) 0.061  
+## 14 Pills                         0.9  (0.41–1.95) 0.777  
+## 15 Other                         0.77 (0.44–1.33) 0.334  
+## 16 Other                         1.07 (0.55–2.06) 0.846
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{legend\_names }\OtherTok{\textless{}{-}}\NormalTok{ method\_labels}
+
+\NormalTok{results\_list }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{()}
+\ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in} \FunctionTok{seq\_along}\NormalTok{(vars\_adm))\{}
+\NormalTok{  var\_name }\OtherTok{\textless{}{-}}\NormalTok{ vars\_adm[i]}
+\NormalTok{  label\_name }\OtherTok{\textless{}{-}}\NormalTok{ legend\_names[i]}
+  
+\NormalTok{  form }\OtherTok{\textless{}{-}} \FunctionTok{as.formula}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"\textasciitilde{}"}\NormalTok{, var\_name))}
+  
+\NormalTok{  tab }\OtherTok{\textless{}{-}} \FunctionTok{svyby}\NormalTok{(form, }\SpecialCharTok{\textasciitilde{}}\NormalTok{YEAR, }\AttributeTok{design =}\NormalTok{ nsduh\_sub, svymean, }\AttributeTok{vartype =} \StringTok{"ci"}\NormalTok{, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+  
+\NormalTok{  col\_est }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(var\_name,}\StringTok{"Yes"}\NormalTok{)}
+\NormalTok{  col\_cil }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}\StringTok{"ci\_l."}\NormalTok{, var\_name,}\StringTok{"Yes"}\NormalTok{)}
+\NormalTok{  col\_ciu }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}\StringTok{"ci\_u."}\NormalTok{, var\_name,}\StringTok{"Yes"}\NormalTok{)}
+  
+\NormalTok{  df\_temp }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+    \AttributeTok{YEAR =}\NormalTok{ tab}\SpecialCharTok{$}\NormalTok{YEAR,}
+    \AttributeTok{prevalence =}\NormalTok{ tab[[col\_est]],}
+    \AttributeTok{ci\_lower   =}\NormalTok{ tab[[col\_cil]],}
+    \AttributeTok{ci\_upper   =}\NormalTok{ tab[[col\_ciu]],}
+    \AttributeTok{Method =}\NormalTok{ label\_name}
+\NormalTok{  )}
+  
+\NormalTok{  results\_list[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ df\_temp}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in data.frame(YEAR = tab$YEAR, prevalence = tab[[col_est]], ci_lower =
+## tab[[col_cil]], : row names were found from a short variable and have been
+## discarded
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in data.frame(YEAR = tab$YEAR, prevalence = tab[[col_est]], ci_lower =
+## tab[[col_cil]], : row names were found from a short variable and have been
+## discarded
+## Warning in data.frame(YEAR = tab$YEAR, prevalence = tab[[col_est]], ci_lower =
+## tab[[col_cil]], : row names were found from a short variable and have been
+## discarded
+## Warning in data.frame(YEAR = tab$YEAR, prevalence = tab[[col_est]], ci_lower =
+## tab[[col_cil]], : row names were found from a short variable and have been
+## discarded
+## Warning in data.frame(YEAR = tab$YEAR, prevalence = tab[[col_est]], ci_lower =
+## tab[[col_cil]], : row names were found from a short variable and have been
+## discarded
+## Warning in data.frame(YEAR = tab$YEAR, prevalence = tab[[col_est]], ci_lower =
+## tab[[col_cil]], : row names were found from a short variable and have been
+## discarded
+## Warning in data.frame(YEAR = tab$YEAR, prevalence = tab[[col_est]], ci_lower =
+## tab[[col_cil]], : row names were found from a short variable and have been
+## discarded
+## Warning in data.frame(YEAR = tab$YEAR, prevalence = tab[[col_est]], ci_lower =
+## tab[[col_cil]], : row names were found from a short variable and have been
+## discarded
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df\_plot }\OtherTok{\textless{}{-}} \FunctionTok{bind\_rows}\NormalTok{(results\_list)}
+
+
+\FunctionTok{print}\NormalTok{(df\_plot)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    YEAR prevalence    ci_lower   ci_upper                       Method
+## 1  2022 0.76661047 0.723680787 0.80954015                      Smoking
+## 2  2023 0.79568091 0.759445177 0.83191665                      Smoking
+## 3  2024 0.75367195 0.713104760 0.79423915                      Smoking
+## 4  2022 0.60276093 0.559576977 0.64594487                       Vaping
+## 5  2023 0.64753447 0.602415630 0.69265331                       Vaping
+## 6  2024 0.72274308 0.689701141 0.75578503                       Vaping
+## 7  2022 0.22413343 0.186704635 0.26156222 Dabbing (waxes/concentrates)
+## 8  2023 0.17475636 0.152570752 0.19694197 Dabbing (waxes/concentrates)
+## 9  2024 0.16893652 0.140525499 0.19734754 Dabbing (waxes/concentrates)
+## 10 2022 0.36120729 0.327039727 0.39537485         Edibles (food/drink)
+## 11 2023 0.39669897 0.354256920 0.43914103         Edibles (food/drink)
+## 12 2024 0.40408580 0.360305779 0.44786582         Edibles (food/drink)
+## 13 2022 0.01875792 0.007915742 0.02960009          Oral (Drops/Sprays)
+## 14 2023 0.00875650 0.004200806 0.01331219          Oral (Drops/Sprays)
+## 15 2024 0.02865838 0.012092196 0.04522456          Oral (Drops/Sprays)
+## 16 2022 0.07544547 0.050765775 0.10012516               Topical (skin)
+## 17 2023 0.05071224 0.032298575 0.06912590               Topical (skin)
+## 18 2024 0.04433617 0.025245295 0.06342705               Topical (skin)
+## 19 2022 0.02991355 0.016259681 0.04356741                        Pills
+## 20 2023 0.01448957 0.006804480 0.02217466                        Pills
+## 21 2024 0.02686910 0.011776229 0.04196197                        Pills
+## 22 2022 0.04317211 0.025161382 0.06118283                        Other
+## 23 2023 0.03340534 0.024385231 0.04242544                        Other
+## 24 2024 0.04588444 0.025392664 0.06637622                        Other
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(df\_plot, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ YEAR, }\AttributeTok{y =}\NormalTok{ prevalence, }\AttributeTok{color =}\NormalTok{ Method, }\AttributeTok{group =}\NormalTok{ Method)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{linewidth =} \DecValTok{1}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{size =} \DecValTok{2}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_errorbar}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{ymin =}\NormalTok{ ci\_lower, }\AttributeTok{ymax =}\NormalTok{ ci\_upper), }\AttributeTok{width =} \FloatTok{0.1}\NormalTok{, }\AttributeTok{alpha =} \FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{scale\_y\_continuous}\NormalTok{(}\AttributeTok{labels =}\NormalTok{ scales}\SpecialCharTok{::}\FunctionTok{percent\_format}\NormalTok{(}\AttributeTok{accuracy =} \DecValTok{1}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{"Cannabis Consumption Habits"}\NormalTok{,}
+    \AttributeTok{subtitle =} \StringTok{"Trends in use methods among past{-}year users (2022{-}2024)"}\NormalTok{,}
+    \AttributeTok{y =} \StringTok{"Prevalence (\%)"}\NormalTok{,}
+    \AttributeTok{x =} \StringTok{"Year"}\NormalTok{,}
+    \AttributeTok{color =} \StringTok{"Mode of Use"}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{text =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{12}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{youth_mrj_nsduh_files/figure-latex/unnamed-chunk-8-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# {-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\FunctionTok{ggplot}\NormalTok{(df\_plot, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ YEAR, }\AttributeTok{y =} \FunctionTok{reorder}\NormalTok{(Method, prevalence), }\AttributeTok{fill =}\NormalTok{ prevalence)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_tile}\NormalTok{(}\AttributeTok{color =} \StringTok{"white"}\NormalTok{, }\AttributeTok{linewidth =} \DecValTok{1}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_text}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{label =}\NormalTok{ scales}\SpecialCharTok{::}\FunctionTok{percent}\NormalTok{(prevalence, }\AttributeTok{accuracy =} \FloatTok{0.1}\NormalTok{),}
+                \AttributeTok{color =} \FunctionTok{ifelse}\NormalTok{(prevalence }\SpecialCharTok{\textgreater{}} \FloatTok{0.3}\NormalTok{, }\StringTok{"black"}\NormalTok{, }\StringTok{"white"}\NormalTok{)),}
+            \AttributeTok{size =} \DecValTok{4}\NormalTok{, }\AttributeTok{fontface =} \StringTok{"bold"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{scale\_color\_identity}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{scale\_fill\_viridis\_c}\NormalTok{(}\AttributeTok{option =} \StringTok{"plasma"}\NormalTok{, }\AttributeTok{labels =}\NormalTok{ scales}\SpecialCharTok{::}\NormalTok{percent) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{"Cannabis Consumption Habits"}\NormalTok{,}
+    \AttributeTok{subtitle =} \StringTok{"Trends in use methods among past{-}year users (2022{-}2024)"}\NormalTok{,}
+    \AttributeTok{x =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{y =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{fill =} \StringTok{"Weighted Prevalence (\%)"}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}
+    \AttributeTok{panel.grid =} \FunctionTok{element\_blank}\NormalTok{(),}
+    \AttributeTok{axis.text.y =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{11}\NormalTok{, }\AttributeTok{face =} \StringTok{"bold"}\NormalTok{, }\AttributeTok{color =} \StringTok{"\#2c3e50"}\NormalTok{),}
+    \AttributeTok{axis.text.x =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{12}\NormalTok{, }\AttributeTok{face =} \StringTok{"bold"}\NormalTok{),}
+    \AttributeTok{legend.position =} \StringTok{"right"}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{youth_mrj_nsduh_files/figure-latex/unnamed-chunk-8-2.pdf}}
+
+\section{Were there differences in the risk of past-year vaping among
+adolescents according to sex and
+age?}\label{were-there-differences-in-the-risk-of-past-year-vaping-among-adolescents-according-to-sex-and-age}
+
+\section{\textgreater\textgreater\textgreater\textgreater\textgreater\textgreater{}
+NO}\label{no}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{vape\_model }\OtherTok{\textless{}{-}} \FunctionTok{svyglm}\NormalTok{(}
+  \FunctionTok{I}\NormalTok{(mj\_vape\_bin }\SpecialCharTok{==} \StringTok{"Yes"}\NormalTok{) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ IRSEX }\SpecialCharTok{+}\NormalTok{ AGE3,}
+  \AttributeTok{design =}\NormalTok{ nsduh\_sub,     }
+  \AttributeTok{family =} \FunctionTok{quasibinomial}\NormalTok{()}
+\NormalTok{)}
+
+\NormalTok{vape\_risk }\OtherTok{\textless{}{-}}\NormalTok{ broom}\SpecialCharTok{::}\FunctionTok{tidy}\NormalTok{(vape\_model, }\AttributeTok{exponentiate =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{conf.int =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{vape\_risk}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 4 x 7
+##   term        estimate std.error statistic  p.value conf.low conf.high
+##   <chr>          <dbl>     <dbl>     <dbl>    <dbl>    <dbl>     <dbl>
+## 1 (Intercept)    2.15     0.206      3.71  0.000549    1.42       3.25
+## 2 IRSEXFemale    1.18     0.0874     1.89  0.0652      0.989      1.41
+## 3 AGE314–15      0.910    0.212     -0.444 0.659       0.594      1.39
+## 4 AGE316–17      0.750    0.202     -1.42  0.162       0.500      1.13
+\end{verbatim}
+
+\section{Association between sociodemographic characteristics and
+current cannabis use among U.S.
+youth}\label{association-between-sociodemographic-characteristics-and-current-cannabis-use-among-u.s.-youth}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{nsduh\_pooled }\OtherTok{\textless{}{-}}\NormalTok{ nsduh\_all }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{weight\_pooled =}\NormalTok{ ANALWT2\_C }\SpecialCharTok{/} \DecValTok{4}\NormalTok{,}
+    \AttributeTok{mj\_past\_year\_num =} \FunctionTok{ifelse}\NormalTok{(mj\_past\_year\_num }\SpecialCharTok{==} \StringTok{"Yes"}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{), }
+    \AttributeTok{family\_income\_cat =} \FunctionTok{case\_when}\NormalTok{(}
+\NormalTok{      family\_income }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\StringTok{"\textless{}$10k"}\NormalTok{, }\StringTok{"$10–19k"}\NormalTok{) }\SpecialCharTok{\textasciitilde{}} \StringTok{"\textless{}$20k"}\NormalTok{,}
+\NormalTok{      family\_income }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\StringTok{"$20–29k"}\NormalTok{, }\StringTok{"$30–39k"}\NormalTok{) }\SpecialCharTok{\textasciitilde{}} \StringTok{"$20–39k"}\NormalTok{,}
+\NormalTok{      family\_income }\SpecialCharTok{==} \StringTok{"$40–49k"} \SpecialCharTok{\textasciitilde{}} \StringTok{"$40–49k"}\NormalTok{,}
+\NormalTok{      family\_income }\SpecialCharTok{==} \StringTok{"$50–74k"} \SpecialCharTok{\textasciitilde{}} \StringTok{"$50–74k"}\NormalTok{,}
+\NormalTok{      family\_income }\SpecialCharTok{==} \StringTok{"≥$75k"} \SpecialCharTok{\textasciitilde{}} \StringTok{"≥$75k"}\NormalTok{,}
+      \ConstantTok{TRUE} \SpecialCharTok{\textasciitilde{}} \ConstantTok{NA\_character\_}\NormalTok{), }
+    \AttributeTok{family\_income\_cat =} \FunctionTok{factor}\NormalTok{(family\_income\_cat,}
+      \AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}
+        \StringTok{"\textless{}$20k"}\NormalTok{,}
+        \StringTok{"$20–39k"}\NormalTok{,}
+        \StringTok{"$40–49k"}\NormalTok{,}
+        \StringTok{"$50–74k"}\NormalTok{,}
+        \StringTok{"≥$75k"}
+\NormalTok{      ))) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{family\_income\_cat =} \FunctionTok{relevel}\NormalTok{(family\_income\_cat, }\AttributeTok{ref =} \StringTok{"≥$75k"}\NormalTok{)}
+\NormalTok{  )}
+
+\NormalTok{nsduh\_design\_pooled }\OtherTok{\textless{}{-}} \FunctionTok{svydesign}\NormalTok{(}
+  \AttributeTok{id =} \SpecialCharTok{\textasciitilde{}}\NormalTok{VEREP,}
+  \AttributeTok{strata =} \SpecialCharTok{\textasciitilde{}}\NormalTok{VESTR\_C,}
+  \AttributeTok{weights =} \SpecialCharTok{\textasciitilde{}}\NormalTok{weight\_pooled,}
+  \AttributeTok{data =}\NormalTok{ nsduh\_pooled,}
+  \AttributeTok{nest =} \ConstantTok{TRUE}
+\NormalTok{)}
+
+\NormalTok{model\_pooled }\OtherTok{\textless{}{-}} \FunctionTok{svyglm}\NormalTok{(}
+\NormalTok{  mj\_past\_year\_num }\SpecialCharTok{\textasciitilde{}}\NormalTok{ age\_cat }\SpecialCharTok{+}\NormalTok{ sex }\SpecialCharTok{+}\NormalTok{ race }\SpecialCharTok{+}\NormalTok{ family\_income\_cat }\SpecialCharTok{+}\NormalTok{ county\_type,}
+  \AttributeTok{design =}\NormalTok{ nsduh\_design\_pooled,}
+  \AttributeTok{family =} \FunctionTok{quasibinomial}\NormalTok{()}
+\NormalTok{)}
+
+\NormalTok{pooled\_results }\OtherTok{\textless{}{-}} \FunctionTok{tidy}\NormalTok{(}
+\NormalTok{  model\_pooled,}
+  \AttributeTok{exponentiate =} \ConstantTok{TRUE}\NormalTok{,}
+  \AttributeTok{conf.int =} \ConstantTok{TRUE}
+\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(term }\SpecialCharTok{!=} \StringTok{"(Intercept)"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{variable =} \FunctionTok{case\_when}\NormalTok{(}
+      \FunctionTok{str\_detect}\NormalTok{(term, }\StringTok{"\^{}age\_cat"}\NormalTok{) }\SpecialCharTok{\textasciitilde{}} \StringTok{"Age"}\NormalTok{,}
+      \FunctionTok{str\_detect}\NormalTok{(term, }\StringTok{"\^{}sex"}\NormalTok{) }\SpecialCharTok{\textasciitilde{}} \StringTok{"Gender"}\NormalTok{,}
+      \FunctionTok{str\_detect}\NormalTok{(term, }\StringTok{"\^{}race"}\NormalTok{) }\SpecialCharTok{\textasciitilde{}} \StringTok{"Race/Ethnicity"}\NormalTok{,}
+      \FunctionTok{str\_detect}\NormalTok{(term, }\StringTok{"\^{}family\_income\_cat"}\NormalTok{) }\SpecialCharTok{\textasciitilde{}} \StringTok{"Family Income"}\NormalTok{,}
+      \FunctionTok{str\_detect}\NormalTok{(term, }\StringTok{"\^{}county\_type"}\NormalTok{) }\SpecialCharTok{\textasciitilde{}} \StringTok{"County Type"}
+\NormalTok{    ),}
+    \AttributeTok{level =} \FunctionTok{str\_remove\_all}\NormalTok{(}
+\NormalTok{      term,}
+      \StringTok{"\^{}age\_cat|\^{}sex|\^{}race|\^{}family\_income\_cat|\^{}county\_type"}
+\NormalTok{    ),}
+    \AttributeTok{aor\_ci =} \FunctionTok{sprintf}\NormalTok{(}\StringTok{"\%.2f (\%.2f–\%.2f)"}\NormalTok{, estimate, conf.low, conf.high),}
+    \AttributeTok{p\_val =} \FunctionTok{ifelse}\NormalTok{(p.value }\SpecialCharTok{\textless{}} \FloatTok{0.001}\NormalTok{, }\StringTok{"\textless{}0.001"}\NormalTok{, }\FunctionTok{sprintf}\NormalTok{(}\StringTok{"\%.3f"}\NormalTok{, p.value))}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(variable, level, aor\_ci, p\_val)}
+
+
+\NormalTok{pooled\_results\_final }\OtherTok{\textless{}{-}} \FunctionTok{bind\_rows}\NormalTok{(pooled\_results) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{variable =} \FunctionTok{factor}\NormalTok{(variable, }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}
+    \StringTok{"Age"}\NormalTok{, }\StringTok{"Gender"}\NormalTok{, }\StringTok{"Race/Ethnicity"}\NormalTok{, }\StringTok{"Family Income"}\NormalTok{, }\StringTok{"County Type"}
+\NormalTok{  ))) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(variable) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ungroup}\NormalTok{()}
+
+
+\NormalTok{final\_table\_pooled }\OtherTok{\textless{}{-}}\NormalTok{ pooled\_results\_final }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{gt}\NormalTok{(}\AttributeTok{groupname\_col =} \StringTok{"variable"}\NormalTok{, }\AttributeTok{rowname\_col =} \StringTok{"level"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_stubhead}\NormalTok{(}\AttributeTok{label =} \StringTok{"Category"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{cols\_align}\NormalTok{(}
+  \AttributeTok{align =} \StringTok{"center"}\NormalTok{,}
+  \AttributeTok{columns =} \FunctionTok{c}\NormalTok{(aor\_ci, p\_val)}
+\NormalTok{)}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{cols\_label}\NormalTok{(}
+    \AttributeTok{aor\_ci =} \StringTok{"AOR (95\% CI)"}\NormalTok{,}
+    \AttributeTok{p\_val =} \StringTok{"p{-}value"}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_header}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{"Association between sociodemographic characteristics and current cannabis use among U.S. youth"}\NormalTok{,}
+    \AttributeTok{subtitle =} \StringTok{"NSDUH 2021–2024, adjusted odds ratios"}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{tab\_options}\NormalTok{(}
+    \AttributeTok{row\_group.background.color =} \StringTok{"\#E0E0E0"}\NormalTok{,}
+    \AttributeTok{column\_labels.font.weight =} \StringTok{"bold"}
+\NormalTok{  )}
+
+
+\NormalTok{final\_table\_pooled}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[t]
+\caption*{
+{\fontsize{20}{25}\selectfont  Association between sociodemographic characteristics and current cannabis use among U.S. youth\fontsize{12}{15}\selectfont } \\ 
+{\fontsize{14}{17}\selectfont  NSDUH 2021–2024, adjusted odds ratios\fontsize{12}{15}\selectfont }
+} 
+\fontsize{12.0pt}{14.0pt}\selectfont
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}l|cc}
+\toprule
+Category & AOR (95\% CI) & p-value \\ 
+\midrule\addlinespace[2.5pt]
+\multicolumn{3}{l}{Age} \\[2.5pt] 
+\midrule\addlinespace[2.5pt]
+14–15 & 4.52 (3.82–5.35) & <0.001 \\ 
+16–17 & 10.70 (9.22–12.42) & <0.001 \\ 
+\midrule\addlinespace[2.5pt]
+\multicolumn{3}{l}{Gender} \\[2.5pt] 
+\midrule\addlinespace[2.5pt]
+Female & 1.30 (1.19–1.42) & <0.001 \\ 
+\midrule\addlinespace[2.5pt]
+\multicolumn{3}{l}{Race/Ethnicity} \\[2.5pt] 
+\midrule\addlinespace[2.5pt]
+Black & 1.00 (0.83–1.21) & 0.999 \\ 
+AIAN & 1.89 (1.22–2.93) & 0.006 \\ 
+NHPI & 2.09 (0.89–4.87) & 0.086 \\ 
+Asian & 0.36 (0.24–0.53) & <0.001 \\ 
+Multiracial & 1.31 (1.08–1.59) & 0.009 \\ 
+Hispanic & 0.85 (0.72–0.99) & 0.038 \\ 
+\midrule\addlinespace[2.5pt]
+\multicolumn{3}{l}{Family Income} \\[2.5pt] 
+\midrule\addlinespace[2.5pt]
+<\$20k & 1.13 (0.94–1.35) & 0.178 \\ 
+\$20–39k & 1.08 (0.91–1.28) & 0.385 \\ 
+\$40–49k & 1.37 (1.13–1.67) & 0.003 \\ 
+\$50–74k & 1.23 (1.09–1.38) & 0.001 \\ 
+\midrule\addlinespace[2.5pt]
+\multicolumn{3}{l}{County Type} \\[2.5pt] 
+\midrule\addlinespace[2.5pt]
+Small metro & 1.12 (1.01–1.24) & 0.040 \\ 
+Nonmetro & 0.83 (0.72–0.96) & 0.011 \\ 
+\bottomrule
+\end{tabular*}
+\end{table}
+
+\section{Question : There is association between past-year marijuana use
+and the presence of major depressive episode and/or substance use
+disorder among
+adolescents?}\label{question-there-is-association-between-past-year-marijuana-use-and-the-presence-of-major-depressive-episode-andor-substance-use-disorder-among-adolescents}
+
+\section{\textgreater\textgreater\textgreater\textgreater{} There is a
+statistically significant association between past-year marijuana use
+and the presence of major depressive episode and/or substance use
+disorder among
+adolescents.}\label{there-is-a-statistically-significant-association-between-past-year-marijuana-use-and-the-presence-of-major-depressive-episode-andor-substance-use-disorder-among-adolescents.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{svytable}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{mj\_past\_year\_num }\SpecialCharTok{+}\NormalTok{ sud\_or\_mde\_num, }\AttributeTok{design =}\NormalTok{ nsduh\_design\_pooled)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                 sud_or_mde_num
+## mj_past_year_num        Yes         No
+##                0  3943533.1 18308091.2
+##                1  1904040.9   854005.3
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{svychisq}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{mj\_past\_year\_num }\SpecialCharTok{+}\NormalTok{ sud\_or\_mde\_num, }\AttributeTok{design =}\NormalTok{ nsduh\_design\_pooled)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Pearson's X^2: Rao & Scott adjustment
+## 
+## data:  svychisq(~mj_past_year_num + sud_or_mde_num, design = nsduh_design_pooled)
+## F = 1694.9, ndf = 1, ddf = 50, p-value < 2.2e-16
+\end{verbatim}
+
+\section{Multivariable models were used to assess whether this
+association persisted after adjustment for sociodemographic
+factors.}\label{multivariable-models-were-used-to-assess-whether-this-association-persisted-after-adjustment-for-sociodemographic-factors.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{nsduh\_pooled}\SpecialCharTok{$}\NormalTok{sud\_or\_mde\_bin }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(nsduh\_pooled}\SpecialCharTok{$}\NormalTok{sud\_or\_mde\_num }\SpecialCharTok{==} \StringTok{"Yes"}\NormalTok{, }\DecValTok{1}\NormalTok{,}
+                                      \FunctionTok{ifelse}\NormalTok{(nsduh\_pooled}\SpecialCharTok{$}\NormalTok{sud\_or\_mde\_num }\SpecialCharTok{==} \StringTok{"No"}\NormalTok{, }\DecValTok{0}\NormalTok{, }\ConstantTok{NA}\NormalTok{))}
+
+\NormalTok{nsduh\_sub\_new }\OtherTok{\textless{}{-}} \FunctionTok{svydesign}\NormalTok{(}
+  \AttributeTok{id =} \SpecialCharTok{\textasciitilde{}}\NormalTok{VEREP,}
+  \AttributeTok{strata =} \SpecialCharTok{\textasciitilde{}}\NormalTok{VESTR\_C,}
+  \AttributeTok{weights =} \SpecialCharTok{\textasciitilde{}}\NormalTok{weight\_pooled,}
+  \AttributeTok{data =}\NormalTok{ nsduh\_pooled,}
+  \AttributeTok{nest =} \ConstantTok{TRUE}
+\NormalTok{)}
+
+\NormalTok{model\_adj }\OtherTok{\textless{}{-}} \FunctionTok{svyglm}\NormalTok{(}
+\NormalTok{  sud\_or\_mde\_bin }\SpecialCharTok{\textasciitilde{}}\NormalTok{ mj\_past\_year\_num }\SpecialCharTok{+}\NormalTok{ age\_cat }\SpecialCharTok{+}\NormalTok{ sex }\SpecialCharTok{+}\NormalTok{ race }\SpecialCharTok{+}\NormalTok{ family\_income\_cat }\SpecialCharTok{+}\NormalTok{ county\_type,}
+  \AttributeTok{design =}\NormalTok{ nsduh\_sub\_new,}
+  \AttributeTok{family =} \FunctionTok{quasibinomial}\NormalTok{()}
+\NormalTok{)}
+
+\NormalTok{results\_adj }\OtherTok{\textless{}{-}} \FunctionTok{tidy}\NormalTok{(}
+\NormalTok{  model\_adj,}
+  \AttributeTok{exponentiate =} \ConstantTok{TRUE}\NormalTok{,}
+  \AttributeTok{conf.int =} \ConstantTok{TRUE}
+\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{category =} \FunctionTok{case\_when}\NormalTok{(}
+      \FunctionTok{str\_detect}\NormalTok{(term, }\StringTok{"\^{}mj\_past\_year\_num"}\NormalTok{) }\SpecialCharTok{\textasciitilde{}} \StringTok{"Past{-}year marijuana use"}\NormalTok{,}
+      \FunctionTok{str\_detect}\NormalTok{(term, }\StringTok{"\^{}age\_cat"}\NormalTok{) }\SpecialCharTok{\textasciitilde{}} \StringTok{"Age"}\NormalTok{,}
+      \FunctionTok{str\_detect}\NormalTok{(term, }\StringTok{"\^{}sex"}\NormalTok{) }\SpecialCharTok{\textasciitilde{}} \StringTok{"Gender"}\NormalTok{,}
+      \FunctionTok{str\_detect}\NormalTok{(term, }\StringTok{"\^{}race"}\NormalTok{) }\SpecialCharTok{\textasciitilde{}} \StringTok{"Race/Ethnicity"}\NormalTok{,}
+      \FunctionTok{str\_detect}\NormalTok{(term, }\StringTok{"\^{}family\_income\_cat"}\NormalTok{) }\SpecialCharTok{\textasciitilde{}} \StringTok{"Family Income"}\NormalTok{,}
+      \FunctionTok{str\_detect}\NormalTok{(term, }\StringTok{"\^{}county\_type"}\NormalTok{) }\SpecialCharTok{\textasciitilde{}} \StringTok{"County Type"}\NormalTok{,}
+      \ConstantTok{TRUE} \SpecialCharTok{\textasciitilde{}}\NormalTok{ term}
+\NormalTok{    ),}
+    \AttributeTok{level =} \FunctionTok{str\_remove\_all}\NormalTok{(}
+\NormalTok{      term,}
+      \StringTok{"\^{}mj\_past\_year\_num|\^{}age\_cat|\^{}sex|\^{}race|\^{}family\_income\_cat|\^{}county\_type"}
+\NormalTok{    ),}
+    \AttributeTok{aor\_ci =} \FunctionTok{sprintf}\NormalTok{(}\StringTok{"\%.2f (\%.2f–\%.2f)"}\NormalTok{, estimate, conf.low, conf.high),}
+    \AttributeTok{p\_val =} \FunctionTok{ifelse}\NormalTok{(p.value }\SpecialCharTok{\textless{}} \FloatTok{0.001}\NormalTok{, }\StringTok{"\textless{}0.001"}\NormalTok{, }\FunctionTok{sprintf}\NormalTok{(}\StringTok{"\%.3f"}\NormalTok{, p.value))}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(category, level, aor\_ci, p\_val) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{arrange}\NormalTok{(category, level)}
+
+\NormalTok{results\_adj}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 17 x 4
+##    category                level         aor_ci            p_val 
+##    <chr>                   <chr>         <chr>             <chr> 
+##  1 (Intercept)             "(Intercept)" 0.08 (0.07–0.09)  <0.001
+##  2 Age                     "14–15"       1.60 (1.46–1.76)  <0.001
+##  3 Age                     "16–17"       1.79 (1.59–2.01)  <0.001
+##  4 County Type             "Nonmetro"    1.07 (0.94–1.21)  0.312 
+##  5 County Type             "Small metro" 1.08 (0.98–1.19)  0.100 
+##  6 Family Income           "$20–39k"     1.00 (0.89–1.12)  0.984 
+##  7 Family Income           "$40–49k"     0.97 (0.87–1.10)  0.657 
+##  8 Family Income           "$50–74k"     1.13 (1.01–1.26)  0.028 
+##  9 Family Income           "<$20k"       0.97 (0.85–1.11)  0.638 
+## 10 Gender                  "Female"      2.86 (2.61–3.13)  <0.001
+## 11 Past-year marijuana use ""            9.62 (8.38–11.04) <0.001
+## 12 Race/Ethnicity          "AIAN"        0.98 (0.57–1.71)  0.956 
+## 13 Race/Ethnicity          "Asian"       0.76 (0.61–0.96)  0.021 
+## 14 Race/Ethnicity          "Black"       0.71 (0.63–0.80)  <0.001
+## 15 Race/Ethnicity          "Hispanic"    1.08 (0.96–1.20)  0.189 
+## 16 Race/Ethnicity          "Multiracial" 1.27 (1.07–1.51)  0.007 
+## 17 Race/Ethnicity          "NHPI"        0.37 (0.17–0.83)  0.017
+\end{verbatim}
+
+\section{Past-year marijuana use and MDE/SUD
+categories}\label{past-year-marijuana-use-and-mdesud-categories}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{nsduh\_pooled }\OtherTok{\textless{}{-}}\NormalTok{ nsduh\_pooled }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{mj\_past\_year\_num =} \FunctionTok{relevel}\NormalTok{(}\FunctionTok{factor}\NormalTok{(mj\_past\_year\_num), }\AttributeTok{ref =} \StringTok{"0"}\NormalTok{),}
+    \AttributeTok{age\_cat =} \FunctionTok{relevel}\NormalTok{(}\FunctionTok{factor}\NormalTok{(age\_cat), }\AttributeTok{ref =} \StringTok{"12–13"}\NormalTok{),}
+    \AttributeTok{sex =} \FunctionTok{relevel}\NormalTok{(}\FunctionTok{factor}\NormalTok{(sex), }\AttributeTok{ref =} \StringTok{"Male"}\NormalTok{),}
+    \AttributeTok{race =} \FunctionTok{relevel}\NormalTok{(}\FunctionTok{factor}\NormalTok{(race), }\AttributeTok{ref =} \StringTok{"White"}\NormalTok{),}
+    \AttributeTok{family\_income\_cat =} \FunctionTok{relevel}\NormalTok{(}\FunctionTok{factor}\NormalTok{(family\_income\_cat), }\AttributeTok{ref =} \StringTok{"≥$75k"}\NormalTok{),}
+    \AttributeTok{county\_type =} \FunctionTok{relevel}\NormalTok{(}\FunctionTok{factor}\NormalTok{(county\_type), }\AttributeTok{ref =} \StringTok{"Large metro"}\NormalTok{)}
+\NormalTok{  )}
+
+\NormalTok{nsduh\_design }\OtherTok{\textless{}{-}} \FunctionTok{svydesign}\NormalTok{(}
+  \AttributeTok{id =} \SpecialCharTok{\textasciitilde{}}\NormalTok{VEREP,}
+  \AttributeTok{strata =} \SpecialCharTok{\textasciitilde{}}\NormalTok{VESTR\_C,}
+  \AttributeTok{weights =} \SpecialCharTok{\textasciitilde{}}\NormalTok{weight\_pooled,}
+  \AttributeTok{data =}\NormalTok{ nsduh\_pooled,}
+  \AttributeTok{nest =} \ConstantTok{TRUE}
+\NormalTok{)}
+
+\NormalTok{mde\_sud\_categories }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"SUD only"}\NormalTok{, }\StringTok{"MDE only"}\NormalTok{, }\StringTok{"SUD and MDE"}\NormalTok{)}
+
+
+\NormalTok{run\_mde\_sud\_model }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(cat) \{}
+  
+\NormalTok{  nsduh\_pooled[[}\FunctionTok{paste0}\NormalTok{(}\StringTok{"mde\_"}\NormalTok{, }\FunctionTok{str\_replace\_all}\NormalTok{(cat, }\StringTok{" "}\NormalTok{, }\StringTok{"\_"}\NormalTok{))]] }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(}
+\NormalTok{    nsduh\_pooled}\SpecialCharTok{$}\NormalTok{mde\_sud\_raw }\SpecialCharTok{==}\NormalTok{ cat, }\DecValTok{1}\NormalTok{, }\DecValTok{0}
+\NormalTok{  )}
+  
+\NormalTok{    design\_bin }\OtherTok{\textless{}{-}} \FunctionTok{update}\NormalTok{(nsduh\_design, }
+                       \AttributeTok{mde\_bin =}\NormalTok{ nsduh\_pooled[[}\FunctionTok{paste0}\NormalTok{(}\StringTok{"mde\_"}\NormalTok{, }\FunctionTok{str\_replace\_all}\NormalTok{(cat, }\StringTok{" "}\NormalTok{, }\StringTok{"\_"}\NormalTok{))]])}
+  
+  
+\NormalTok{  model }\OtherTok{\textless{}{-}} \FunctionTok{svyglm}\NormalTok{(}
+\NormalTok{    mde\_bin }\SpecialCharTok{\textasciitilde{}}\NormalTok{ mj\_past\_year\_num }\SpecialCharTok{+}\NormalTok{ age\_cat }\SpecialCharTok{+}\NormalTok{ sex }\SpecialCharTok{+}\NormalTok{ race }\SpecialCharTok{+}\NormalTok{ family\_income\_cat,}
+    \AttributeTok{design =}\NormalTok{ design\_bin,}
+    \AttributeTok{family =} \FunctionTok{quasibinomial}\NormalTok{()}
+\NormalTok{  )}
+  
+ 
+  \FunctionTok{tidy}\NormalTok{(model, }\AttributeTok{exponentiate =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{conf.int =} \ConstantTok{TRUE}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{filter}\NormalTok{(}\FunctionTok{str\_detect}\NormalTok{(term, }\StringTok{"mj\_past\_year\_num"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{mutate}\NormalTok{(}
+      \AttributeTok{category =}\NormalTok{ cat,}
+      \AttributeTok{aor\_ci =} \FunctionTok{sprintf}\NormalTok{(}\StringTok{"\%.2f (\%.2f–\%.2f)"}\NormalTok{, estimate, conf.low, conf.high),}
+      \AttributeTok{p\_val =} \FunctionTok{ifelse}\NormalTok{(p.value }\SpecialCharTok{\textless{}} \FloatTok{0.001}\NormalTok{, }\StringTok{"\textless{}0.001"}\NormalTok{, }\FunctionTok{sprintf}\NormalTok{(}\StringTok{"\%.3f"}\NormalTok{, p.value))}
+\NormalTok{    ) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{select}\NormalTok{(category, aor\_ci, p\_val)}
+\NormalTok{\}}
+
+
+\NormalTok{results\_mj }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(mde\_sud\_categories, run\_mde\_sud\_model) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{bind\_rows}\NormalTok{()}
+
+\NormalTok{ref\_row }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}
+  \AttributeTok{category =} \StringTok{"Neither (REF)"}\NormalTok{,}
+  \AttributeTok{aor\_ci =} \StringTok{"REF"}\NormalTok{,}
+  \AttributeTok{p\_val =} \StringTok{"REF"}
+\NormalTok{)}
+
+\NormalTok{results\_mj }\OtherTok{\textless{}{-}} \FunctionTok{bind\_rows}\NormalTok{(ref\_row, results\_mj) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{category =} \FunctionTok{factor}\NormalTok{(category, }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\StringTok{"Neither (REF)"}\NormalTok{, mde\_sud\_categories)))}
+
+\NormalTok{results\_mj}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 4 x 3
+##   category      aor_ci              p_val 
+##   <fct>         <chr>               <chr> 
+## 1 Neither (REF) REF                 REF   
+## 2 SUD only      22.15 (18.69–26.25) <0.001
+## 3 MDE only      0.78 (0.68–0.91)    0.002 
+## 4 SUD and MDE   21.79 (17.00–27.94) <0.001
+\end{verbatim}
+
+\end{document}
