@@ -912,7 +912,7 @@ final_table_pooled <- pooled_results_final %>%
   ) %>%
   tab_options(
       column_labels.font.weight = "bold"
-  ) %>% # <--- Fecha o tab_options aqui antes de dar o pipe
+  ) %>% 
   tab_source_note(
     source_note = md(
       "**Abbreviations:** **NSDUH**: National Survey on Drug Use and Health; **AOR**: Adjusted Odds Ratio; **CI**: Confidence Interval; **AIAN**: American Indian or Alaska Native; **NHPI**: Native Hawaiian or Other Pacific Islander.<br>
@@ -941,168 +941,82 @@ gtsave(final_table_pooled, filename = "Tabela2Sup_NSUDH.docx")
 ```
 
 
-# Among adolescents who reported past-year cannabis use, what was the prevalence of marijuana use disorder?
-# Which sociodemographic factors were independently associated with increased risk of CUD?
-
-```{r}
-
-
-nsduh_pooled <- nsduh_all  
-nsduh_pooled$weight_pooled <- nsduh_pooled$ANALWT2_C / 4
-
-nsduh_design <- svydesign(
-  id = ~VEREP,
-  strata = ~VESTR_C,
-  weights = ~weight_pooled,
-  data = nsduh_pooled,
-  nest = TRUE
-)
-
-adolescents_users <- subset(nsduh_design, mj_past_year == 1 & !is.na(mrj_use_disorder_bin))
-
-# Prevalence
-svyby(~mrj_use_disorder_bin, ~year, adolescents_users, svymean, na.rm = TRUE)
-
-model_adj <- svyglm(
-  mrj_use_disorder_bin ~ age_cat + sex + race + family_income + year,
-  design = adolescents_users,
-  family = quasibinomial()
-)
-summary(model_adj)
-
-exp(cbind(OR = coef(model_adj), confint(model_adj)))
-
-
-library(gtsummary)
-library(gt)
-
-tabela_cud <- tbl_regression(
-  model_adj, 
-  exponentiate = TRUE, # Transforma Log-Odds em Odds Ratio
-  conf.int = TRUE,     # Mostra o IC 95%
-  pvalue_fun = ~style_pvalue(.x, digits = 3), # Formata o p-valor
-  label = list(        # Opcional: Renomeia as variáveis para ficar bonito
-    age_cat ~ "Age Category",
-    sex ~ "Sex",
-    race ~ "Race/Ethnicity",
-    family_income ~ "Family Income",
-    year ~ "Survey Year"
-  )
-) %>%
-  bold_p() %>%        # Deixa p < 0.05 em negrito
-  add_global_p() %>%  # Adiciona p-valor global para variáveis categóricas
-  as_gt() %>%         # Converte para gt para podermos por título
-  tab_header(
-    title = md("**Factors Associated with Cannabis Use Disorder (CUD)**"),
-    subtitle = "Multivariable Logistic Regression (NSDUH 2021-2024)"
-  ) %>%
-  tab_source_note(
-    source_note = "Model adjusted for age, sex, race, income, and year."
-  )
-
-# Visualizar
-tabela_cud
-
-# Salvar no Word
-gtsave(tabela_cud, "Tabela_Regressao_CUD.docx")
-
-
-
-
-
-```
-
 # Fig 2. Prevalence of different modes of marijuana use among past-year users (2022-2024)
 # Were there significant year-to-year trends in marijuana use by mode of administration among adolescents? 
 
 ```{r}
 
+library(dplyr)
+library(survey)
+library(broom)
+library(ggplot2)
+library(purrr)
+library(labelled)
+library(gt) 
+library(stringr)
+
 nsduh_2224 <- bind_rows(
-  nsduh_2123 %>% filter(YEAR %in% c(2022,2023)),
+  nsduh_2123 %>% filter(YEAR %in% c(2022, 2023)),
   nsduh_2024
 )
 
 vars_keep_subset <- c(
-  "YEAR","MRJYR","MJREC","AGE3","IRSEX","IRPYUD5MRJ","MJYRSMOKE","MJYRVAPE","MJYRDAB",
-  "MJYREAT","MJYRMOUTH","MJYRSKIN","MJYRPILL","MJYROTHER",
-  "ANALWT2_C3","ANALWT2_C","VESTR_C","VEREP"
+  "YEAR", "MRJYR", "MJREC", "AGE3", "IRSEX", 
+  "MJSMKYR", "MJVAPYR", "MJDABYR", "MJEATYR", 
+  "MJMTHYR", "MJSKNYR", "MJPLLYR", "MJOTHYR",
+  "ANALWT2_C", "VESTR_C", "VEREP"
 )
 
-nsduh_2224 <- nsduh_2224 %>% select(any_of(vars_keep_subset))
-
-missing_vals <- list(
-  MJYRSMOKE = c(91,93,94,97,98), 
-  MJYRVAPE = c(91,93,94,97,98), 
-  MJYRDAB = c(91,93,94,97,98), 
-  MJYREAT = c(91,93,94,97,98), 
-  MJYRMOUTH = c(91,93,94,97,98), 
-  MJYRSKIN = c(91,93,94,97,98), 
-  MJYRPILL = c(91,93,94,97,98), 
-  MJYROTHER = c(91,93,94,97,98)
-)
-
-nsduh_2224 <- replace_with_na(nsduh_2224, missing_vals)
+nsduh_2224 <- nsduh_2224 %>% 
+  select(any_of(vars_keep_subset)) %>%
+  mutate(weight_pooled = ANALWT2_C / 3)
 
 nsduh_2224 <- nsduh_2224 %>%
   mutate(
-    mj_past_year_bin = ifelse(MRJYR %in% c(1), 1,
-                           ifelse(MRJYR %in% c(0), 0, NA)),
-    mj_smoke_bin  = ifelse(MJYRSMOKE %in% c(1,3,5), 1,
-                           ifelse(MJYRSMOKE %in% c(2), 0, NA)),
-    mj_vape_bin   = ifelse(MJYRVAPE %in% c(1,3,5), 1,
-                           ifelse(MJYRVAPE %in% c(2,4), 0, NA)),
-    mj_dab_bin    = ifelse(MJYRDAB %in% c(1,3,5), 1,
-                           ifelse(MJYRDAB %in% c(2,4), 0, NA)),
-    mj_eat_bin    = ifelse(MJYREAT %in% c(1,3,5), 1,
-                           ifelse(MJYREAT %in% c(2,4), 0, NA)),
-    mj_mouth_bin  = ifelse(MJYRMOUTH %in% c(1,3,5), 1,
-                           ifelse(MJYRMOUTH %in% c(2,4), 0, NA)),
-    mj_skin_bin   = ifelse(MJYRSKIN %in% c(1,3,5), 1,
-                           ifelse(MJYRSKIN %in% c(2,4), 0, NA)),
-    mj_pill_bin   = ifelse(MJYRPILL %in% c(1,5), 1,
-                           ifelse(MJYRPILL %in% c(2,4), 0, NA)),
-    mj_other_bin  = ifelse(MJYROTHER %in% c(1,5), 1,
-                           ifelse(MJYROTHER %in% c(2,4), 0, NA))
+   
+    n_modes_calc = (
+      (MJSMKYR == 1) + (MJVAPYR == 1) + (MJDABYR == 1) + 
+      (MJEATYR == 1) + (MJMTHYR == 1) + (MJSKNYR == 1) + 
+      (MJPLLYR == 1) + (MJOTHYR == 1)
+    ),
+    
+    
+    multimodal_bin = factor(
+      ifelse(n_modes_calc >= 2, "Yes", "No"), 
+      levels = c("No", "Yes")
+    ),
+   
+    mj_past_year_bin = factor(ifelse(MRJYR == 1, "Yes", "No"), levels = c("No", "Yes")),
+    mj_smoke_bin     = factor(ifelse(MJSMKYR == 1, "Yes", "No"), levels = c("No", "Yes")),
+    mj_vape_bin      = factor(ifelse(MJVAPYR == 1, "Yes", "No"), levels = c("No", "Yes")),
+    mj_dab_bin       = factor(ifelse(MJDABYR == 1, "Yes", "No"), levels = c("No", "Yes")),
+    mj_eat_bin       = factor(ifelse(MJEATYR == 1, "Yes", "No"), levels = c("No", "Yes")),
+    mj_mouth_bin     = factor(ifelse(MJMTHYR == 1, "Yes", "No"), levels = c("No", "Yes")),
+    mj_skin_bin      = factor(ifelse(MJSKNYR == 1, "Yes", "No"), levels = c("No", "Yes")),
+    mj_pill_bin      = factor(ifelse(MJPLLYR == 1, "Yes", "No"), levels = c("No", "Yes")),
+    mj_other_bin     = factor(ifelse(MJOTHYR == 1, "Yes", "No"), levels = c("No", "Yes"))
   )
+
 
 nsduh_2224 <- nsduh_2224 %>%
   mutate(
-    YEAR = factor(YEAR),
-    AGE3 = factor(AGE3, levels=1:3, labels=c("12–13","14–15","16–17")),
-    IRSEX = factor(IRSEX, levels=1:2, labels=c("Male","Female")),
-    across(ends_with("_bin"), ~factor(., levels=c(1,0), labels=c("Yes","No")))
+    YEAR = relevel(factor(YEAR), ref = "2022"), 
+    AGE3 = factor(AGE3, levels = 1:3, labels = c("12–13", "14–15", "16–17")),
+    IRSEX = factor(IRSEX, levels = 1:2, labels = c("Male", "Female"))
   )
 
-var_label(nsduh_2224) <- list(
-  YEAR = "Survey year",
-  AGE3 = "Age group (years)",
-  IRSEX = "Sex",
-  mj_past_year_bin = "Marijuana use in past year (binary)",
-  mj_smoke_bin  = "Marijuana use - Smoking",
-  mj_vape_bin   = "Marijuana use - Vaping",
-  mj_dab_bin    = "Marijuana use - Dabbing (waxes/concentrates)",
-  mj_eat_bin    = "Marijuana use - Edibles (food/drink)",
-  mj_mouth_bin  = "Marijuana use - Oral (Drops/Sprays)",
-  mj_skin_bin   = "Marijuana use - Topical (skin)",
-  mj_pill_bin   = "Marijuana use - Pills",
-  mj_other_bin  = "Marijuana use - Other methods"
-)
 
 nsduh_sub <- svydesign(
   id = ~VEREP,
   strata = ~VESTR_C,
-  weights = ~ANALWT2_C,
+  weights = ~weight_pooled, 
   data = nsduh_2224,
   nest = TRUE
 )
 
-run_trend_adj <- function(var, design_obj) {
-  f <- as.formula(paste0("I(", var, " == 'Yes') ~ YEAR"))
-  mod <- svyglm(f, design = design_obj, family = quasibinomial())
-  broom::tidy(mod, exponentiate = TRUE, conf.int = TRUE) %>%
-    filter(grepl("YEAR", term)) %>%
-    mutate(Method = var)
-}
+
+nsduh_users_only <- subset(nsduh_sub, mj_past_year_bin == "Yes")
+
 
 method_labels <- c(
   mj_smoke_bin  = "Smoking",
@@ -1112,203 +1026,294 @@ method_labels <- c(
   mj_mouth_bin  = "Oral (Drops/Sprays)",
   mj_skin_bin   = "Topical (skin)",
   mj_pill_bin   = "Pills",
-  mj_other_bin  = "Other"
+  mj_other_bin  = "Other",
+  multimodal_bin = "Multimodal Use (2+)" 
 )
-
-format_p <- function(p){
-  ifelse(p < 0.001, "<0.001", round(p, 3))
-}
-
 vars_adm <- names(method_labels)
 
-trend_adj_results <- purrr::map_dfr(vars_adm, run_trend_adj, design_obj = nsduh_sub)
+# ==============================================================================
+# TABEL 1
+# ==============================================================================
 
-trend_adj_table <- trend_adj_results %>%
-  transmute(
-    Method  = method_labels[Method],
-    OR      = round(estimate, 2),
-    CI      = paste0("(", round(conf.low,2), "–", round(conf.high,2), ")"),
-    p_value = format_p(p.value)
-  )
-
-trend_adj_table
-
-
-legend_names <- method_labels
-
-results_list <- list()
-for(i in seq_along(vars_adm)){
-  var_name <- vars_adm[i]
-  label_name <- legend_names[i]
-  
+get_table_data <- function(var_name, label, design) {
   form <- as.formula(paste0("~", var_name))
+  tab <- svyby(form, ~YEAR, design = design, svymean, vartype = "ci", na.rm = TRUE)
   
-  tab <- svyby(form, ~YEAR, design = nsduh_sub, svymean, vartype = "ci", na.rm = TRUE)
+  col_est <- paste0(var_name, "Yes")
+  col_cil <- paste0("ci_l.", var_name, "Yes")
+  col_ciu <- paste0("ci_u.", var_name, "Yes")
   
-  col_est <- paste0(var_name,"Yes")
-  col_cil <- paste0("ci_l.", var_name,"Yes")
-  col_ciu <- paste0("ci_u.", var_name,"Yes")
+  if (!col_est %in% names(tab)) {
+    col_est <- grep("Yes$", names(tab), value = TRUE)[1]
+    col_cil <- grep("^ci_l.*Yes$", names(tab), value = TRUE)[1]
+    col_ciu <- grep("^ci_u.*Yes$", names(tab), value = TRUE)[1]
+  }
   
-  df_temp <- data.frame(
-    YEAR = tab$YEAR,
-    prevalence = tab[[col_est]],
-    ci_lower   = tab[[col_cil]],
-    ci_upper   = tab[[col_ciu]],
-    Method = label_name
-  )
-  
-  results_list[[i]] <- df_temp
+  data.frame(
+    Method = label,
+    Year = tab$YEAR,
+    Prevalence_Pct = round(as.numeric(tab[[col_est]]) * 100, 1),
+    CI_Lower = round(as.numeric(tab[[col_cil]]) * 100, 1),
+    CI_Upper = round(as.numeric(tab[[col_ciu]]) * 100, 1)
+  ) %>%
+    mutate(
+      Result_Formatted = paste0(Prevalence_Pct, " (", CI_Lower, "–", CI_Upper, ")")
+    )
 }
 
-df_plot <- bind_rows(results_list)
+table_pct_long <- purrr::map_dfr(seq_along(vars_adm), function(i) {
+  get_table_data(vars_adm[i], method_labels[i], nsduh_users_only)
+})
 
 
-print(df_plot)
+table_1_pub <- table_pct_long %>%
+  select(Method, Year, Result_Formatted) %>%
+  tidyr::pivot_wider(names_from = Year, values_from = Result_Formatted) %>%
+  gt() %>%
+  tab_header(title = NULL) %>%
+  
+  tab_spanner(
+    label = "Prevalence % (CI 95%)",
+    columns = c("2022", "2023", "2024")
+  ) %>%
+  cols_label(Method = "Mode of Use") %>%
+  tab_options(
+    table.border.top.color = "black",
+    table.border.bottom.color = "black",
+    heading.align = "left",
+    table.font.size = 12
+  ) %>%
+  tab_source_note(
+    source_note = md(
+      "**Abbreviations:** **CI**: Confidence Interval <br>
+       **Note:** Data represent weighted prevalence percentages among past-year adolescent cannabis users (NSDUH 2022-2024)."
+    )
+  )
 
-ggplot(df_plot, aes(x = YEAR, y = prevalence, color = Method, group = Method)) +
-  geom_line(linewidth = 1) +
-  geom_point(size = 2) +
-  geom_errorbar(aes(ymin = ci_lower, ymax = ci_upper), width = 0.1, alpha = 0.5) +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+print(table_1_pub)
+
+
+# ==============================================================================
+# FIGURE 1
+# ==============================================================================
+
+df_plot <- purrr::map_dfr(seq_along(vars_adm), function(i) {
+  d <- get_table_data(vars_adm[i], method_labels[i], nsduh_users_only)
+  d %>% select(Year, Prevalence_Pct, CI_Lower, CI_Upper, Method)
+})
+
+
+library(forcats) 
+
+df_plot <- df_plot %>%
+  mutate(
+    Method = fct_reorder(Method, Prevalence_Pct, .fun = mean, .desc = TRUE)
+  )
+
+
+plot_pub <- ggplot(df_plot, aes(x = Year, y = Prevalence_Pct, group = Method, color = Method, fill = Method)) +
+  
+  geom_line(linewidth = 0.7) + 
+  geom_point(size = 1.5) +
+  
+  geom_ribbon(aes(ymin = CI_Lower, ymax = CI_Upper), alpha = 0.2, color = NA) +
+  
+  facet_wrap(~Method, scales = "free_y", ncol = 3) +
+  
   labs(
-    y = "Prevalence (%)",
-    x = "Year",
-    color = "Mode of Use"
-  ) +
-  theme_minimal(base_size = 13) +
+    title = NULL,
+    y = "Prevalence (%)", 
+    x = NULL,
+    caption = str_wrap("Note: Denominator restricted to past-year cannabis users. 
+    Scales vary by method.\nError bands represent 95% Confidence Intervals. 
+    \nOther refers to using marijuana in ways not explicitly listed in the survey (i.e., methods other than smoking, vaping, dabbing, eating/drinking, oral drops, topical application, or pills). Multimodal Use is defined as the use of two or more distinct methods of marijuana consumption within the past year. Source: NSDUH 2022-2024.", width = 130) ) +
+  
+  theme_classic(base_size = 11) +
   theme(
-    panel.grid.major.x = element_blank(),
-    panel.grid.minor = element_blank(),
-    panel.grid.major.y = element_line(color = "grey85"),
-    axis.title = element_text(face = "bold"),
-    axis.text = element_text(color = "black")
+    strip.background = element_blank(),
+    strip.text = element_text(face = "bold", size = 10),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "none", 
+    plot.caption = element_text(hjust = 0, face = "italic", size = 8, margin = margin(t = 10))
   )
 
+print(plot_pub)
 
+# ==============================================================================
+# FIGURE 1B
+# ==============================================================================
 
-```
+plot_single <- ggplot(df_plot, aes(x = Year, y = Prevalence_Pct, group = Method, color = Method)) +
+  
 
+  geom_line(linewidth = 1) + 
+  geom_point(size = 2) +
+  
 
-# What was the proportion of cannabis multimodal use?
-
-```{r}
-
-nsduh_mj_users <- subset(
-  nsduh_sub,
-  mj_past_year_bin == "Yes"
-)
-
-nsduh_mj_users <- update(
-  nsduh_mj_users,
-  smoke_n = ifelse(mj_smoke_bin == "Yes", 1, 0),
-  vape_n  = ifelse(mj_vape_bin  == "Yes", 1, 0),
-  dab_n   = ifelse(mj_dab_bin   == "Yes", 1, 0),
-  eat_n   = ifelse(mj_eat_bin   == "Yes", 1, 0),
-  mouth_n = ifelse(mj_mouth_bin == "Yes", 1, 0),
-  skin_n  = ifelse(mj_skin_bin  == "Yes", 1, 0),
-  pill_n  = ifelse(mj_pill_bin  == "Yes", 1, 0),
-  other_n = ifelse(mj_other_bin == "Yes", 1, 0)
-)
-
-nsduh_mj_users <- update(
-  nsduh_mj_users,
-  n_modes =
-    smoke_n +
-    vape_n +
-    dab_n +
-    eat_n +
-    mouth_n +
-    skin_n +
-    pill_n +
-    other_n
-)
-
-nsduh_mj_users <- update(
-  nsduh_mj_users,
-  multimodal_use = factor(
-    ifelse(n_modes >= 2, "Two or more modes", "One mode only"),
-    levels = c("One mode only", "Two or more modes")
+  geom_ribbon(aes(ymin = CI_Lower, ymax = CI_Upper, fill = Method), alpha = 0.05, color = NA) +
+  
+  scale_y_continuous(limits = c(0, NA)) +
+  
+ 
+  labs(
+    title = NULL,
+    y = "Prevalence (%)", 
+    x = NULL,
+    color = "Mode of Use",
+    fill = "Mode of Use",
+     caption = str_wrap("Note: Denominator restricted to past-year cannabis users. 
+    Scales vary by method.\nError bands represent 95% Confidence Intervals. 
+    \nOther refers to using marijuana in ways not explicitly listed in the survey (i.e., methods other than smoking, vaping, dabbing, eating/drinking, oral drops, topical application, or pills). Multimodal Use is defined as the use of two or more distinct methods of marijuana consumption within the past year. Source: NSDUH 2022-2024.", width = 130) ) +
+  
+  theme_classic(base_size = 12) +
+  theme(
+    axis.text.x = element_text(face = "bold", size = 11),
+    axis.text.y = element_text(color = "black"),
+    legend.position = "right", # Legenda na direita para identificar as cores
+    legend.title = element_text(face = "bold"),
+    plot.caption = element_text(hjust = 0, face = "italic", size = 8, margin = margin(t = 10))
   )
-)
 
-svytable(~multimodal_use, nsduh_mj_users) %>%
-  prop.table()
+print(plot_single)
 
-svytable(~n_modes, nsduh_mj_users) %>%
-  prop.table()
+# ==============================================================================
+# TABEL 2
+# ==============================================================================
 
-nsduh_mj_users <- update(
-  nsduh_mj_users,
-  n_modes_cat = factor(
-    case_when(
-      n_modes == 1 ~ "1 mode",
-      n_modes == 2 ~ "2 modes",
-      n_modes >= 3 ~ "3+ modes"
-    ),
-    levels = c("1 mode", "2 modes", "3+ modes")
+nsduh_users_only <- update(nsduh_users_only, year_num = as.numeric(as.character(YEAR)))
+
+get_linear_trend <- function(var_name, label, design) {
+  f <- as.formula(paste0(var_name, " ~ year_num + AGE3 + IRSEX"))
+  mod <- svyglm(f, design = design, family = quasibinomial())
+  
+  broom::tidy(mod, exponentiate = TRUE, conf.int = TRUE) %>%
+    filter(term == "year_num") %>%
+    mutate(
+      Method = label,
+      AOR = sprintf("%.2f", estimate),
+      CI = paste0("(", sprintf("%.2f", conf.low), "–", sprintf("%.2f", conf.high), ")"),
+      p_val_raw = p.value,
+      p_value = ifelse(p.value < 0.001, "<.001", sprintf("%.3f", p.value))
+    ) %>%
+    select(Method, AOR, CI, p_value, p_val_raw)
+}
+
+trend_results <- purrr::map_dfr(seq_along(vars_adm), function(i) {
+  get_linear_trend(vars_adm[i], method_labels[i], nsduh_users_only)
+}) %>%
+  arrange(p_val_raw) %>%
+  select(-p_val_raw) 
+
+table_2_pub <- trend_results %>%
+  gt() %>%
+  cols_label(Method = "Mode of Use", AOR = "aOR (Per Year)", CI = "95% CI", p_value = "P-Value") %>%
+  cols_align(align = "center", columns = c(AOR, CI, p_value)) %>%
+  cols_align(align = "left", columns = Method) %>%
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_body(columns = p_value, rows = p_value < 0.05 | p_value == "<.001")
+  ) %>%
+  tab_source_note(
+    source_note = md("**Abbreviations:** **aOR**: Adjusted Odds Ratio; **CI**: Confidence Interval.<br> **Note:** Models adjusted for Age and Sex.")
   )
-)
 
-svytable(~n_modes_cat, nsduh_mj_users) %>%
-  prop.table()
+print(table_2_pub)
 
-svytable(~mj_smoke_bin + mj_vape_bin, design = nsduh_mj_users) %>%
-  prop.table(margin = 1)
 
-svytable(~mj_smoke_bin + mj_eat_bin, design = nsduh_mj_users) %>%
-  prop.table(margin = 1)
+# ==============================================================================
+# TABEL 3
+# ==============================================================================
 
 oddis <- svyglm(
-  I(multimodal_use == "Two or more modes") ~ YEAR + AGE3 + IRSEX,
-  design = nsduh_mj_users,
+  multimodal_bin ~ YEAR + AGE3 + IRSEX, 
+  design = nsduh_users_only,
   family = quasibinomial()
 )
 
-broom::tidy(
-  oddis,
-  exponentiate = TRUE,
-  conf.int = TRUE
-)
-
-
-tab_multimodal <- svymean(
-  ~I(multimodal_use == "Two or more modes"),
-  design = nsduh_mj_users,
-  na.rm = TRUE
-)
-
-confint(tab_multimodal)
-
-table_or_adj <- broom::tidy(
-  oddis,
-  exponentiate = TRUE,
-  conf.int = TRUE
-) %>%
+table_3_pub <- broom::tidy(oddis, exponentiate = TRUE, conf.int = TRUE) %>%
   filter(term != "(Intercept)") %>%
   mutate(
-    Variable = recode(
-      term,
-      "YEAR2023" = "Year: 2023 vs 2022",
-      "YEAR2024" = "Year: 2024 vs 2022",
-      "AGE314–15" = "Age: 14–15 vs 12–13",
-      "AGE316–17" = "Age: 16–17 vs 12–13",
-      "IRSEXFemale" = "Sex: Female vs Male"
+    Variable = dplyr::recode(term,
+      "YEAR2023"      = "Year: 2023 (vs 2022)",
+      "YEAR2024"      = "Year: 2024 (vs 2022)",
+      "AGE314–15"     = "Age: 14–15 (vs 12–13)",
+      "AGE316–17"     = "Age: 16–17 (vs 12–13)",
+      "IRSEXFemale"   = "Sex: Female (vs Male)"
+    ),
+    AOR = sprintf("%.2f", estimate),
+    CI = paste0("(", sprintf("%.2f", conf.low), "–", sprintf("%.2f", conf.high), ")"),
+    p_val_raw = p.value,
+    p_value = ifelse(p.value < 0.001, "<.001", sprintf("%.3f", p.value))
+  ) %>%
+  select(Variable, AOR, CI, p_value, p_val_raw) %>%
+  gt() %>%
+  
+  cols_hide(columns = p_val_raw) %>% 
+  cols_label(
+    AOR = "aOR",
+    CI = "95% CI",
+    p_value = "P-Value"
+  ) %>%
+  cols_align(align = "center", columns = c(AOR, CI, p_value)) %>%
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_body(
+      columns = p_value,
+      rows = p_val_raw < 0.05
     )
   ) %>%
-  transmute(
-    Variable,
-    `Adjusted OR` = round(estimate, 2),
-    `95% CI` = paste0(
-      round(conf.low, 2), "–", round(conf.high, 2)
-    ),
-    `p-value` = ifelse(p.value < 0.001, "<0.001", round(p.value, 3))
+  tab_source_note(
+    source_note = md(
+      "**Abbreviations:** **aOR**: Adjusted Odds Ratio; **CI**: Confidence Interval.<br>
+       **Note:** Dependent variable is Multimodal Use (use of 2+ methods in the past year)."
+    )
   )
 
-table_or_adj
-
-
+print(table_3_pub)
 
 ```
+
+```{r}
+library(officer)
+library(magrittr)
+
+# 1. Cria um documento Word vazio
+doc <- read_docx()
+
+# 2. Função auxiliar para adicionar Tabela GT como imagem no doc
+add_gt_as_image <- function(doc, gt_object, title) {
+  # Salva temporariamente como PNG
+  temp_file <- tempfile(fileext = ".png")
+  gtsave(gt_object, temp_file)
+  
+  doc %>% 
+    body_add_par(title, style = "heading 1") %>%
+    body_add_img(src = temp_file, width = 6.5, height = 5) %>% # Ajuste tamanho se precisar
+    body_add_break()
+}
+
+# 3. Função auxiliar para adicionar GGPLOT
+add_ggplot <- function(doc, plot_object, title) {
+  doc %>% 
+    body_add_par(title, style = "heading 1") %>%
+    body_add_gg(value = plot_object, style = "centered", width = 7, height = 5) %>%
+    body_add_break()
+}
+
+# 4. Executa a montagem do documento
+doc <- doc %>%
+  add_gt_as_image(table_1_pub, "Tabela 1: Prevalência") %>%
+  add_gt_as_image(table_2_pub, "Tabela 2: Tendência Linear") %>%
+  add_gt_as_image(table_3_pub, "Tabela 3: Uso Multimodal") %>%
+  add_ggplot(plot_pub, "Figura 1: Tendências (Painel)") %>%
+  add_ggplot(plot_single, "Figura 1B: Tendências (Geral)")
+
+# 5. Salva o arquivo final
+print(doc, target = "Sup_NSUDH_Completo.docx")
+
+```
+
+
 
 # Do individuals who use cannabis via two or more modes (multimodal use) have a higher risk of past-year marijuana use disorder (IRPYUD5MRJ)?
 
@@ -1391,6 +1396,76 @@ sud_proportions_df <- data.frame(
   )
 
 sud_proportions_df
+
+
+```
+# Among adolescents who reported past-year cannabis use, what was the prevalence of marijuana use disorder?
+# Which sociodemographic factors were independently associated with increased risk of CUD?
+
+```{r}
+
+
+nsduh_pooled <- nsduh_all  
+nsduh_pooled$weight_pooled <- nsduh_pooled$ANALWT2_C / 4
+
+nsduh_design <- svydesign(
+  id = ~VEREP,
+  strata = ~VESTR_C,
+  weights = ~weight_pooled,
+  data = nsduh_pooled,
+  nest = TRUE
+)
+
+adolescents_users <- subset(nsduh_design, mj_past_year == 1 & !is.na(mrj_use_disorder_bin))
+
+# Prevalence
+svyby(~mrj_use_disorder_bin, ~year, adolescents_users, svymean, na.rm = TRUE)
+
+model_adj <- svyglm(
+  mrj_use_disorder_bin ~ age_cat + sex + race + family_income + year,
+  design = adolescents_users,
+  family = quasibinomial()
+)
+summary(model_adj)
+
+exp(cbind(OR = coef(model_adj), confint(model_adj)))
+
+
+library(gtsummary)
+library(gt)
+
+tabela_cud <- tbl_regression(
+  model_adj, 
+  exponentiate = TRUE, # Transforma Log-Odds em Odds Ratio
+  conf.int = TRUE,     # Mostra o IC 95%
+  pvalue_fun = ~style_pvalue(.x, digits = 3), # Formata o p-valor
+  label = list(        # Opcional: Renomeia as variáveis para ficar bonito
+    age_cat ~ "Age Category",
+    sex ~ "Sex",
+    race ~ "Race/Ethnicity",
+    family_income ~ "Family Income",
+    year ~ "Survey Year"
+  )
+) %>%
+  bold_p() %>%        # Deixa p < 0.05 em negrito
+  add_global_p() %>%  # Adiciona p-valor global para variáveis categóricas
+  as_gt() %>%         # Converte para gt para podermos por título
+  tab_header(
+    title = md("**Factors Associated with Cannabis Use Disorder (CUD)**"),
+    subtitle = "Multivariable Logistic Regression (NSDUH 2021-2024)"
+  ) %>%
+  tab_source_note(
+    source_note = "Model adjusted for age, sex, race, income, and year."
+  )
+
+# Visualizar
+tabela_cud
+
+# Salvar no Word
+gtsave(tabela_cud, "Tabela_Regressao_CUD.docx")
+
+
+
 
 
 ```
