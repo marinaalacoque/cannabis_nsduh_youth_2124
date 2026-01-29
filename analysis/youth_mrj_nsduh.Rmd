@@ -753,7 +753,7 @@ nsduh_design_pooled <- svydesign(
 )
 
 model_pooled <- svyglm(
-  mj_past_year ~ age_cat + sex + race + family_income_cat + county_type,
+  mj_past_year ~ age_cat + sex + race + family_income_cat + county_type + year,
   design = nsduh_design_pooled,
   family = quasibinomial()
 )
@@ -770,11 +770,12 @@ pooled_results <- tidy(
       str_detect(term, "^sex") ~ "Gender",
       str_detect(term, "^race") ~ "Race/Ethnicity",
       str_detect(term, "^family_income_cat") ~ "Family Income",
-      str_detect(term, "^county_type") ~ "County Type"
+      str_detect(term, "^county_type") ~ "County Type",
+      str_detect(term, "^year") ~ "Year"
     ),
     level = str_remove_all(
       term,
-      "^age_cat|^sex|^race|^family_income_cat|^county_type"
+      "^age_cat|^sex|^race|^family_income_cat|^county_type|^year"
     ),
     aor_ci = sprintf("%.2f (%.2f–%.2f)", estimate, conf.low, conf.high),
     p_val = ifelse(p.value < 0.001, "<0.001", sprintf("%.3f", p.value))
@@ -784,7 +785,7 @@ pooled_results <- tidy(
 
 pooled_results_final <- bind_rows(pooled_results) %>%
   mutate(variable = factor(variable, levels = c(
-    "Age", "Gender", "Race/Ethnicity", "Family Income", "County Type"
+    "Age", "Gender", "Race/Ethnicity", "Family Income", "County Type", "Year"
   ))) %>%
   group_by(variable) %>%
   ungroup()
@@ -861,7 +862,7 @@ vars_keep_subset <- c(
   "MJSMKYR", "MJVAPYR", "MJDABYR", "MJEATYR", 
   "MJMTHYR", "MJSKNYR", "MJPLLYR", "MJOTHYR",
   "ANALWT2_C", "VESTR_C", "VEREP", "IRPYUD5MRJ" ,
-  "NEWRACE2", "IRFAMIN3"
+  "NEWRACE2", "IRFAMIN3", "COUTYP4"
 )
 
 nsduh_2224 <- nsduh_2224 %>% 
@@ -899,7 +900,9 @@ nsduh_2224 <- nsduh_2224 %>%
                   c("White","Black","AIAN","NHPI","Asian","Multiracial","Hispanic")),
     IRFAMIN3 = factor(IRFAMIN3, 1:7,
                            c("<$10k","$10–19k","$20–29k","$30–39k",
-                             "$40–49k","$50–74k","≥$75k"))
+                             "$40–49k","$50–74k","≥$75k")),
+    COUTYP4 = factor(COUTYP4, 1:3,
+                         c("Large metro","Small metro","Nonmetro"))
   )
 
 nsduh_sub <- svydesign(
@@ -959,11 +962,11 @@ table_pct_long <- purrr::map_dfr(seq_along(vars_adm), function(i) {
   get_table_data(vars_adm[i], method_labels[i], nsduh_users_only)
 })
 
-# --- TABELA 1 PADRONIZADA ---
+
 table_1_pub <- table_pct_long %>%
   select(Method, Year, Result_Formatted) %>%
   tidyr::pivot_wider(names_from = Year, values_from = Result_Formatted) %>%
-  gt() %>%
+  gt(groupname_col = "variable", rowname_col = "level") %>%
   
   tab_spanner(
     label = "Prevalence % (95% CI)",
@@ -1046,7 +1049,7 @@ print(plot_single)
 nsduh_users_only <- update(nsduh_users_only, year_num = as.numeric(as.character(YEAR)))
 
 get_linear_trend <- function(var_name, label, design) {
-  f <- as.formula(paste0(var_name, " ~ year_num + AGE3 + IRSEX"))
+  f <- as.formula(paste0(var_name, " ~ year_num + AGE3 + IRSEX + COUTYP4 + IRFAMIN3 + NEWRACE2"))
   mod <- svyglm(f, design = design, family = quasibinomial())
   
   broom::tidy(mod, exponentiate = TRUE, conf.int = TRUE) %>%
@@ -1112,7 +1115,7 @@ print(table_2_pub)
 # ==============================================================================
 
 oddis <- svyglm(
-  multimodal_bin ~ YEAR + AGE3 + IRSEX + IRFAMIN3 + NEWRACE2, 
+  multimodal_bin ~ YEAR + AGE3 + IRSEX + IRFAMIN3 + NEWRACE2 + COUTYP4, 
   design = nsduh_users_only,
   family = quasibinomial()
 )
@@ -1127,7 +1130,8 @@ table_3_pub <- broom::tidy(oddis, exponentiate = TRUE, conf.int = TRUE) %>%
       str_detect(term, "IRSEX") ~ str_replace(term, "IRSEX", "Sex: "),
       str_detect(term, "NEWRACE2") ~ str_replace(term, "NEWRACE2", "Race/Ethnicity: "),
       str_detect(term, "IRFAMIN3") ~ str_replace(term, "IRFAMIN3", "Income: "),
-      TRUE ~ term
+      str_detect(term, "COUTYP4") ~ str_replace(term, "COUTYP4", "County type: "),
+            TRUE ~ term
     ),
     AOR = sprintf("%.2f", estimate),
     CI = paste0("(", sprintf("%.2f", conf.low), "–", sprintf("%.2f", conf.high), ")"),
@@ -1223,7 +1227,7 @@ print(doc, target = "Sup_NSUDH_Completo.docx")
 ```{r}
 
 odd_multimodal <- svyglm(
-  IRPYUD5MRJ ~ multimodal_bin + YEAR + AGE3 + IRSEX,
+  IRPYUD5MRJ ~ multimodal_bin + YEAR + AGE3 + IRSEX +COUTYP4 + IRFAMIN3 + NEWRACE2,
   design = nsduh_users_only,
   family = quasibinomial()
 )
@@ -1509,68 +1513,37 @@ print(chisq_result)
 ```
 
 # Multivariable models were used to assess whether this association persisted after adjustment for sociodemographic factors.
+#Sociodemographic Risk Factors for Co-occurring SUD + MDE
 
 ```{r}
+library(dplyr)
+library(survey)
+library(broom)
+library(gt)
+library(stringr)
+library(purrr)
 
-nsduh_pooled$sud_or_mde_bin <- ifelse(nsduh_pooled$sud_or_mde_num == "Yes", 1,
-                                      ifelse(nsduh_pooled$sud_or_mde_num == "No", 0, NA))
 
-nsduh_sub_new <- svydesign(
-  id = ~VEREP,
-  strata = ~VESTR_C,
-  weights = ~weight_pooled,
-  data = nsduh_pooled,
-  nest = TRUE
-)
-
-model_adj <- svyglm(
-  sud_or_mde_bin ~ mj_past_year_num + age_cat + sex + race + family_income_cat + county_type,
-  design = nsduh_sub_new,
-  family = quasibinomial()
-)
-
-results_adj <- tidy(
-  model_adj,
-  exponentiate = TRUE,
-  conf.int = TRUE
-) %>%
-  mutate(
-    category = case_when(
-      str_detect(term, "^mj_past_year_num") ~ "Past-year marijuana use",
-      str_detect(term, "^age_cat") ~ "Age",
-      str_detect(term, "^sex") ~ "Gender",
-      str_detect(term, "^race") ~ "Race/Ethnicity",
-      str_detect(term, "^family_income_cat") ~ "Family Income",
-      str_detect(term, "^county_type") ~ "County Type",
-      TRUE ~ term
-    ),
-    level = str_remove_all(
-      term,
-      "^mj_past_year_num|^age_cat|^sex|^race|^family_income_cat|^county_type"
-    ),
-    aor_ci = sprintf("%.2f (%.2f–%.2f)", estimate, conf.low, conf.high),
-    p_val = ifelse(p.value < 0.001, "<0.001", sprintf("%.3f", p.value))
-  ) %>%
-  select(category, level, aor_ci, p_val) %>%
-  arrange(category, level)
-
-results_adj
-
-```
-
-# Past-year marijuana use  and MDE/SUD categories
-
-```{r}
-
+nsduh_pooled <- nsduh_all 
+nsduh_pooled$weight_pooled <- nsduh_pooled$ANALWT2_C / 4
 
 nsduh_pooled <- nsduh_pooled %>%
   mutate(
-    mj_past_year_num = relevel(factor(mj_past_year_num), ref = "0"),
-    age_cat = relevel(factor(age_cat), ref = "12–13"),
-    sex = relevel(factor(sex), ref = "Male"),
-    race = relevel(factor(race), ref = "White"),
-    family_income_cat = relevel(factor(family_income_cat), ref = "≥$75k"),
-    county_type = relevel(factor(county_type), ref = "Large metro")
+    
+    mj_past_year_bin = relevel(as.factor(ifelse(mj_past_year == 1, "Yes", "No")), ref = "No"),
+    
+    age_cat       = relevel(as.factor(age_cat), ref = "12–13"),
+    sex           = relevel(as.factor(sex), ref = "Male"),
+    race          = relevel(as.factor(race), ref = "White"),
+    family_income = relevel(as.factor(family_income), ref = "<$10k"),
+    county_type   = relevel(as.factor(county_type), ref = "Small metro"),
+    year   = relevel(as.factor(year), ref = "2021"),
+    
+    target_comorbid = case_when(
+      mde_sud_5cat == "SUD and MDE" ~ 1,
+      mde_sud_5cat == "Neither" ~ 0,
+      TRUE ~ NA_real_
+    )
   )
 
 nsduh_design <- svydesign(
@@ -1581,53 +1554,99 @@ nsduh_design <- svydesign(
   nest = TRUE
 )
 
-mde_sud_categories <- c("SUD only", "MDE only", "SUD and MDE")
 
+design_comorbid_only <- subset(nsduh_design, !is.na(target_comorbid))
 
-run_mde_sud_model <- function(cat) {
-  
-  nsduh_pooled[[paste0("mde_", str_replace_all(cat, " ", "_"))]] <- ifelse(
-    nsduh_pooled$mde_sud_raw == cat, 1, 0
-  )
-  
-    design_bin <- update(nsduh_design, 
-                       mde_bin = nsduh_pooled[[paste0("mde_", str_replace_all(cat, " ", "_"))]])
-  
-  
-  model <- svyglm(
-    mde_bin ~ mj_past_year_num + age_cat + sex + race + family_income_cat,
-    design = design_bin,
-    family = quasibinomial()
-  )
-  
- 
-  tidy(model, exponentiate = TRUE, conf.int = TRUE) %>%
-    filter(str_detect(term, "mj_past_year_num")) %>%
-    mutate(
-      category = cat,
-      aor_ci = sprintf("%.2f (%.2f–%.2f)", estimate, conf.low, conf.high),
-      p_val = ifelse(p.value < 0.001, "<0.001", sprintf("%.3f", p.value))
-    ) %>%
-    select(category, aor_ci, p_val)
-}
-
-
-results_mj <- lapply(mde_sud_categories, run_mde_sud_model) %>%
-  bind_rows()
-
-ref_row <- tibble(
-  category = "Neither (REF)",
-  aor_ci = "REF",
-  p_val = "REF"
+model_demographics <- svyglm(
+  target_comorbid ~ mj_past_year_bin + age_cat + sex + race + family_income + county_type + year,
+  design = design_comorbid_only,
+  family = quasibinomial()
 )
 
-results_mj <- bind_rows(ref_row, results_mj) %>%
-  mutate(category = factor(category, levels = c("Neither (REF)", mde_sud_categories)))
+table_demographics <- tidy(model_demographics, exponentiate = TRUE, conf.int = TRUE) %>%
+  filter(term != "(Intercept)") %>%
+  mutate(
+    Variable = case_when(
+      str_detect(term, "mj_past_year_bin") ~ "Past-Year Marijuana Use",
+      str_detect(term, "age_cat") ~ str_replace(term, "age_cat", "Age: "),
+      str_detect(term, "sex") ~ str_replace(term, "sex", "Sex: "),
+      str_detect(term, "race") ~ str_replace(term, "race", "Race: "),
+      str_detect(term, "family_income") ~ str_replace(term, "family_income", "Income: "),
+      str_detect(term, "county_type") ~ str_replace(term, "county_type", "County: "),
+      str_detect(term, "year") ~ str_replace(term, "year", "Year: "),
+      TRUE ~ term
+    ),
+    AOR = sprintf("%.2f", estimate),
+    CI = paste0("(", sprintf("%.2f", conf.low), "–", sprintf("%.2f", conf.high), ")"),
+    
+    
+    p_val_raw = p.value,
+    p_value = ifelse(p.value < 0.001, "<0.001", sprintf("%.3f", p.value))
+  ) %>%
+  
+  select(Variable, AOR, CI, p_value, p_val_raw) %>%
+  gt() %>%
+  cols_hide(columns = p_val_raw) %>% 
+  cols_align(align = "center", columns = c(AOR, CI, p_value)) %>%
+  
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_body(columns = p_value, rows = p_val_raw < 0.05)
+  ) %>%
+  
+   tab_source_note(
+    source_note = md(
+      "**Abbreviations:** **AOR**: Adjusted Odds Ratio; **CI**: Confidence Interval; **MDE**: Major Depressive Episode; **SUD**: Substance Use Disorder; **NSDUH**: National Survey on Drug Use and Health.<br>
+       **Note:** Multivariable logistic regression model. The analysis compares adolescents with **co-occurring SUD and MDE** (Outcome = 1) against those with **neither condition** (Reference = 0). Adolescents with a single diagnosis (SUD only or MDE only) were excluded from this specific model to isolate factors associated with comorbidity. Models were adjusted for past-year marijuana use, age, sex, race/ethnicity, family income, and county type."
+    )
+  )
 
-results_mj
+print(table_demographics)
 
 
+
+categories <- c("SUD only", "MDE only", "SUD and MDE")
+
+run_mj_risk <- function(cat_name) {
+  
+  nsduh_design <- update(nsduh_design, y = ifelse(mde_sud_5cat == cat_name, 1, 
+                                           ifelse(mde_sud_5cat == "Neither", 0, NA)))
+  
+  mod <- svyglm(y ~ mj_past_year_bin + age_cat + sex + race + family_income + county_type + year, 
+                design = subset(nsduh_design, !is.na(y)), family = quasibinomial())
+  
+  tidy(mod, exponentiate = TRUE, conf.int = TRUE) %>%
+    filter(str_detect(term, "mj_past_year_bin")) %>%
+    mutate(
+      Outcome = cat_name, 
+      AOR = sprintf("%.2f", estimate),
+      CI = paste0("(", sprintf("%.2f", conf.low), "–", sprintf("%.2f", conf.high), ")"),
+      
+      p_val_raw = p.value,
+      p_value = ifelse(p.value < 0.001, "<0.001", sprintf("%.3f", p.value))
+    ) %>%
+    
+    select(Outcome, AOR, CI, p_value, p_val_raw)
+}
+
+table_mj_impact <- map_dfr(categories, run_mj_risk) %>% 
+  gt() %>%
+  cols_hide(columns = p_val_raw) %>%
+  cols_align(align = "center", columns = c(AOR, CI, p_value)) %>%
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_body(columns = p_value, rows = p_val_raw < 0.05)
+  ) %>%
+  tab_source_note(
+    source_note = md(
+      "**Abbreviations:** **AOR**: Adjusted Odds Ratio; **CI**: Confidence Interval.<br>
+       **Note:** Each row represents a separate multivariable logistic regression model estimating the odds of the specific outcome among past-year marijuana users compared with non-users. In all models, the reference group for the outcome is **'Neither MDE nor SUD'**. Models were adjusted for age, sex, race/ethnicity, family income, and county type. **p < .001** indicates statistical significance."
+    )
+  )
+
+print(table_mj_impact)
 ```
+
 
 
 
