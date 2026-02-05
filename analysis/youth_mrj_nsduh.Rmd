@@ -440,7 +440,7 @@ confint(pares)
 
 ```
 
-# Supplementary Table 1 : Sociodemographic Characteristics of the Study Population by Year (2021–2024)
+# Table 1 : Sociodemographic Characteristics of the Study Population by Year (2021–2024)
 
 ```{r}
 
@@ -589,7 +589,7 @@ gtsave(gt_table_profile, filename = "Tabela1Sup_NSUDH.docx")
 
 
 
-# Table 1: Sociodemographic characteristics of US adolescents with past-year cannabis use by year (Weighted prevalence), 2021–2024
+# Table 2: Sociodemographic characteristics of US adolescents with past-year cannabis use by year (Weighted prevalence), 2021–2024
 
 ```{r}
 
@@ -719,7 +719,7 @@ gtsave(gt_table_profile2, "Tabela1_NSUDH_GT.html")
 gtsave(gt_table_profile2, filename = "Tabela1_NSUDH.docx")
 ```
 
-# Supplementary Table 2: Association between sociodemographic characteristics and current cannabis use among U.S. youth
+# Supplementary Table 1: Association between sociodemographic characteristics and current cannabis use among U.S. youth
 
 ```{r}
 
@@ -1648,6 +1648,96 @@ print(table_mj_impact)
 ```
 
 
+```{r}
+# Instale se não tiver
+# install.packages("survey") 
 
+# Para modelos svyglm, usamos o teste de Wald para Goodness of Fit
+# ou a função regTermTest para testar termos polinomiais.
+
+# Uma alternativa comum é o teste de Archer-Lemeshow disponível no pacote 'survey' 
+# através de extensões ou via o pacote 'generalhoslem'
+
+install.packages("generalhoslem")
+library(generalhoslem)
+
+# Executando o teste para o seu modelo de comorbidade
+logitgof(design_comorbid_only$variables$target_comorbid, 
+         fitted(model_demographics), 
+         g = 10)
+
+library(car)
+
+# O VIF para svyglm pode ser calculado passando o modelo diretamente
+# ou tratando-o como um glm simples apenas para checar a colinearidade entre preditores
+vif_values <- vif(model_demographics)
+print(vif_values)
+
+# Se o comando acima der erro por causa do tipo do objeto:
+# Use uma versão GLM padrão apenas para o teste de VIF (os resultados de colinearidade são idênticos)
+dummy_mod <- glm(target_comorbid ~ mj_past_year_bin + age_cat + sex + race + family_income + county_type + year, 
+                 data = design_comorbid_only$variables, 
+                 family = binomial)
+vif(dummy_mod)
+
+
+
+```
+```{r}
+
+library(ggplot2)
+library(stringr)
+library(dplyr)
+library(broom)
+
+# 1. Preparação dos dados com ORDEM FIXA
+plot_data <- tidy(model_demographics, exponentiate = TRUE, conf.int = TRUE) %>%
+  filter(term != "(Intercept)") %>%
+  mutate(
+    Variable = case_when(
+      str_detect(term, "mj_past_year_bin") ~ "Past-Year Marijuana Use",
+      str_detect(term, "year") ~ str_replace(term, "year", "Year: "),
+      str_detect(term, "age_cat") ~ str_replace(term, "age_cat", "Age: "),
+      str_detect(term, "sex") ~ str_replace(term, "sex", "Sex: "),
+      str_detect(term, "race") ~ str_replace(term, "race", "Race: "),
+      str_detect(term, "family_income") ~ str_replace(term, "family_income", "Income: "),
+      str_detect(term, "county_type") ~ str_replace(term, "county_type", "County: "),
+      TRUE ~ term
+    )
+  )
+
+# --- TRUQUE PARA ORGANIZAR: Transformar em Factor ---
+# Isso garante que a ordem no gráfico seja a ordem em que as variáveis aparecem nos dados
+plot_data$Variable <- factor(plot_data$Variable, levels = rev(plot_data$Variable))
+
+# 2. Legenda com quebra de linha
+caption_text <- "Abbreviations: AOR: Adjusted Odds Ratio; CI: Confidence Interval; MDE: Major Depressive Episode; SUD: Substance Use Disorder; NSDUH: National Survey on Drug Use and Health. Notes: Multivariable logistic regression model. The analysis compares adolescents with co-occurring SUD and MDE (Outcome = 1) against those with neither condition (Reference = 0). Adolescents with a single diagnosis (SUD only or MDE only) were excluded from this specific model to isolate factors associated with comorbidity. Models were adjusted for past-year marijuana use, age, sex, race/ethnicity, family income, year and county type."
+wrapped_caption <- str_wrap(caption_text, width = 110)
+
+# 3. Gerar o gráfico (USANDO 'Variable' sem reorder)
+ggplot(plot_data, aes(x = estimate, y = Variable)) +
+  geom_vline(xintercept = 1, linetype = "dashed", color = "black", linewidth = 0.5) + 
+  geom_errorbarh(aes(xmin = conf.low, xmax = conf.high), height = 0.2, color = "black") +
+  geom_point(size = 2, color = "black") + # Aumentei um pouco o ponto de 1 para 2
+  scale_x_log10(breaks = c(0.5, 1, 2, 4, 8)) + 
+  labs(
+    x = "Adjusted Odds Ratio (95% CI, log scale)",
+    y = NULL,
+    caption = wrapped_caption 
+  ) +
+  theme_classic() + 
+  theme(
+    plot.caption = element_text(hjust = 0, size = 9, lineheight = 1.1, margin = margin(t = 15)), 
+    plot.margin = margin(10, 20, 10, 10),
+    axis.text.y = element_text(color = "black", size = 11),
+    axis.title.x = element_text(size = 11, color = "black"),
+    axis.text.x = element_text(color = "black", size = 11)
+  )
+
+# 4. Salvar
+ggsave("forest_plot_organizado.png", width = 10, height = 9, dpi = 300, bg = "white")
+
+
+```
 
 
