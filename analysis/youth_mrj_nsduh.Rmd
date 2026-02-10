@@ -3,10 +3,10 @@ title: "NSDUH project"
 author: "Marina Alacoque Rodrigues"
 date: "`r Sys.Date()`"
 output:
+  pdf_document: default
+  word_document: default
   html_document:
     df_print: paged
-  word_document: default
-  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -966,7 +966,7 @@ table_pct_long <- purrr::map_dfr(seq_along(vars_adm), function(i) {
 table_1_pub <- table_pct_long %>%
   select(Method, Year, Result_Formatted) %>%
   tidyr::pivot_wider(names_from = Year, values_from = Result_Formatted) %>%
-  gt(groupname_col = "variable", rowname_col = "level") %>%
+  gt(groupname_col = "variable", rowname_col = "Method") %>%
   
   tab_spanner(
     label = "Prevalence % (95% CI)",
@@ -1364,6 +1364,109 @@ final_tab <- table_sud %>%
 print(final_tab)
 
 ```
+```{r}
+
+# --- 1. Preparação dos Indicadores ---
+nsduh_temp <- update(
+  nsduh_design_pooled,
+  any_sud_bin = ifelse(mde_sud_5cat %in% c("SUD only", "SUD and MDE"), 1, 0),
+  alc_n = as.numeric(IRPYUD5ALC),
+  coc_n = as.numeric(IRPYUD5COC),
+  her_n = as.numeric(IRPYUD5HER),
+  hal_n = as.numeric(IRPYUD5HAL),
+  inh_n = as.numeric(IRPYUD5INH),
+  mth_n = as.numeric(IRPYUD5MTH),
+  mrj_n = as.numeric(mrj_use_disorder), 
+  other_drug_sud = ifelse((alc_n + coc_n + her_n + hal_n + inh_n + mth_n + mrj_n) == 0, 1, 0)
+)
+
+
+# --- 2. Definindo os Denominadores Populacionais (N) ---
+# Isso resolve o erro 'object not found'
+N_total_any_val <- sum(weights(nsduh_temp, "sampling"))
+sud_only_design <- subset(nsduh_temp, any_sud_bin == 1)
+N_any_sud_val <- sum(weights(sud_only_design, "sampling"))
+
+# --- 3. Função de Estatística Otimizada ---
+get_sud_stats <- function(var_name, design_obj, label_name) {
+  # Prevalência
+  form <- as.formula(paste0("~", var_name))
+  res <- svymean(form, design = design_obj, na.rm = TRUE)
+  
+  # n Amostral bruto
+  n_val <- sum(design_obj$variables[[var_name]] == 1, na.rm = TRUE)
+  
+  # N Populacional estimado (Soma dos pesos de quem tem a condição)
+  # Usamos tryCatch para evitar erro se n=0
+  N_val <- tryCatch(
+    sum(weights(subset(design_obj, design_obj$variables[[var_name]] == 1), "sampling")),
+    error = function(e) 0
+  )
+  
+  data.frame(
+    Label = label_name,
+    n_sample = n_val,
+    N_estimated = N_val,
+    Mean = as.numeric(coef(res)),
+    SE = as.numeric(SE(res))
+  )
+}
+
+# --- 4. Executando e Unindo os Dados ---
+row_any <- get_sud_stats("any_sud_bin", nsduh_temp, "Any Substance Use Disorder (Total)")
+
+subst_list <- list(
+  c("alc_n", "Alcohol"),
+  c("mrj_n", "Cannabis"),
+  c("hal_n", "Hallucinogen"),
+  c("inh_n", "Inhalant"),
+  c("coc_n", "Cocaine"),
+  c("mth_n", "Methamphetamine"),
+  c("her_n", "Heroin"), 
+  c("other_drug_sud", "Other")
+)
+
+rows_subst <- map_dfr(subst_list, ~get_sud_stats(.x[1], sud_only_design, .x[2]))
+
+table_data_final <- bind_rows(row_any, rows_subst) %>%
+  mutate(
+    Pct = Mean * 100,
+    CI_Low = pmax(0, (Mean - 1.96 * SE) * 100),
+    CI_High = (Mean + 1.96 * SE) * 100,
+    Formatted_Prev = sprintf("%.1f%% (%.1f–%.1f)", Pct, CI_Low, CI_High),
+    n_display_pop = scales::comma(round(N_estimated))
+  )
+
+# --- 5. Tabela GT Final ---
+final_sud_table <- table_data_final %>%
+  gt() %>%
+  tab_header(
+    title = "Prevalence of Substance Use Disorders (SUD) Among U.S. Adolescents",
+    subtitle = "Analysis of Sample Size (n) vs. Weighted Population Estimate (N)"
+  ) %>%
+  cols_label(
+    Label = "Condition / Substance",
+    n_sample = "n (Sample)",
+    n_display_pop = "N (Est. US Pop)",
+    Formatted_Prev = "Prevalence (95% CI)"
+  ) %>%
+  cols_hide(columns = c(Mean, SE, Pct, CI_Low, CI_High, N_estimated)) %>%
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_body(rows = 1)
+  ) %>%
+  tab_source_note(
+    source_note = md(paste0(
+      "**Footnote:** The total weighted denominator for 'Any SUD' is the entire U.S. adolescent population (N ≈ ", 
+      scales::comma(round(N_total_any_val)), "). For specific substances, the denominator is restricted to the SUD-positive sub-population (N ≈ ", 
+      scales::comma(round(N_any_sud_val)), "). Categories are not mutually exclusive."
+    ))
+  )
+
+print(final_sud_table)
+
+```
+
 
 
 # Among adolescents who reported past-year cannabis use, what was the prevalence of marijuana use disorder?
@@ -1738,6 +1841,65 @@ ggplot(plot_data, aes(x = estimate, y = Variable)) +
 ggsave("forest_plot_organizado.png", width = 10, height = 9, dpi = 300, bg = "white")
 
 
+
+# 1. Preparação (mantive seu código de mutate)
+plot_data <- tidy(model_demographics, exponentiate = TRUE, conf.int = TRUE) %>%
+  filter(term != "(Intercept)") %>%
+  mutate(
+    Variable = case_when(
+      str_detect(term, "mj_past_year_bin") ~ "Past-Year Marijuana Use",
+      str_detect(term, "year") ~ str_replace(term, "year", "Year: "),
+      str_detect(term, "age_cat") ~ str_replace(term, "age_cat", "Age: "),
+      str_detect(term, "sex") ~ str_replace(term, "sex", "Sex: "),
+      str_detect(term, "race") ~ str_replace(term, "race", "Race: "),
+      str_detect(term, "family_income") ~ str_replace(term, "family_income", "Income: "),
+      str_detect(term, "county_type") ~ str_replace(term, "county_type", "County: "),
+      TRUE ~ term
+    ),
+    res_label = sprintf("%.2f (%.2f-%.2f)", estimate, conf.low, conf.high)
+  )
+
+plot_data$Variable <- factor(plot_data$Variable, levels = rev(plot_data$Variable))
+
+# --- AJUSTE DE POSIÇÃO ---
+# Como seu OR é 47, vamos colocar o texto bem mais à frente (ex: 150)
+# e expandir o limite do gráfico para que o ponto 47 tenha espaço.
+text_pos <- 150 
+
+# 2. Legenda com quebra de linha
+caption_text <- "Abbreviations: AOR: Adjusted Odds Ratio; CI: Confidence Interval; MDE: Major Depressive Episode; SUD: Substance Use Disorder; NSDUH: National Survey on Drug Use and Health. Notes: Multivariable logistic regression model. The analysis compares adolescents with co-occurring SUD and MDE (Outcome = 1) against those with neither condition (Reference = 0). Adolescents with a single diagnosis (SUD only or MDE only) were excluded from this specific model to isolate factors associated with comorbidity. Models were adjusted for past-year marijuana use, age, sex, race/ethnicity, family income, year and county type."
+wrapped_caption <- str_wrap(caption_text, width = 110)
+
+# 3. Gráfico
+ggplot(plot_data, aes(y = Variable)) +
+  geom_vline(xintercept = 1, linetype = "dashed", color = "black", linewidth = 0.5) + 
+  geom_errorbarh(aes(xmin = conf.low, xmax = conf.high), height = 0.2) +
+  geom_point(aes(x = estimate), size = 2) +
+  
+  # Texto dos valores (AOR e IC)
+  geom_text(aes(x = text_pos, label = res_label), hjust = 0, size = 3.2) +
+  
+  # CABEÇALHO DA COLUNA
+  annotate("text", x = text_pos, y = length(unique(plot_data$Variable)) + 1, 
+           label = "Adjusted OR (95% CI)", fontface = "bold", hjust = 0, size = 3.5) +
+  
+  # Escala log expandida para acomodar o OR de 47
+  scale_x_log10(breaks = c(0.5, 1, 2, 5, 10, 25, 50)) +
+  
+  # Expandimos o xlim para 400 para dar margem à coluna de texto na escala log
+  coord_cartesian(xlim = c(-10, 400), clip = "off") + 
+  
+  labs(x = "Adjusted Odds Ratio (95% CI, log scale)", y = NULL, caption = wrapped_caption) +
+  theme_classic() + 
+  theme(
+    plot.caption = element_text(hjust = 0, size = 9, margin = margin(t = 20)),
+    # Aumentamos muito a margem direita (150) para o ggsave não cortar o texto
+    plot.margin = margin(10, 150, 10, 10), 
+    axis.text.y = element_text(color = "black", size = 11),
+    axis.text.x = element_text(color = "black")
+  )
+
+ggsave("forest_plot_organizado2.png", width = 10, height = 9, dpi = 300, bg = "white")
 ```
 
 
